@@ -1,0 +1,36 @@
+generator client {
+  provider        = "prisma-client-js"
+  engineType      = "binary"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  imageUrl  String?
+  videoUrl  String?
+  audioUrl  String?
+  state     String   @default("Yucatán") // Yucatán, Campeche, Quintana Roo, CDMX, Jalisco, Nuevo León
+  category  String   @default("Local")   // Local, Política, Economía, Deportes, Cultura
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PortfolioItem {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  imageUrl    String?
+  liveUrl     String?
+  price       Float?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
