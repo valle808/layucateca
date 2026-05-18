@@ -333,21 +333,7 @@ export default function MunaPage() {
 
   return (
     <div className="flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative" style={{ height: "100vh" }}>
-      {/* ── TOP CRYPTO TICKER BAR (MONROE STYLE) ── */}
-      <div className="flex items-center h-9 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)] text-xs font-bold overflow-x-auto shrink-0 select-none no-scrollbar">
-        <div className="bg-[#ff5500] text-white px-4 h-full flex items-center gap-1.5 font-black shrink-0 tracking-wider text-[11px] shadow-sm">
-          ⚡ LIVE MKT
-        </div>
-        <div className="flex items-center gap-8 px-6 shrink-0 tracking-wider text-[11px] text-[var(--text-secondary)] font-semibold">
-          <span>SOL <strong className="text-[var(--text-primary)] font-black">$168.40</strong> <span className="text-emerald-500 font-bold ml-0.5">+3.05%</span></span>
-          <span>XRP <strong className="text-[var(--text-primary)] font-black">$2.31</strong> <span className="text-rose-500 font-bold ml-0.5">-0.42%</span></span>
-          <span>BNB <strong className="text-[var(--text-primary)] font-black">$648.20</strong> <span className="text-rose-500 font-bold ml-0.5">-1.21%</span></span>
-          <span>VALLE <strong className="text-[var(--text-primary)] font-black">$1.00</strong> <span className="text-emerald-500 font-bold ml-0.5">+12.35%</span></span>
-          <span>BTC <strong className="text-[var(--text-primary)] font-black">$103,240</strong> <span className="text-rose-500 font-bold ml-0.5">-2.27%</span></span>
-          <span>ETH <strong className="text-[var(--text-primary)] font-black">$3,450</strong> <span className="text-emerald-500 font-bold ml-0.5">+1.40%</span></span>
-          <span>MAYA <strong className="text-[var(--text-primary)] font-black">$14.20</strong> <span className="text-emerald-500 font-bold ml-0.5">+5.80%</span></span>
-        </div>
-      </div>
+
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
         {/* AMBIENT BG GRADIENT */}
@@ -364,7 +350,7 @@ export default function MunaPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -320, opacity: 0 }}
               transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-              className="fixed top-9 left-0 bottom-0 w-72 z-[90] border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] backdrop-blur-3xl flex flex-col shadow-2xl xl:hidden"
+              className="fixed top-0 left-0 bottom-0 w-72 z-[90] border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] backdrop-blur-3xl flex flex-col shadow-2xl xl:hidden"
             >
               <SidebarContent 
                 knowledgeGraph={knowledgeGraph} 

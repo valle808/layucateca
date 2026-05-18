@@ -4,12 +4,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 
+import { usePathname } from "next/navigation";
+
 interface Message {
   sender: "user" | "muna";
   text: string;
 }
 
 export default function MunaChatbot() {
+  const pathname = usePathname();
+  if (pathname === "/muna") return null;
+
   const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
