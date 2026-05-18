@@ -28,19 +28,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <LanguageProvider>
-            <div style={{ display: "flex", minHeight: "100vh", width: "100vw", overflowX: "hidden" }}>
+            <div className="layout-wrapper">
               <Sidebar />
-              <div
-                style={{
-                  flex: 1,
-                  marginLeft: "var(--current-sidebar-width)",
-                  transition: "margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "calc(100vw - var(--current-sidebar-width))",
-                  minWidth: 0,
-                }}
-              >
+              <div className="content-container">
                 {children}
               </div>
             </div>

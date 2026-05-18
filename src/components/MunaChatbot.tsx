@@ -153,8 +153,10 @@ export default function MunaChatbot() {
           style={{
             position: "fixed",
             bottom: "105px",
-            right: "30px",
-            width: "380px",
+            right: "20px",
+            left: "20px",
+            maxWidth: "380px",
+            marginLeft: "auto",
             height: "520px",
             background: "var(--bg-card)",
             backdropFilter: "blur(25px)",

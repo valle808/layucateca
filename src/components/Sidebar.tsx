@@ -71,21 +71,51 @@ const Icons = {
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.documentElement.style.setProperty(
-        "--current-sidebar-width",
-        isCollapsed ? "var(--sidebar-collapsed-width)" : "var(--sidebar-width)"
-      );
-    }
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        document.documentElement.style.setProperty("--current-sidebar-width", "0px");
+      } else {
+        document.documentElement.style.setProperty(
+          "--current-sidebar-width",
+          isCollapsed ? "var(--sidebar-collapsed-width)" : "var(--sidebar-width)"
+        );
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [isCollapsed]);
 
-  return (
-    <aside
-      style={{
+  // Sidebar styling for desktop vs mobile drawer
+  const sidebarStyle: React.CSSProperties = isMobile
+    ? {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        bottom: 0,
+        width: "280px",
+        background: "var(--bg-card)",
+        backdropFilter: "blur(40px)",
+        WebkitBackdropFilter: "blur(40px)",
+        borderRight: "1px solid var(--border-subtle)",
+        zIndex: 1000,
+        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        transform: isOpen ? "translateX(0%)" : "translateX(-100%)",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "32px 0",
+      }
+    : {
         position: "fixed",
         top: 0,
         left: 0,
@@ -101,294 +131,406 @@ export default function Sidebar() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "32px 0",
-      }}
-    >
-      {/* Top Section */}
-      <div>
+      };
+
+  return (
+    <>
+      {/* 1. Mobile Backdrop */}
+      {isMobile && isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0, 0, 0, 0.6)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            zIndex: 999,
+            transition: "opacity 0.3s ease",
+          }}
+        />
+      )}
+
+      {/* 2. Sticky Mobile Header */}
+      {isMobile && (
         <div
           style={{
-            padding: isCollapsed ? "0 20px" : "0 32px",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "64px",
+            background: "var(--bg-card)",
+            backdropFilter: "blur(30px)",
+            WebkitBackdropFilter: "blur(30px)",
+            borderBottom: "1px solid var(--border-subtle)",
             display: "flex",
             alignItems: "center",
-            justifyContent: isCollapsed ? "center" : "space-between",
-            marginBottom: "48px",
+            justifyContent: "space-between",
+            padding: "0 20px",
+            zIndex: 900,
           }}
         >
-          {/* Logo */}
-          <Link
-            href="/"
+          {/* Hamburger toggle button */}
+          <button
+            onClick={() => setIsOpen(true)}
             style={{
+              background: "none",
+              border: "none",
+              color: "var(--text-primary)",
+              cursor: "pointer",
+              padding: "8px",
               display: "flex",
               alignItems: "center",
-              gap: "16px",
-              textDecoration: "none",
+              justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--text-primary)",
-                flexShrink: 0,
-                border: "1px solid var(--border-subtle)",
-              }}
-            >
-               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="2" x2="12" y2="22"></line>
-                <line x1="2" y1="12" x2="22" y2="12"></line>
-              </svg>
-            </div>
-            {!isCollapsed && (
-              <span
-                style={{
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  color: "var(--text-primary)",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                La Yucateca
-              </span>
-            )}
-          </Link>
-        </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
 
-        {/* Navigation Links */}
-        <nav
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-            padding: isCollapsed ? "0 16px" : "0 24px",
-          }}
-        >
-          {[
-            { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
-            { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
-            { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob"), icon: <Icons.Portfolio /> },
-            { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
-            { href: "/contact", label: t("Contacto", "Contact", "Tsikbal"), icon: <Icons.Contact /> },
-          ].map((item) => (
+          {/* Logo center */}
+          <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontWeight: 800, fontSize: "0.95rem", color: "var(--text-primary)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              La Yucateca
+            </span>
+          </Link>
+
+          {/* Dark Mode toggle */}
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            style={{
+              background: "none",
+              border: "none",
+              color: "var(--text-secondary)",
+              cursor: "pointer",
+              padding: "8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {theme === "dark" ? <Icons.ThemeDark /> : <Icons.ThemeLight />}
+          </button>
+        </div>
+      )}
+
+      {/* 3. Aside Sidebar Drawer */}
+      <aside style={sidebarStyle}>
+        {/* Mobile Close Button */}
+        {isMobile && (
+          <button
+            onClick={() => setIsOpen(false)}
+            style={{
+              position: "absolute",
+              top: "24px",
+              right: "20px",
+              background: "none",
+              border: "none",
+              color: "var(--text-secondary)",
+              cursor: "pointer",
+              fontSize: "1.3rem",
+              zIndex: 1010,
+            }}
+          >
+            ✕
+          </button>
+        )}
+
+        {/* Top Section */}
+        <div>
+          <div
+            style={{
+              padding: isCollapsed ? "0 20px" : "0 32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: isCollapsed ? "center" : "space-between",
+              marginBottom: "48px",
+            }}
+          >
+            {/* Logo */}
             <Link
-              key={item.href}
-              href={item.href}
+              href="/"
+              onClick={() => setIsOpen(false)}
               style={{
-                padding: "12px 16px",
-                color: "var(--text-secondary)",
-                textDecoration: "none",
-                fontWeight: 500,
-                fontSize: "0.85rem",
-                letterSpacing: "0.05em",
-                border: "1px solid transparent",
-                borderRadius: "8px",
-                transition: "all 0.2s ease",
                 display: "flex",
                 alignItems: "center",
                 gap: "16px",
-                justifyContent: isCollapsed ? "center" : "flex-start",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                (e.currentTarget as HTMLElement).style.border = "1px solid var(--border-subtle)";
-                (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                (e.currentTarget as HTMLElement).style.border = "1px solid transparent";
-                (e.currentTarget as HTMLElement).style.background = "transparent";
+                textDecoration: "none",
               }}
             >
-              <span style={{ display: "flex", alignItems: "center" }}>{item.icon}</span>
-              {!isCollapsed && <span>{item.label}</span>}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {/* Humanese-style Circular Collapse/Expand Toggle Button */}
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        style={{
-          position: "absolute",
-          top: "34px",
-          right: "-14px",
-          width: "28px",
-          height: "28px",
-          borderRadius: "50%",
-          background: "var(--bg-primary)",
-          border: "1px solid var(--border-subtle)",
-          color: "var(--text-primary)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 110,
-          cursor: "pointer",
-          boxShadow: "0 0 15px rgba(0,0,0,0.15)",
-          transition: "transform 0.2s ease, background 0.2s ease",
-        }}
-        onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1.1)")}
-        onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
-        title={isCollapsed ? "Expand menu" : "Collapse menu"}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          {isCollapsed ? <polyline points="9 18 15 12 9 6"></polyline> : <polyline points="15 18 9 12 15 6"></polyline>}
-        </svg>
-      </button>
-
-      {/* Bottom Section */}
-      <div
-        style={{
-          padding: isCollapsed ? "0 16px" : "0 24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-        }}
-      >
-        {isCollapsed ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
-            {/* Compact Language button */}
-            <button
-              onClick={() => setLanguage(language === "es" ? "en" : language === "en" ? "my" : "es")}
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "var(--text-primary)",
-                color: "var(--bg-primary)",
-                border: "none",
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1.05)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
-              title="Change Language"
-            >
-              {language.toUpperCase()}
-            </button>
-            {/* Compact Theme button */}
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "8px",
-                background: "transparent",
-                border: "1px solid var(--border-subtle)",
-                color: "var(--text-secondary)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                (e.currentTarget as HTMLElement).style.background = "transparent";
-              }}
-              title="Toggle Theme"
-            >
-              {theme === "dark" ? <Icons.ThemeDark /> : <Icons.ThemeLight />}
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Language Switcher */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "4px",
-                borderRadius: "8px",
-                border: "1px solid var(--border-subtle)",
-                background: "var(--bg-primary)",
-              }}
-            >
-              {[
-                { code: "es", label: "ES" },
-                { code: "en", label: "EN" },
-                { code: "my", label: "MY" },
-              ].map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code as "es" | "en" | "my")}
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "var(--text-primary)",
+                  flexShrink: 0,
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="2" x2="12" y2="22"></line>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                </svg>
+              </div>
+              {(!isCollapsed || isMobile) && (
+                <span
                   style={{
-                    flex: 1,
-                    background: language === lang.code ? "var(--text-primary)" : "transparent",
-                    color: language === lang.code ? "var(--bg-primary)" : "var(--text-secondary)",
-                    border: "none",
-                    borderRadius: "6px",
-                    padding: "10px 0",
-                    fontSize: "0.75rem",
                     fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
+                    fontSize: "1rem",
+                    color: "var(--text-primary)",
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {lang.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Theme Switcher */}
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "12px",
-                padding: "12px",
-                background: "transparent",
-                borderRadius: "8px",
-                border: "1px solid var(--border-subtle)",
-                color: "var(--text-secondary)",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                letterSpacing: "0.05em",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                (e.currentTarget as HTMLElement).style.background = "transparent";
-              }}
-            >
-              {theme === "dark" ? (
-                <>
-                  <Icons.ThemeDark />
-                  <span>Akbal</span>
-                </>
-              ) : (
-                <>
-                  <Icons.ThemeLight />
-                  <span>K'in</span>
-                </>
+                  La Yucateca
+                </span>
               )}
-            </button>
-          </>
+            </Link>
+          </div>
+
+          {/* Navigation Links */}
+          <nav
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              padding: isCollapsed && !isMobile ? "0 16px" : "0 24px",
+            }}
+          >
+            {[
+              { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
+              { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
+              { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob"), icon: <Icons.Portfolio /> },
+              { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
+              { href: "/contact", label: t("Contacto", "Contact", "Tsikbal"), icon: <Icons.Contact /> },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                style={{
+                  padding: "12px 16px",
+                  color: "var(--text-secondary)",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                  fontSize: "0.85rem",
+                  letterSpacing: "0.05em",
+                  border: "1px solid transparent",
+                  borderRadius: "8px",
+                  transition: "all 0.2s ease",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                  justifyContent: isCollapsed && !isMobile ? "center" : "flex-start",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+                  (e.currentTarget as HTMLElement).style.border = "1px solid var(--border-subtle)";
+                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                  (e.currentTarget as HTMLElement).style.border = "1px solid transparent";
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
+              >
+                <span style={{ display: "flex", alignItems: "center" }}>{item.icon}</span>
+                {(!isCollapsed || isMobile) && <span>{item.label}</span>}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        {/* Humanese-style Circular Collapse/Expand Toggle Button (Hide on Mobile) */}
+        {!isMobile && (
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            style={{
+              position: "absolute",
+              top: "34px",
+              right: "-14px",
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+              background: "var(--bg-primary)",
+              border: "1px solid var(--border-subtle)",
+              color: "var(--text-primary)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 110,
+              cursor: "pointer",
+              boxShadow: "0 0 15px rgba(0,0,0,0.15)",
+              transition: "transform 0.2s ease, background 0.2s ease",
+            }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1.1)")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
+            title={isCollapsed ? "Expand menu" : "Collapse menu"}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              {isCollapsed ? <polyline points="9 18 15 12 9 6"></polyline> : <polyline points="15 18 9 12 15 6"></polyline>}
+            </svg>
+          </button>
         )}
-      </div>
-    </aside>
+
+        {/* Bottom Section */}
+        <div
+          style={{
+            padding: isCollapsed && !isMobile ? "0 16px" : "0 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          {isCollapsed && !isMobile ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
+              {/* Compact Language button */}
+              <button
+                onClick={() => setLanguage(language === "es" ? "en" : language === "en" ? "my" : "es")}
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "8px",
+                  background: "var(--text-primary)",
+                  color: "var(--bg-primary)",
+                  border: "none",
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "transform 0.2s ease",
+                }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
+                title="Change Language"
+              >
+                {language.toUpperCase()}
+              </button>
+              {/* Compact Theme button */}
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "8px",
+                  background: "transparent",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-secondary)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
+                title="Toggle Theme"
+              >
+                {theme === "dark" ? <Icons.ThemeDark /> : <Icons.ThemeLight />}
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Language Switcher */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "4px",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border-subtle)",
+                  background: "var(--bg-primary)",
+                }}
+              >
+                {[
+                  { code: "es", label: "ES" },
+                  { code: "en", label: "EN" },
+                  { code: "my", label: "MY" },
+                ].map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code as "es" | "en" | "my")}
+                    style={{
+                      flex: 1,
+                      background: language === lang.code ? "var(--text-primary)" : "transparent",
+                      color: language === lang.code ? "var(--bg-primary)" : "var(--text-secondary)",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "10px 0",
+                      fontSize: "0.75rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.1em",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Theme Switcher */}
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "12px",
+                  padding: "12px",
+                  background: "transparent",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-secondary)",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.05em",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                }}
+              >
+                {theme === "dark" ? (
+                  <>
+                    <Icons.ThemeDark />
+                    <span>Akbal</span>
+                  </>
+                ) : (
+                  <>
+                    <Icons.ThemeLight />
+                    <span>K'in</span>
+                  </>
+                )}
+              </button>
+            </>
+          )}
+        </div>
+      </aside>
+    </>
   );
 }

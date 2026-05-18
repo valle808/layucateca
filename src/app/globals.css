@@ -401,3 +401,111 @@ html[data-theme="light"] ::selection {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
+
+/* ---- Responsive Sidebar & Grid Layouts ---- */
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.content-container {
+  flex: 1;
+  margin-left: var(--current-sidebar-width);
+  transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  width: calc(100vw - var(--current-sidebar-width));
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    margin-left: 0 !important;
+    width: 100vw !important;
+  }
+  
+  /* Ensure correct offset for mobile fixed header */
+  main {
+    padding-top: 84px !important;
+  }
+}
+
+/* News Layout Grid responsiveness */
+.news-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .news-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+/* News Header flexbox layout */
+.news-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .news-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .news-header-flex > div {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .news-header-flex select {
+    width: 100% !important;
+  }
+}
+
+/* Featured dashboard card span */
+.featured-card-span {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .featured-card-span {
+    grid-column: span 1 !important;
+  }
+}
+
+/* Showcase Header responsiveness */
+.showcase-header {
+  height: 70px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .showcase-header {
+    height: auto;
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+    align-items: stretch;
+    text-align: center;
+  }
+  .showcase-header > div {
+    justify-content: center !important;
+  }
+}
+

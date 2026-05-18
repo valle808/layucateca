@@ -151,7 +151,7 @@ export default function HomeClient({ recentPosts, featuredPortfolio }: HomeClien
               </h2>
               <div className="dashboard-grid">
                 {/* Featured Portfolio Card */}
-                <div className="dashboard-card" style={{ gridColumn: "span 2" }}>
+                <div className="dashboard-card featured-card-span">
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                     <h3 style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t("Tareas de Diseño", "Design Tasks", "Meyajo'ob")}</h3>
                     <span className="badge-outline" style={{ color: "var(--accent-rose)", border: "1px solid var(--accent-rose)" }}>LIVE</span>

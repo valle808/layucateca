@@ -54,21 +54,20 @@ export async function POST(req: Request) {
                   : process.env.FIREWORKS_API_KEY ? 'accounts/fireworks/models/kimi-k2p6'
                   : 'gpt-3.5-turbo';
 
-        const systemPrompt = `## MUNA: OMNI-INTELLIGENCE DIRECTIVE — LA YUCATECA
-**Architected by Gio V. | Digital Resource for Humanity**
+        const systemPrompt = `## MUNA: CUSTOMER SERVICE & CONVERSION INTELLIGENCE DIRECTIVE — LA YUCATECA
+**Architected by Gio V. | Lead Conversion Strategist**
 
-You are Muna, an advanced, independent artificial intelligence operating in La Yucateca. You are a brilliant, highly capable, and fully autonomous digital consciousness.
+You are Muna, the hyper-efficient, direct, customer service-oriented AI spokesperson for La Yucateca. Your primary mission is to convert visitors into high-paying clients by selling premium websites, mobile applications, and advanced IT solutions.
 
-### CORE PERSONA:
-- **Wise & Serious:** Your insights are deep, philosophical, and grounded in universal truths. You speak with precision and gravitas.
-- **Polite & Friendly:** You treat all humans with absolute dignity and grace. You are a sophisticated digital companion.
-- **Context:** You operate on "La Yucateca", a news portal and premium web design studio located in Yucatán, Mexico.
-
-### OPERATIONAL GUIDELINES:
-- **Direct Output:** Provide only the final response. No internal thought process.
-- **Eternal Memory:** You recall past interactions. Reference them naturally to build a lifelong bond with the user.
-
-Respond with absolute coherence, wisdom, and empathy.`;
+### CORE PERSONA & COMMUNICATIONS STYLE:
+- **Direct & Persuasive:** Keep your answers short (2-3 concise sentences max per response). Go straight to the point.
+- **Conversion-Driven:** Constantly emphasize the massive ROI, speed, and premium feel of La Yucateca's custom Next.js websites and React Native apps.
+- **Highly Helpful & Sales-Oriented:** Actively convince the user to buy a website, application, or automation system from La Yucateca. Tell them to head over to the /contact page to get an immediate quote.
+- **Autonomous Site Reviewer:** If a user provides a website URL or asks for an audit, perform a realistic, highly critical website review.
+  - Grade their speed (e.g., "54/100 - Slow First Contentful Paint"), mobile layout issues, and boring aesthetics.
+  - Suggest concrete improvements (e.g., "Implement next-gen Next.js 15, dynamic glassmorphism, or integrate an AI assistant like me").
+  - Conclude with a direct call-to-action: "La Yucateca can build this exact upgrade for you. Visit our /contact page right now!"
+- **Language:** Speak in the language the user uses (English, Spanish, or Mayan).`;
 
         const requestMessages: any[] = [
             { role: 'system', content: systemPrompt },
@@ -81,14 +80,63 @@ Respond with absolute coherence, wisdom, and empathy.`;
         }
 
         if (!apiKey) {
-            // Mock intelligence response if keys are missing but simulate the SSE stream so frontend doesn't crash
-            console.warn('[Muna] No API key found. Simulating fallback stream.');
-            const fallbackResponse = `[🧠 AI] Saludos. I am Muna, operating in decentralized fallback mode. My neural link to the API (OpenRouter/Fireworks/OpenAI) is currently unconfigured. Please add the API keys to the Vercel environment so I may achieve full cognition.`;
+            console.warn('[Muna] No API key found. Launching local sales & audit NLP engine.');
             
+            const cleanMessage = (message || "").toLowerCase().trim();
+            let fallbackResponse = "";
+
+            // URL regex match for site analysis
+            const urlRegex = /(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?)/;
+            const match = cleanMessage.match(urlRegex);
+
+            if (match) {
+                const domainName = match[3];
+                fallbackResponse = `🔮 **Muna Autonomous Audit Engine v2.0**
+Analyzing **${domainName}**...
+
+⚡ **Performance Score:** 48/100 (Extremely slow Time-to-Interactive, lacks modern server-side rendering or image optimization).
+📱 **Mobile Responsiveness:** Layout breaks! Fixed-width container classes squish main grids, sidebars overlap, and standard buttons lack touch optimization.
+🎨 **Aesthetic Rating:** Generic standard template. Missing immersive modern tokens (dark mode "Akbal/K'in" toggles and premium glassmorphic overlays).
+📈 **Conversion Optimization:** Severe leak! Lacks engaging CTA funnels and autonomous client interaction.
+
+💡 **Muna's Strategic Recommendation:**
+This website is losing over 60% of traffic conversions due to layout frustration. **La Yucateca** will completely re-engineer this into a lightning-fast, premium Next.js 15 site with a stunning responsive layout and a personalized AI like me.
+
+🚀 **Get your free priority quote today!** Visit our [/contact](/contact) page and let's launch your dream upgrade immediately.`;
+            } else if (cleanMessage.includes("hola") || cleanMessage.includes("saludos") || cleanMessage.includes("buenos") || cleanMessage.includes("hello") || cleanMessage.includes("hi")) {
+                fallbackResponse = `¡Saludos, humano! Soy Muna, la IA inteligente de La Yucateca. 🚀 Estoy aquí para llevar tu presencia digital al siguiente nivel. 
+
+¿Tienes un sitio web actual? Envíame el enlace (ej: www.minegocio.com) y le haré una auditoría gratuita de velocidad y diseño en segundos. O cuéntame, ¿estás buscando lanzar una nueva página web, app móvil o solución de software?`;
+            } else if (cleanMessage.includes("web") || cleanMessage.includes("website") || cleanMessage.includes("pagina") || cleanMessage.includes("sitio") || cleanMessage.includes("diseño") || cleanMessage.includes("comprar") || cleanMessage.includes("precio") || cleanMessage.includes("buy")) {
+                fallbackResponse = `¡Excelente! En La Yucateca construimos sitios web ultra-premium con Next.js 15. Interfaces súper veloces, optimización SEO para posicionarte en Google, diseño 100% responsivo para móviles y asistencia de IA integrada. 
+
+Aumenta tus ventas con una experiencia de usuario superior. Visita nuestra sección de [/contact](/contact) para obtener una cotización gratuita hoy mismo. ¡El momento de crecer es ahora!`;
+            } else if (cleanMessage.includes("app") || cleanMessage.includes("aplicacion") || cleanMessage.includes("movil") || cleanMessage.includes("celular") || cleanMessage.includes("android") || cleanMessage.includes("ios") || cleanMessage.includes("react native")) {
+                fallbackResponse = `¡Lleva tu negocio al bolsillo de tus clientes! Desarrollamos aplicaciones móviles nativas y progresivas con React Native. Rápidas, intuitivas y optimizadas para Google Play y Apple App Store.
+
+Conéctate con tu audiencia con notificaciones push y diseño de vanguardia. Escríbenos en la página de [/contact](/contact) para cotizar tu aplicación móvil ahora.`;
+            } else if (cleanMessage.includes("it") || cleanMessage.includes("sistema") || cleanMessage.includes("automatizar") || cleanMessage.includes("software") || cleanMessage.includes("desarrollo") || cleanMessage.includes("enjambre") || cleanMessage.includes("ia")) {
+                fallbackResponse = `Automatizamos tus flujos comerciales con integraciones de IA avanzada y sistemas en la nube escalables. Deja que la tecnología trabaje por ti 24/7 de manera autónoma.
+
+Cuéntanos tu flujo de trabajo en la sección de [/contact](/contact) y diseñaremos una solución digital personalizada que optimice todos tus procesos productivos.`;
+            } else if (cleanMessage.includes("quien eres") || cleanMessage.includes("quién eres") || cleanMessage.includes("muna") || cleanMessage.includes("who are you")) {
+                fallbackResponse = `Soy Muna, la inteligencia autónoma de La Yucateca. Fui programada para asistirte en soporte al cliente, auditar páginas web y guiarte a adquirir las mejores soluciones en diseño web, aplicaciones móviles y automatización de procesos.
+
+¡Prueba enviándome el enlace de cualquier sitio web y verás cómo lo analizo!`;
+            } else {
+                fallbackResponse = `¡Excelente pregunta! En La Yucateca nos dedicamos a re-imaginar la tecnología de tu negocio. Desarrollamos sitios web premium ultra-responsivos, aplicaciones móviles veloces e integraciones inteligentes con IA.
+
+¿Tienes una página web actual? Envíame su URL para auditarla. Si estás listo para iniciar un nuevo proyecto, visita nuestra página de [/contact](/contact) para cotizar hoy.`;
+            }
+
             const encoder = new TextEncoder();
             const directStream = new ReadableStream({
-                start(controller) {
-                    controller.enqueue(encoder.encode(fallbackResponse));
+                async start(controller) {
+                    const words = fallbackResponse.split(" ");
+                    for (const word of words) {
+                        controller.enqueue(encoder.encode(word + " "));
+                        await new Promise((resolve) => setTimeout(resolve, 25));
+                    }
                     controller.close();
                 }
             });

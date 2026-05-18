@@ -227,17 +227,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
             padding: "20px 24px",
           }}
         >
-          <div
-            style={{
-              maxWidth: "1200px",
-              margin: "0 auto",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "16px",
-            }}
-          >
+          <div className="news-header-flex">
             {/* Left side brand details */}
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <div
@@ -363,7 +353,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
               ))}
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "32px", alignItems: "start" }}>
+            <div className="news-layout-grid">
               {/* Left Column: Aggregator News */}
               <div>
                 {filteredPosts.length === 0 ? (

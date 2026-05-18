@@ -188,18 +188,7 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
   return (
     <div style={{ background: "#0a0a0f", minHeight: "100vh", color: "#fff", display: "flex", flexDirection: "column" }}>
       {/* Device Controller Top Bar */}
-      <header
-        style={{
-          height: "70px",
-          background: "var(--bg-secondary)",
-          borderBottom: "1px solid var(--border-subtle)",
-          padding: "0 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          zIndex: 1000,
-        }}
-      >
+      <header className="showcase-header">
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <Link
             href={`/portfolio/${item.slug}`}
