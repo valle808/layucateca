@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useTheme } from "@/components/ThemeContext";
+import { usePathname } from "next/navigation";
 
 const Icons = {
   Home: () => (
@@ -70,11 +71,20 @@ const Icons = {
 };
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(pathname === "/muna");
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    if (pathname === "/muna") {
+      setIsCollapsed(true);
+    } else {
+      setIsCollapsed(false);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const handleResize = () => {

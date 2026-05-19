@@ -509,3 +509,200 @@ html[data-theme="light"] ::selection {
   }
 }
 
+/* ── Muna Premium Markdown Typography Styles ── */
+.muna-markdown {
+  line-height: 1.75;
+  font-size: 0.925rem;
+  color: var(--text-primary);
+}
+
+.muna-markdown p {
+  margin-bottom: 1.2rem;
+  line-height: 1.75;
+}
+
+.muna-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.muna-markdown h1,
+.muna-markdown h2,
+.muna-markdown h3,
+.muna-markdown h4 {
+  color: var(--text-primary);
+  font-weight: 800;
+  margin-top: 1.85rem;
+  margin-bottom: 0.95rem;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.muna-markdown h1 { font-size: 1.55rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem; }
+.muna-markdown h2 { font-size: 1.38rem; }
+.muna-markdown h3 { font-size: 1.22rem; }
+.muna-markdown h4 { font-size: 1.08rem; }
+
+.muna-markdown ul {
+  list-style-type: disc;
+  padding-left: 1.6rem;
+  margin-bottom: 1.2rem;
+  display: block;
+}
+
+.muna-markdown ol {
+  list-style-type: decimal;
+  padding-left: 1.6rem;
+  margin-bottom: 1.2rem;
+  display: block;
+}
+
+.muna-markdown li {
+  margin-bottom: 0.6rem;
+  line-height: 1.65;
+  display: list-item;
+}
+
+.muna-markdown strong {
+  font-weight: 700;
+  color: #ff5500;
+}
+
+.muna-markdown em {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.muna-markdown blockquote {
+  border-left: 4px solid #ff5500;
+  padding: 0.75rem 1.25rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin: 1.5rem 0;
+  background: rgba(255, 85, 0, 0.04);
+  border-radius: 0 8px 8px 0;
+}
+
+.muna-markdown pre {
+  background: rgba(10, 10, 15, 0.9) !important;
+  border: 1px solid var(--border-accent) !important;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: Menlo, Monaco, Consolas, "Fira Code", monospace;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.muna-markdown code {
+  font-family: Menlo, Monaco, Consolas, "Fira Code", monospace;
+  font-size: 0.825rem;
+  background: rgba(255, 85, 0, 0.08);
+  color: #ffaa66;
+  padding: 0.15rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 85, 0, 0.15);
+}
+
+.muna-markdown pre code {
+  background: transparent !important;
+  color: #e2e8f0;
+  padding: 0;
+  border: none;
+  font-size: 0.825rem;
+}
+
+.muna-markdown a {
+  color: #ff5500;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.muna-markdown a:hover {
+  opacity: 0.8;
+}
+
+.muna-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.muna-markdown th {
+  background: rgba(255, 85, 0, 0.1);
+  color: #ffaa66;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--border-accent);
+}
+
+.muna-markdown td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.muna-markdown tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ── Muna Monroe Sovereign Theme Overrides ── */
+.muna-monroe-theme {
+  --bg-primary: #fdfbf7;
+  --bg-secondary: #f6f3eb;
+  --bg-card: #ffffff;
+  --bg-card-hover: #faf7f1;
+  --accent-gold: #ff5500;
+  --accent-teal: #ff5500;
+  --accent-purple: #ff5500;
+  --accent-rose: #ff5500;
+  --text-primary: #1e1b18;
+  --text-secondary: #7c746b;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-accent: rgba(255, 85, 0, 0.22);
+  --glow-gold: 0 4px 25px rgba(255, 85, 0, 0.07);
+  
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Custom Scrollbar for Monroe Light theme */
+.muna-monroe-theme ::-webkit-scrollbar {
+  width: 6px;
+}
+.muna-monroe-theme ::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+.muna-monroe-theme ::-webkit-scrollbar-thumb {
+  background: rgba(255, 85, 0, 0.25);
+  border-radius: 3px;
+}
+.muna-monroe-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 85, 0, 0.5);
+}
+
+/* Custom styles for muna-monroe-theme specific items */
+.muna-monroe-theme .glass {
+  background: rgba(253, 251, 247, 0.8) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+.muna-monroe-theme .muna-markdown {
+  color: #1e1b18 !important;
+}
+
+.muna-monroe-theme .muna-markdown strong {
+  color: #ff5500 !important;
+}
+
+.muna-monroe-theme .muna-markdown code {
+  background: rgba(255, 85, 0, 0.05) !important;
+  color: #d84b00 !important;
+  border-color: rgba(255, 85, 0, 0.12) !important;
+}
+
+
+

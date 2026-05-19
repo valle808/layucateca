@@ -62,7 +62,8 @@ export default function MunaChatbot() {
         body: JSON.stringify({
           message: text,
           history: messages.map(m => ({ role: m.sender === "user" ? "user" : "assistant", content: m.text })),
-          sessionId: "muna-session-layucateca"
+          sessionId: "muna-session-layucateca",
+          language: language
         }),
       });
 

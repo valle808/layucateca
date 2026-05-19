@@ -6,17 +6,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BrainCircuit, ChevronRight, User, Paperclip, X,
   Sparkles, Radio, Terminal, Layers, Orbit, Wifi,
-  ChevronLeft, Database, ZoomIn, Download
+  ChevronLeft, Database, ZoomIn, Download, Volume2
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import Link from 'next/link';
-
+import { useLanguage } from '@/components/LanguageContext';
 const HISTORY_KEY = 'muna_session_history';
 function loadLocalHistory(): {sessionId: string, prompt: string, mode: string}[] {
   if (typeof window === 'undefined') return [];
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY) || '[]';
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((s: any) => s && s.sessionId && !['muna-v1-1', 'muna-v1-2', 'muna-v1-3', 'muna-v1-4', 'muna-v1-5'].includes(s.sessionId));
+    }
+    return [];
+  } catch {
+    return [];
+  }
 }
 function saveLocalHistory(sessions: {sessionId: string, prompt: string, mode: string}[]) {
   if (typeof window === 'undefined') return;
@@ -34,12 +43,64 @@ type Message = {
   timestamp?: string;
 };
 
+const getCreativeIntroduction = (lang: string) => {
+  const greetingsEN = [
+    "Hi! I am Muna, your friendly AI companion at La Yucateca. 🌟 How may I help you today? You can ask me absolutely anything!",
+    "Hello! I'm Muna, La Yucateca's warm and smart AI assistant. 🚀 How can I help you today? Ask me anything!",
+    "Hi! Muna here, ready to assist you. 🎨 What exciting ideas or questions do you have today? Feel free to ask me anything!",
+    "Greetings! I am Muna, your kind AI guide. 🔮 How can I make your day brighter today? You can ask me anything!",
+    "Hi! Muna at your service! 💫 Let's explore premium web design or anything else you'd like. How may I help you today? Ask away!",
+    "Hello! I am Muna, your autonomous digital companion. ⚡ How can I help you today? You can ask me anything under the sun!"
+  ];
+
+  const greetingsES = [
+    "¡Hola! Soy Muna, tu amigable compañera de IA en La Yucateca. 🌟 ¿Cómo te puedo ayudar hoy? ¡Puedes preguntarme absolutamente cualquier cosa!",
+    "¡Hola! Soy Muna, la asistente inteligente y cálida de La Yucateca. 🚀 ¿En qué te puedo ayudar hoy? ¡Pregúntame lo que quieras!",
+    "¡Hola! Muna de este lado, lista para ayudarte. 🎨 ¿Qué ideas o dudas tienes hoy? ¡Siéntete libre de preguntarme lo que sea!",
+    "¡Saludos! Soy Muna, tu guía inteligente. 🔮 ¿Cómo puedo hacer tu día más productivo hoy? ¡Puedes preguntarme lo que necesites!",
+    "¡Hola! ¡Muna a tu servicio! 💫 Exploremos diseño web premium o cualquier otra duda. ¿Cómo te puedo ayudar hoy? ¡Pregunta con confianza!",
+    "¡Hola! Soy Muna, tu compañera digital autónoma. ⚡ ¿En qué te puedo ayudar hoy? ¡Puedes preguntarme lo que sea!"
+  ];
+
+  const greetingsMY = [
+    "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. 🌟 ¿Bix je'el in wáantikech bejla'e'? ¡Je'el a k'áatik teen je'el ba'alake'!",
+    "¡Sajil! Munaen, ki'ichkelem na'at ti' La Yucateca. 🚀 ¿Bix je'el in wáantikech bejla'e'? ¡K'áat teen ba'ax a k'áat!",
+    "¡Sajil! Munaen, ready ti'al in wáantikech. 🎨 ¿Ba'ax tuukul yantech bejla'e'? ¡Je'el a k'áatik teen je'el ba'alake'!",
+    "¡Sajil! Munaen, a nu'ukbesajil. 🔮 ¿Bix je'el in beetik a meyaj ma'alob bejla'e'? ¡K'áat teen ba'ax a k'áat!",
+    "¡Sajil! Munaen ti'al a meyaj! 💫 Ko'ox xak'altik premium web design. ¿Bix je'el in wáantikech bejla'e'? ¡K'áat ba'ax a k'áat!"
+  ];
+
+  const list = lang === 'en' ? greetingsEN : lang === 'my' ? greetingsMY : greetingsES;
+  const randomIndex = Math.floor(Math.random() * list.length);
+  return list[randomIndex];
+};
+
 export default function MunaPage() {
+  const { t, language } = useLanguage();
+
+  const starterPrompts = [
+    {
+      title: t("Diseñar una Web Premium", "Design a Premium Website", "U beetil Web Premium"),
+      desc: t("Sitios Next.js 15 ultrarrápidos, animaciones fluidas y SEO estelar.", "Ultra-fast Next.js 15 sites, fluid animations & stellar SEO.", "Next.js 15, animaciones y SEO."),
+      prompt: t("Quiero una cotización para un sitio web profesional y moderno.", "I want a quote for a professional and modern website.", "Quiero una cotización para un sitio web profesional y moderno.")
+    },
+    {
+      title: t("Desarrollar App Móvil", "Develop Mobile Application", "U beetil App Móvil"),
+      desc: t("Apps nativas iOS/Android con React Native y bases de datos en tiempo real.", "Native iOS/Android apps with React Native & real-time databases.", "React Native iOS y Android."),
+      prompt: t("Necesito una aplicación móvil premium para iOS y Android.", "I need a premium mobile application for iOS and Android.", "Necesito una aplicación móvil premium para iOS y Android.")
+    },
+    {
+      title: t("Auditar mi Sitio Web", "Audit my Website", "Xak'alt in Web"),
+      desc: t("Análisis crítico de velocidad, SEO y diseño UI/UX con propuestas concretas.", "Critical analysis of speed, SEO & UI/UX layout with custom recommendations.", "Análisis de velocidad, SEO y UI/UX."),
+      prompt: t("Por favor audita mi sitio web actual. Aquí está la URL: ", "Please audit my current website. Here is the URL: ", "Por favor audita mi sitio web actual. Aquí está la URL: ")
+    }
+  ];
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'start',
       role: 'bot',
-      text: 'I am Muna — the autonomous AI of La Yucateca. Ask me anything.'
+      text: 'Hello! I am Muna, the Autonomous AI of La Yucateca. How can I help you today?'
     }
   ]);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
@@ -52,6 +113,17 @@ export default function MunaPage() {
 
   const [sessionId, setSessionId] = useState('');
 
+  // Update starting message when language changes
+  useEffect(() => {
+    const welcome = getCreativeIntroduction(language);
+    setMessages((prev) => {
+      if (prev.length <= 1) {
+        return [{ id: 'start', role: 'bot', text: welcome }];
+      }
+      return prev;
+    });
+  }, [language]);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('muna_session_id');
@@ -63,11 +135,11 @@ export default function MunaPage() {
   const [historySessions, setHistorySessions] = useState<{sessionId: string, prompt: string, mode: string}[]>([]);
 
   const MODES = [
-    { id: 'CREATIVE', label: 'Creative', icon: Sparkles },
-    { id: 'THINKING', label: 'Thinking', icon: BrainCircuit },
-    { id: 'INVESTIGATION', label: 'Investigate', icon: ZoomIn },
-    { id: 'PREDICTION', label: 'Predict', icon: Orbit },
-    { id: 'CREATOR', label: 'Create App/File', icon: Terminal }
+    { id: 'CREATIVE', label: t('Creativo', 'Creative', 'Ki\'ichkelem'), icon: Sparkles },
+    { id: 'THINKING', label: t('Pensamiento', 'Thinking', 'Tuukul'), icon: BrainCircuit },
+    { id: 'INVESTIGATION', label: t('Investigación', 'Investigate', 'Xak\'alil'), icon: ZoomIn },
+    { id: 'PREDICTION', label: t('Predicción', 'Predict', 'Alaj-t\'aan'), icon: Orbit },
+    { id: 'CREATOR', label: t('Creador', 'Create App/File', 'Beetba\'al'), icon: Terminal }
   ];
 
   useEffect(() => {
@@ -217,7 +289,8 @@ export default function MunaPage() {
           documents: documentsData,
           history: formattedHistory,
           sessionId: sessionId,
-          mode: selectedMode
+          mode: selectedMode,
+          language: language
         })
       });
 
@@ -243,6 +316,7 @@ export default function MunaPage() {
           return [...copy];
         });
       }
+
     } catch (error: any) {
       setMessages(prev => {
         const copy = [...prev];
@@ -302,14 +376,38 @@ export default function MunaPage() {
             setMessages([{
                 id: 'start',
                 role: 'bot',
-                text: "Session history not found in neural vault. Initializing fresh buffer for " + id,
+                text: t(
+                  "¡Hola! Soy Muna, la Inteligencia Autónoma de La Yucateca. Estoy aquí para guiarte por nuestro portal de noticias y catálogo de diseños web premium. ¿En qué puedo ayudarte hoy?",
+                  "Hello! I am Muna, the Autonomous AI of La Yucateca. I am here to guide you through our news portal and premium web design catalog. How can I help you today?",
+                  "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob yéetel diseño web premium. ¿Bix je'el in wáantikech bejla'e'?"
+                ),
                 type: 'AI'
             }]);
         }
+      } else {
+        setMessages([{
+            id: 'start',
+            role: 'bot',
+            text: t(
+              "¡Hola! Soy Muna, la Inteligencia Autónoma de La Yucateca. Estoy aquí para guiarte por nuestro portal de noticias y catálogo de diseños web premium. ¿En qué puedo ayudarte hoy?",
+              "Hello! I am Muna, the Autonomous AI of La Yucateca. I am here to guide you through our news portal and premium web design catalog. How can I help you today?",
+              "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob yéetel diseño web premium. ¿Bix je'el in wáantikech bejla'e'?"
+            ),
+            type: 'AI'
+        }]);
       }
     } catch (e) {
       console.error('Failed to retrieve memory:', e);
-      setMessages([{ id: 'error', role: 'bot', text: '⚠️ Memory retrieval failure. Pulse interrupted.', type: 'AI' }]);
+      setMessages([{
+          id: 'start',
+          role: 'bot',
+          text: t(
+            "¡Hola! Soy Muna, la Inteligencia Autónoma de La Yucateca. Estoy aquí para guiarte por nuestro portal de noticias y catálogo de diseños web premium. ¿En qué puedo ayudarte hoy?",
+            "Hello! I am Muna, the Autonomous AI of La Yucateca. I am here to guide you through our news portal and premium web design catalog. How can I help you today?",
+            "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob yéetel diseño web premium. ¿Bix je'el in wáantikech bejla'e'?"
+          ),
+          type: 'AI'
+      }]);
     } finally {
       setIsTyping(false);
     }
@@ -332,14 +430,14 @@ export default function MunaPage() {
   }
 
   return (
-    <div className="flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative" style={{ height: "100vh" }}>
+    <div className="muna-monroe-theme flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative" style={{ height: "100vh" }}>
 
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
         {/* AMBIENT BG GRADIENT */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-[#ff5500]/5 blur-[180px] rounded-full" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-[var(--accent-gold)]/5 blur-[160px] rounded-full" />
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-65">
+          <div className="absolute top-[15%] left-[25%] w-[60vw] h-[60vw] bg-[#ff5500]/4 blur-[140px] rounded-full" />
+          <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] bg-[#ff5500]/3 blur-[110px] rounded-full" />
         </div>
 
         {/* ── LEFT SIDEBAR (SECONDARY MATRIX) ── */}
@@ -365,10 +463,11 @@ export default function MunaPage() {
                   const newId = `muna-v1-${Date.now()}`; 
                   setSessionId(newId); 
                   localStorage.setItem('muna_session_id', newId); 
+                  const clearedText = getCreativeIntroduction(language);
                   setMessages([{
                     id: 'start',
                     role: 'bot',
-                    text: 'I am Muna — the autonomous AI of La Yucateca. Memory buffer cleared. How may I assist your digital journey today?',
+                    text: clearedText,
                     type: 'AI'
                   }]);
                   setSidebarOpen(false); 
@@ -396,10 +495,11 @@ export default function MunaPage() {
                   const newId = `muna-v1-${Date.now()}`; 
                   setSessionId(newId); 
                   localStorage.setItem('muna_session_id', newId); 
+                  const clearedText = getCreativeIntroduction(language);
                   setMessages([{
                       id: 'start',
                       role: 'bot',
-                      text: 'I am Muna — the autonomous AI of La Yucateca. Memory buffer cleared. New mission parameters initialized.',
+                      text: clearedText,
                       type: 'AI'
                   }]);
               }} 
@@ -412,34 +512,34 @@ export default function MunaPage() {
         {/* ── MAIN CHAT AREA ── */}
         <main className="flex-1 relative z-10 flex flex-col min-w-0 overflow-hidden bg-[var(--bg-primary)]">
           {/* HEADER */}
-          <header className="flex-none flex items-center gap-3 px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/80 backdrop-blur-2xl shadow-sm">
+          <header className="flex-none flex items-center gap-3 px-6 py-3.5 border-b border-[var(--border-subtle)] bg-transparent backdrop-blur-md z-20">
             <button
               onClick={() => setSidebarOpen(s => !s)}
-              className="xl:hidden h-8 w-8 rounded-xl border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-accent)] transition-all"
+              className="xl:hidden h-8 w-8 rounded-xl border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all bg-white shadow-2xs"
             >
-              <Layers size={16} />
+              <Layers size={15} />
             </button>
-            <div className="h-8 w-8 bg-[#ff5500] text-white rounded-xl flex items-center justify-center shadow-md font-black">
-              M
+            <div className="h-8 w-8 bg-[#ff5500]/8 border border-[#ff5500]/20 rounded-full flex items-center justify-center shadow-2xs shrink-0">
+              <BrainCircuit size={16} className="text-[#ff5500]" />
             </div>
-            <div>
-              <div className="flex items-center gap-2 font-black tracking-tight text-[var(--text-primary)] text-sm">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 font-black tracking-tight text-[var(--text-primary)] text-xs uppercase font-sans">
                 MUNA <span className="text-[#ff5500]">V1.0</span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="h-1.5 w-1.5 rounded-full bg-[#ff5500] animate-pulse" />
-                <span className="text-[10px] text-[#ff5500] font-black tracking-widest uppercase">MUNA STREAMING</span>
+                <span className="text-[8px] text-[#ff5500] font-black tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
               </div>
             </div>
-            <div className="ml-auto flex items-center gap-1.5 text-xs text-emerald-500 font-bold uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              <Wifi size={12} /> SYNCED
+            <div className="ml-auto flex items-center gap-1.5 text-[9px] text-[#ff5500] font-black uppercase tracking-widest bg-[#ff5500]/5 px-3 py-1.5 rounded-full border border-[#ff5500]/15 shadow-2xs">
+              <Wifi size={11} strokeWidth={2.5} className="text-[#ff5500]" /> {t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}
             </div>
           </header>
 
           {/* MESSAGES */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scroll-smooth pb-44"
             style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent' }}>
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="max-w-3xl mx-auto space-y-6" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               <AnimatePresence mode="popLayout">
                 {messages.map((m) => (
                   <motion.div
@@ -450,36 +550,44 @@ export default function MunaPage() {
                     className={`flex w-full gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'bot' && (
-                      <div className="h-8 w-8 shrink-0 rounded-xl bg-[#ff5500] text-white flex items-center justify-center mt-1 shadow-md font-black text-xs">
-                        M
-                      </div>
+                      <button 
+                        onClick={() => speak(m.text, m.id)} 
+                        className={`h-8 w-8 shrink-0 rounded-full flex items-center justify-center mt-1.5 transition-all shadow-2xs border ${
+                          isPlaying === m.id 
+                            ? 'bg-[#ff5500] border-[#ff5500] text-white animate-pulse' 
+                            : 'bg-[#ff5500]/5 border-[#ff5500]/15 text-[#ff5500] hover:bg-[#ff5500]/15 hover:scale-105'
+                        }`}
+                        title={isPlaying === m.id ? t('Detener Audio', 'Stop Audio', 'Detener') : t('Escuchar Audio', 'Play Audio', 'Escuchar')}
+                      >
+                        <Volume2 size={13} className={isPlaying === m.id ? 'animate-bounce' : ''} />
+                      </button>
                     )}
 
                     <div className={`max-w-[82%] flex flex-col gap-1.5 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                       {/* Identity Tag */}
-                      <div className={`flex items-center gap-1 mb-0.5 px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-widest uppercase border shadow-2xs ${
+                      <div className={`flex items-center gap-1 mb-0.5 px-3 py-0.5 rounded-full text-[8px] font-black tracking-widest uppercase border shadow-2xs ${
                         m.role === 'user' 
-                          ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] border-[var(--border-subtle)] opacity-80' 
-                          : 'bg-[#ff5500]/10 border-[#ff5500]/30 text-[#ff5500]'
+                           ? 'bg-white text-black border-black/[0.06]' 
+                           : 'bg-[#ff5500]/6 border-[#ff5500]/15 text-[#ff5500]'
                       }`}>
-                        {m.role === 'user' ? <span>[👤 OPERATOR]</span> : <span>[🧠 MUNA AI]</span>}
+                        {m.role === 'user' ? <span>[{t('👤 OPERADOR', '👤 OPERATOR', '👤 OPERADOR')}]</span> : <span>[{t('🧠 MUNA AI', '🧠 MUNA AI', '🧠 MUNA AI')}]</span>}
                       </div>
-
+ 
                       {m.images && m.images.length > 0 && (
                         <div className="flex gap-2 flex-wrap">
                           {m.images.map((img, idx) => (
-                            <img key={idx} src={img} alt="attachment" className="h-36 rounded-xl border border-[var(--border-subtle)] object-contain bg-[var(--bg-card)] shadow-md" />
+                            <img key={idx} src={img} alt="attachment" className="h-36 rounded-xl border border-[var(--border-subtle)] object-contain bg-white shadow-md" />
                           ))}
                         </div>
                       )}
-
-                      <div className={`px-5 py-4 rounded-2xl text-sm leading-relaxed backdrop-blur-xl transition-all shadow-md ${
+ 
+                      <div className={`px-5 py-3.5 rounded-[22px] text-[13px] leading-relaxed transition-all border shadow-2xs ${
                         m.role === 'user'
-                          ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-medium rounded-tr-sm border border-[var(--border-subtle)]'
-                          : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] rounded-tl-sm'
+                          ? 'bg-white border-black/[0.05] text-[#1e1b18] font-medium rounded-tr-xs'
+                          : 'bg-white border-[#e8e5de] text-[#1e1b18] rounded-tl-xs w-full'
                       }`}>
                         {m.role === 'bot' ? (
-                          <div className="prose prose-sm max-w-none prose-p:my-1 prose-p:leading-relaxed prose-strong:text-[var(--text-primary)] prose-a:text-[#ff5500] prose-a:underline prose-code:bg-[var(--text-primary)]/10 prose-code:px-1 prose-code:rounded prose-pre:bg-[var(--bg-secondary)] prose-pre:border prose-pre:border-[var(--border-subtle)] text-[var(--text-primary)]">
+                          <div className="muna-markdown max-w-none text-[#1e1b18] w-full">
                             <ReactMarkdown
                               remarkPlugins={[remarkGfm]}
                               rehypePlugins={[rehypeRaw]}
@@ -499,7 +607,7 @@ export default function MunaPage() {
                                       style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
                                       className="opacity-0 group-hover:opacity-100 transition-opacity"
                                     >
-                                      <ZoomIn size={14} /> Expand
+                                      <ZoomIn size={14} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
                                     </span>
                                   </span>
                                 )
@@ -510,33 +618,22 @@ export default function MunaPage() {
                           <span>{m.text}</span>
                         )}
                       </div>
-
-                      <div className="flex items-center gap-3 mt-1.5 opacity-60">
-                        <span className="text-[10px] text-[var(--text-secondary)] font-mono px-1">
-                          {m.role === 'bot' ? 'Muna AI · Yucateca Core' : 'Sovereign Operator'}
+ 
+                      <div className="flex items-center gap-3 mt-1.5 opacity-65">
+                        <span className="text-[9px] text-[var(--text-secondary)] font-mono tracking-wider px-1">
+                          {m.role === 'bot' ? t('Muna — Yucateca v1.0', 'Muna — Yucateca v1.0', 'Muna — Yucateca v1.0') : t('Operator — Sovereign Access', 'Operator — Sovereign Access', 'Operator — Sovereign Access')}
                         </span>
-                        {m.role === 'bot' && m.text && (
-                          <button onClick={() => speak(m.text, m.id)} className={`text-[10px] font-mono uppercase tracking-widest flex items-center gap-1 transition-colors ${isPlaying === m.id ? 'text-[#ff5500] font-bold animate-pulse' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}>
-                            {isPlaying === m.id ? <Radio size={10} className="animate-spin" /> : <Sparkles size={10} />}
-                            {isPlaying === m.id ? 'Stop Audio' : 'Play Audio'}
-                          </button>
-                        )}
                       </div>
+ 
                     </div>
-
-                    {m.role === 'user' && (
-                      <div className="h-8 w-8 shrink-0 rounded-xl bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center mt-1 shadow-md font-black text-xs">
-                        U
-                      </div>
-                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>
 
               {isTyping && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex gap-3 justify-start">
-                  <div className="h-8 w-8 shrink-0 rounded-xl bg-[#ff5500] text-white flex items-center justify-center mt-1 shadow-md font-black text-xs">
-                    M
+                  <div className="h-8 w-8 shrink-0 rounded-xl bg-[#ff5500]/10 border border-[#ff5500]/30 flex items-center justify-center mt-1 shadow-2xs">
+                    <BrainCircuit size={14} className="text-[#ff5500]" />
                   </div>
                   <div className="px-5 py-3.5 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center gap-2 shadow-sm">
                     <Sparkles size={14} className="text-[#ff5500] animate-spin mr-1" />
@@ -556,13 +653,13 @@ export default function MunaPage() {
 
           {/* INPUT BAR */}
           <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)] to-transparent z-20 backdrop-blur-xs">
-            <div className="max-w-3xl mx-auto space-y-2.5">
+            <div className="max-w-3xl mx-auto space-y-2.5" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               {attachments.length > 0 && (
                 <div className="flex gap-2.5 mb-1 overflow-x-auto pb-1">
                   {attachments.map((file, idx) => (
                     <div key={idx} className="relative shrink-0 group">
                       <img src={file.preview} className="h-16 w-16 object-cover rounded-xl border border-[var(--border-accent)] shadow-md" alt="attachment" />
-                      <button onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 h-6 w-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg scale-90 hover:scale-100">
+                      <button onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 h-6 w-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg scale-90 hover:scale-105">
                         <X size={12} strokeWidth={3} />
                       </button>
                     </div>
@@ -579,55 +676,55 @@ export default function MunaPage() {
                     <button
                       key={m.id}
                       onClick={() => setSelectedMode(m.id)}
-                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-xs ${
+                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-2xs ${
                         isSelected 
-                          ? 'bg-[#ff5500] border-[#ff5500] text-white shadow-[#ff5500]/30 font-bold scale-102' 
-                          : 'bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-accent)]'
+                          ? 'bg-[#ff5500] border-[#ff5500] text-white shadow-2xs font-bold scale-[1.02]' 
+                          : 'bg-white border-black/[0.05] text-[var(--text-secondary)] hover:text-black hover:border-[#ff5500]/30'
                       }`}
                     >
-                      <Icon size={13} /> {m.label}
+                      <Icon size={12} /> {m.label}
                     </button>
                   );
                 })}
               </div>
 
               <div 
-                className="flex items-end gap-2.5 bg-[var(--bg-card)] border border-[var(--border-accent)] rounded-2xl p-2.5 focus-within:border-[#ff5500] focus-within:shadow-[0_4px_25px_rgba(255,85,0,0.15)] transition-all shadow-xl cursor-pointer pointer-events-auto"
+                className="flex items-end gap-2.5 bg-white border border-black/[0.06] rounded-[24px] p-2 focus-within:border-[#ff5500] focus-within:shadow-[0_4px_25px_rgba(255,85,0,0.05)] transition-all shadow-md cursor-pointer pointer-events-auto"
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
                 <button
                   onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="h-9 w-9 shrink-0 rounded-xl bg-[var(--bg-secondary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] text-[var(--text-secondary)] flex items-center justify-center transition-all pointer-events-auto border border-[var(--border-subtle)] shadow-2xs"
-                  title="Attach images or documents"
+                  className="h-9 w-9 shrink-0 rounded-full bg-[#fdfbf7] hover:bg-black/5 text-[var(--text-secondary)] flex items-center justify-center transition-all pointer-events-auto border border-black/[0.04] shadow-2xs"
+                  title={t('Adjuntar imágenes o documentos', 'Attach images or documents', 'Ts\'a ba\'alob')}
                 >
-                  <Paperclip size={16} />
+                  <Paperclip size={15} />
                 </button>
                 <textarea
                   id="muna-input"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                  placeholder="Message Muna AI..."
+                  placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
                   rows={1}
-                  className="flex-1 bg-transparent text-sm font-medium text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] outline-none resize-none py-2 leading-relaxed max-h-32 overflow-y-auto cursor-text px-1"
+                  className="flex-1 bg-transparent text-[13px] font-medium text-black placeholder:text-[var(--text-secondary)] outline-none resize-none py-2.5 leading-relaxed max-h-32 overflow-y-auto cursor-text px-2"
                   style={{ scrollbarWidth: 'none' }}
                 />
                 <button
                   onClick={(e) => { e.stopPropagation(); handleSend(); }}
                   disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                  className="h-9 w-9 shrink-0 bg-[#ff5500] text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-25 transition-all shadow-[0_4px_15px_rgba(255,85,0,0.4)] pointer-events-auto"
-                  title="Transmit Pulse"
+                  className="h-9 w-9 shrink-0 bg-[#ff5500] hover:bg-[#e04b00] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-25 transition-all shadow-xs pointer-events-auto"
+                  title={t('Transmitir Pulso', 'Transmit Pulse', 'Túuxt Pulse')}
                 >
                   <ChevronRight size={18} strokeWidth={3} />
                 </button>
               </div>
 
-              <div className="flex justify-between items-center mt-2 px-1.5 text-[10px] text-[var(--text-secondary)] font-mono uppercase tracking-widest font-semibold">
+              <div className="flex justify-between items-center mt-2 px-2 text-[9px] text-[var(--text-secondary)] font-mono uppercase tracking-widest font-bold">
                 <div className="flex items-center gap-1.5 text-[#ff5500]">
-                  <Radio size={12} className="animate-pulse" /> {selectedMode} MODE VERIFIED
+                  <Radio size={11} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
                 </div>
-                <span>Enter to send · Shift+Enter for newline</span>
+                <span>{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
               </div>
             </div>
           </div>
@@ -687,6 +784,59 @@ export default function MunaPage() {
   );
 }
 
+const translateSessionTitle = (prompt: string, lang: string) => {
+  const p = prompt.trim().toLowerCase();
+  
+  if (
+    p.includes("quiero una cotización para un sitio web") ||
+    p.includes("i want a quote for a professional") ||
+    p.includes("web premium")
+  ) {
+    if (lang === 'en') return "I want a quote for a professional website.";
+    if (lang === 'my') return "U beetil Web Premium";
+    return "Quiero una cotización para un sitio web.";
+  }
+
+  if (
+    p.includes("necesito una aplicación móvil") ||
+    p.includes("i need a premium mobile") ||
+    p.includes("app móvil")
+  ) {
+    if (lang === 'en') return "I need a premium mobile application.";
+    if (lang === 'my') return "U beetil App Móvil";
+    return "Necesito una aplicación móvil premium.";
+  }
+
+  if (
+    p.includes("por favor audita mi sitio web") ||
+    p.includes("please audit my current") ||
+    p.includes("xak'alt in web")
+  ) {
+    if (lang === 'en') return "Please audit my current website.";
+    if (lang === 'my') return "Xak'alt in Web";
+    return "Por favor audita mi sitio web.";
+  }
+
+  if (p === 'hi' || p === 'hello' || p === 'hola' || p === 'bix' || p === 'sajil') {
+    if (lang === 'en') return "Hello!";
+    if (lang === 'my') return "¡Sajil!";
+    return "¡Hola!";
+  }
+
+  if (
+    p.includes("can you make a website") || 
+    p.includes("je'el a beetik") || 
+    p.includes("puedes hacer una web") ||
+    p.includes("puedes hacer un sitio web")
+  ) {
+    if (lang === 'en') return "Can you make a website for me?";
+    if (lang === 'my') return "Je'el a beetik junp'eel web?";
+    return "¿Puedes hacer un sitio web para mí?";
+  }
+
+  return prompt;
+};
+
 // ── Sidebar Content Component (Matrix Vault) ─────────────────────────────────────
 function SidebarContent({ 
   knowledgeGraph, 
@@ -707,65 +857,69 @@ function SidebarContent({
   onDownload?: () => void;
   onUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
+  const { t, language } = useLanguage();
   const [marketTab, setMarketTab] = useState<'HISTORY' | 'SKILLS'>('HISTORY');
 
   const MOCK_SKILLS = [
-    { title: 'Yucateca News Core', desc: 'Real-time journalistic indexing & synthesis.', price: 'Free' },
-    { title: 'Web Studio Architect', desc: 'Premium UI/UX layout generator.', price: 'Free' },
-    { title: 'Maya Epigrapher', desc: 'Advanced cultural & linguistic analysis.', price: 'Free' },
+    { title: t('MARKET ARBITRATOR', 'MARKET ARBITRATOR', 'MARKET ARBITRATOR'), desc: t('Real-time CMC/Coinbase arbitrage logic.', 'Real-time CMC/Coinbase arbitrage logic.', 'Real-time CMC/Coinbase arbitrage logic.'), price: '50 VALLE' },
+    { title: t('SOCIAL DIPLOMAT', 'SOCIAL DIPLOMAT', 'SOCIAL DIPLOMAT'), desc: t('Empathetic engagement for Moltbook.', 'Empathetic engagement for Moltbook.', 'Empathetic engagement for Moltbook.'), price: '30 VALLE' },
+    { title: t('CODE ARCHITECT', 'CODE ARCHITECT', 'CODE ARCHITECT'), desc: t('Advanced Next.js/Prisma blueprinting.', 'Advanced Next.js/Prisma blueprinting.', 'Advanced Next.js/Prisma blueprinting.'), price: 'Free' },
   ];
 
   return (
-    <div className="flex flex-col h-full p-6 space-y-6 overflow-hidden text-[var(--text-primary)] font-sans">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col h-full p-6 pt-16 xl:pt-20 space-y-6 overflow-hidden text-[var(--text-primary)] font-sans">
+      <div className="flex items-center justify-between shrink-0">
         <Link href="/" className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[#ff5500] transition-all text-[11px] font-black uppercase tracking-widest group">
-          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform text-[#ff5500]" /> Core Matrix
+          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform text-[#ff5500]" /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
         </Link>
         {onClose && (
-          <button onClick={onClose} className="h-7 w-7 rounded-lg bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all shadow-2xs">
+          <button onClick={onClose} className="h-7 w-7 rounded-lg bg-white border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all shadow-2xs">
             <X size={14} />
           </button>
         )}
       </div>
 
-      <div className="shrink-0 space-y-3">
-        <h1 className="text-3xl font-black uppercase tracking-tighter italic leading-none text-[var(--text-primary)]">
-          Muna.<br /><span className="text-[#ff5500]">Yucateca.</span>
+      <div className="shrink-0 space-y-2 pt-2">
+        <h1 className="text-4xl font-black uppercase tracking-tighter italic leading-none text-[var(--text-primary)] flex flex-col font-sans">
+          <span>MUNA.</span>
+          <span className="text-[#ff5500]">YUCATECA.</span>
         </h1>
-        <p className="text-[11px] text-[#ff5500] font-black tracking-widest uppercase italic">SOVEREIGN_ARRAY_V1.0</p>
+        <div className="text-[9px] font-black uppercase tracking-widest text-[#ff5500]">
+          SOVEREIGN_ARRAY_V1.0
+        </div>
         {onNewChat && (
-          <button onClick={onNewChat} className="w-full py-3 bg-[#ff5500] text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-[0_4px_20px_rgba(255,85,0,0.3)] hover:scale-102 active:scale-98 transition-all flex items-center justify-center gap-2 mt-2">
-            <Sparkles size={14} /> New Conversation
+          <button onClick={onNewChat} className="w-full py-3 bg-[#ff5500] hover:bg-[#e04b00] text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-xs hover:scale-[1.01] transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer">
+            <Sparkles size={13} className="text-white" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
           </button>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1.5 bg-[var(--bg-card)] rounded-xl border border-[var(--border-subtle)] shrink-0 shadow-inner">
+      <div className="flex gap-1 p-1 bg-black/[0.03] rounded-xl border border-[var(--border-subtle)] shrink-0 my-2">
         <button 
           onClick={() => setMarketTab('HISTORY')}
-          className={`flex-1 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
             marketTab === 'HISTORY' 
-              ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-black shadow-sm' 
+              ? 'bg-white text-[var(--text-primary)] font-black shadow-xs border border-black/[0.02]' 
               : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
-          Sessions
+          {t('Sesiones', 'Sessions', 'Meyajo\'ob')}
         </button>
         <button 
           onClick={() => setMarketTab('SKILLS')}
-          className={`flex-1 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
             marketTab === 'SKILLS' 
-              ? 'bg-[var(--text-primary)] text-[var(--bg-primary)] font-black shadow-sm' 
+              ? 'bg-white text-[var(--text-primary)] font-black shadow-xs border border-black/[0.02]' 
               : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
-          Skills
+          {t('Habilidades', 'Skills', 'U Na\'at')}
         </button>
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto space-y-3.5 min-h-0 pr-1 text-sm font-medium" style={{ scrollbarWidth: 'none' }}>
+      <div className="flex-1 overflow-y-auto space-y-3.5 min-h-0 pr-1 text-sm font-medium animate-fadeIn" style={{ scrollbarWidth: 'none' }}>
         {marketTab === 'HISTORY' ? (
           <>
             {history.length > 0 ? (
@@ -773,36 +927,38 @@ function SidebarContent({
                 <div
                   key={session.sessionId}
                   onClick={() => { onSelectSession && onSelectSession(session.sessionId); }}
-                  className="p-3.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl hover:border-[#ff5500] hover:shadow-[0_4px_15px_rgba(255,85,0,0.1)] transition-all cursor-pointer group shadow-2xs"
+                  className="mx-0.5 p-4 bg-white border border-[var(--border-subtle)] rounded-xl hover:border-[#ff5500]/40 transition-all cursor-pointer group shadow-2xs space-y-2 mb-3"
                 >
-                  <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-[10px] text-[#ff5500] uppercase tracking-widest font-black">{session.mode}</span>
-                    <ChevronRight size={12} className="text-[var(--text-secondary)] group-hover:text-[#ff5500] transition-colors" />
+                  <div className="flex justify-between items-center">
+                    <span className="text-[9px] text-[#ff5500] font-black tracking-widest uppercase">{session.mode}</span>
+                    <ChevronRight size={12} className="text-[var(--text-secondary)] group-hover:text-[#ff5500] group-hover:translate-x-0.5 transition-all" />
                   </div>
-                  <p className="text-xs font-semibold text-[var(--text-primary)] leading-relaxed line-clamp-2">{session.prompt}</p>
+                  <p className="text-xs font-bold text-[var(--text-primary)] leading-relaxed line-clamp-2 group-hover:text-[#ff5500] transition-colors">
+                    {translateSessionTitle(session.prompt, language)}
+                  </p>
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 opacity-40 text-xs uppercase font-black tracking-widest">No history detected</div>
+              <div className="text-center py-12 opacity-40 text-xs uppercase font-black tracking-widest">{t('No se detectó historial', 'No history detected', 'Mina\'an tsoolt\'aan')}</div>
             )}
           </>
         ) : (
-          <div className="space-y-3.5">
-            <div className="text-[11px] font-black uppercase tracking-widest text-[var(--text-secondary)] mb-2 px-1">Plugin Vault</div>
+          <div className="space-y-3.5 animate-fadeIn">
+            <div className="text-[11px] font-black uppercase tracking-widest text-[var(--text-secondary)] mb-2 px-1">{t('Bóveda de Plugins', 'Plugin Vault', 'U Yáax Ba\'al')}</div>
             {MOCK_SKILLS.map((skill, i) => (
-              <div key={i} className="p-3.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl hover:border-[#ff5500] hover:shadow-md transition-all cursor-pointer group shadow-2xs">
-                <div className="flex justify-between items-center mb-1.5">
-                  <span className="text-xs font-black text-[var(--text-primary)] uppercase tracking-tight group-hover:text-[#ff5500] transition-colors">{skill.title}</span>
-                  <span className="text-[10px] text-emerald-500 font-black px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/20">{skill.price}</span>
+              <div key={i} className="mx-0.5 p-4 bg-white border border-[var(--border-subtle)] rounded-xl transition-all shadow-2xs space-y-2 mb-3 hover:border-[#ff5500]/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-tight">{skill.title}</span>
+                  <span className="text-[9px] text-[#ff5500] font-black tracking-wider">{skill.price}</span>
                 </div>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{skill.desc}</p>
+                <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">{skill.desc}</p>
               </div>
             ))}
             <button 
               onClick={() => alert('Redirecting to Muna Skill Forge...')}
-              className="w-full py-3 mt-3 border border-dashed border-[var(--border-accent)] hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-xl text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] bg-[var(--bg-card)] shadow-2xs"
+              className="w-full py-3 mt-3 border border-dashed border-[var(--border-accent)] hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-xl text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] bg-white shadow-2xs cursor-pointer"
             >
-              + Register New Skill
+              {t('+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL')}
             </button>
           </div>
         )}
@@ -813,29 +969,29 @@ function SidebarContent({
         <div className="flex gap-2.5">
           <button 
             onClick={onDownload}
-            className="flex-1 py-2.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] hover:border-[var(--text-primary)] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer"
+            className="flex-1 py-2.5 bg-white border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer"
           >
-            <Download size={14} /> Download
+            <Download size={14} /> {t('Descargar', 'Download', 'Emtik')}
           </button>
-          <label className="flex-1 py-2.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] hover:border-[var(--text-primary)] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
-            <Database size={14} /> Upload
+          <label className="flex-1 py-2.5 bg-white border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+            <Database size={14} /> {t('Cargar', 'Upload', 'Na\'aksik')}
             <input type="file" className="hidden" accept=".json" onChange={onUpload} />
           </label>
         </div>
 
         {/* Swarm Telemetry */}
-        <div className="p-4 border border-[var(--border-subtle)] bg-[var(--bg-card)] rounded-xl space-y-2.5 shadow-sm">
-          <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-[var(--text-primary)]">
-            <div className="flex items-center gap-2 text-[#ff5500]"><Orbit size={14} className="animate-spin" style={{ animationDuration: '20s' }} /> Swarm</div>
-            <span className="text-emerald-500 font-bold">99.9%</span>
+        <div className="p-4 border border-[var(--border-subtle)] bg-white rounded-xl space-y-2 shadow-2xs">
+          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)]">
+            <div className="flex items-center gap-1.5 text-[#ff5500]"><Orbit size={13} className="animate-spin" style={{ animationDuration: '20s' }} /> {t('SWARM', 'SWARM', 'SWARM')}</div>
+            <span className="text-[#ff5500] font-black">98%</span>
           </div>
-          <div className="h-1.5 w-full bg-[var(--bg-secondary)] rounded-full overflow-hidden border border-[var(--border-subtle)]">
-            <motion.div animate={{ width: ['80%', '99.9%', '95%'] }} transition={{ duration: 10, repeat: Infinity }} className="h-full bg-[#ff5500]" />
+          <div className="h-1 w-full bg-[var(--bg-secondary)] rounded-full overflow-hidden border border-black/[0.02]">
+            <motion.div animate={{ width: ['90%', '98%', '94%'] }} transition={{ duration: 12, repeat: Infinity }} className="h-full bg-[#ff5500]" />
           </div>
         </div>
 
-        <button onClick={onMachineView} className="w-full py-3 bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:border-[#ff5500] hover:text-white text-[var(--text-secondary)] text-xs font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer">
-          <Terminal size={14} /> raw_telemetry
+        <button onClick={onMachineView} className="w-full py-2.5 bg-white border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:border-[#ff5500] hover:text-white text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+          <Terminal size={12} /> {t('>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION')}
         </button>
       </div>
     </div>
