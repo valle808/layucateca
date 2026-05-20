@@ -63,15 +63,15 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
     { key: "Cultura", label: t("Cultura", "Culture", "Miatsil") },
   ];
 
-  // Agent Swarm Teams
+  // Agent Swarm Teams — v2.0 Pipeline
   const agentTeams = [
-    { icon: "🕵️‍♂️", name: "Agentes Exploradores (Scouts)", role: "Rastreo satelital y de redes 24/7" },
-    { icon: "✍️", name: "Agentes Periodistas (Writers)", role: "Síntesis trilingüe de 500+ palabras" },
-    { icon: "🎨", name: "Agentes de Diseño (Vision)", role: "Generación fotográfica y arte maya" },
-    { icon: "🎥", name: "Agentes Audiovisuales (Media)", role: "Ensamblaje de documentales en video" },
-    { icon: "⚖️", name: "Agentes de Verificación (Fact-Check)", role: "Auditoría editorial con 99.8% de precisión" },
-    { icon: "📢", name: "Agentes de Publicación Facebook", role: "Distribución viral minuto a minuto" }
+    { icon: "🕵️‍♂️", name: "Scout Agent", role: "Ingesta de datos, tendencias y hechos verificados en tiempo real" },
+    { icon: "✍️", name: "Writer Agent", role: "Redacción trilingüe ES · EN · Maya — estándar NYT/Reuters" },
+    { icon: "🎨", name: "Vision Agent", role: "Selección de imagen contextual de alta resolución 16:9" },
+    { icon: "⚖️", name: "Fact-Check Agent", role: "Auditoría editorial — veto absoluto sobre publicación" },
+    { icon: "📢", name: "Publisher Agent", role: "Distribución CMS + Facebook Graph API cada 60 segundos" },
   ];
+  const [pipelineLog, setPipelineLog] = React.useState<string[]>([]);
 
   // Geolocation detection on mount
   useEffect(() => {
@@ -134,31 +134,41 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
     return () => clearInterval(agentInterval);
   }, [agentTeams.length]);
 
+  // Fetch posts on mount to ensure synchronization
+  useEffect(() => {
+    fetch("/api/posts")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setPosts(data);
+      })
+      .catch(err => console.warn("Initial posts fetch error:", err));
+  }, []);
+
   // Automated 1-minute AJAX news swarm trigger
   useEffect(() => {
     const interval = setInterval(() => {
       fetch("/api/bot/pull", { method: "POST" })
         .then(res => res.json())
         .then(data => {
+          if (data.pipeline) setPipelineLog(data.pipeline);
           if (data.success && data.posts && data.posts.length > 0) {
             setPosts(prev => {
               const existingSlugs = new Set(prev.map(p => p.slug));
               const newUniquePosts = data.posts.filter((p: Post) => !existingSlugs.has(p.slug));
               return [...newUniquePosts, ...prev];
             });
-            // Update Facebook stats dynamically
             setFbLikes(prev => prev + Math.floor(Math.random() * 25) + 10);
             setFbShares(prev => prev + Math.floor(Math.random() * 8) + 2);
             setFbComments(prev => prev + Math.floor(Math.random() * 5) + 1);
             setFbLastSyncTime("Publicado hace unos segundos en Facebook");
-            
-            // Trigger gorgeous Swarm Toast
-            setSwarmToast("⚡ ¡El Enjambre Multi-Agente ha completado un nuevo ciclo! Noticia viral trilingüe publicada con éxito en Facebook.");
+            const cat = data.category || "";
+            const fb = data.facebookPublished ? " · Publicado en Facebook ✓" : "";
+            setSwarmToast(`⚡ Ciclo completado — ${cat}${fb}`);
             setTimeout(() => setSwarmToast(""), 8000);
           }
         })
         .catch(err => console.warn("Auto bot sync error:", err));
-    }, 60000); // 1 minute
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
@@ -479,48 +489,32 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                             }}
                           >
                             <div>
-                              {post.imageUrl && (
-                                <div style={{ height: "150px", borderRadius: "10px", overflow: "hidden", marginBottom: "16px" }}>
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={post.imageUrl}
-                                    alt={translateDb(post.title)}
-                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                  />
+                              {/* Card Image — fixed height */}
+                              <div style={{ height: "160px", flexShrink: 0, overflow: "hidden", position: "relative" }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={post.imageUrl || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80"}
+                                  alt={translateDb(post.title)}
+                                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                />
+                                <div style={{ position: "absolute", top: "10px", left: "10px", display: "flex", gap: "6px" }}>
+                                  <span className="badge badge-news" style={{ fontSize: "0.65rem", backdropFilter: "blur(8px)", background: "rgba(212,168,83,0.85)", color: "#000" }}>
+                                    {post.category}
+                                  </span>
                                 </div>
-                              )}
-                              <div style={{ display: "flex", gap: "6px", marginBottom: "10px" }}>
-                                <span className="badge badge-news" style={{ fontSize: "0.68rem" }}>
-                                  {post.category}
-                                </span>
-                                <span className="badge badge-portfolio" style={{ fontSize: "0.68rem" }}>
-                                  📍 {post.state}
-                                </span>
                               </div>
-
-                              <h3 style={{ fontSize: "1.05rem", fontWeight: 800, marginBottom: "8px", lineHeight: 1.35 }}>
-                                <Link
-                                  href={`/news/${post.slug}`}
-                                  style={{ color: "inherit", textDecoration: "none" }}
-                                >
-                                  {translateDb(post.title)}
-                                </Link>
-                              </h3>
-
-                              <p
-                                style={{
-                                  color: "var(--text-secondary)",
-                                  fontSize: "0.85rem",
-                                  lineHeight: 1.6,
-                                  marginBottom: "16px",
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 3,
-                                  WebkitBoxOrient: "vertical",
-                                  overflow: "hidden",
-                                }}
-                              >
-                                {translateDb(post.content)}
-                              </p>
+                              {/* Card Body */}
+                              <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+                                <p style={{ fontSize: "0.7rem", color: "var(--accent-teal)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", margin: "0 0 8px" }}>📍 {post.state}</p>
+                                <h3 style={{ fontSize: "0.95rem", fontWeight: 800, marginBottom: "8px", lineHeight: 1.35, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                  <Link href={`/news/${post.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
+                                    {translateDb(post.title)}
+                                  </Link>
+                                </h3>
+                                <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", flex: 1 }}>
+                                  {translateDb(post.content)}
+                                </p>
+                              </div>
                             </div>
 
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid var(--border-subtle)" }}>
@@ -551,83 +545,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                 {/* Weather Forecast Widget */}
                 <WeatherWidget stateName={selectedState === "Todos" ? "Yucatán" : selectedState} />
 
-                {/* Swarm AI Collective Agents Live Dashboard */}
-                <div
-                  className="card"
-                  style={{
-                    padding: "24px",
-                    borderRadius: "20px",
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--border-accent)",
-                    boxShadow: "0 8px 32px rgba(212,168,83,0.1)",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ fontSize: "1.4rem" }}>🐝</span>
-                      <h3 style={{ fontSize: "1.05rem", fontWeight: 900, margin: 0, color: "var(--text-primary)" }}>
-                        {t("Enjambre Colectivo AI", "Collective Swarm AI", "Much'táambal Na'at AI")}
-                      </h3>
-                    </div>
-                    <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.72rem", background: "rgba(16,185,129,0.15)", color: "#10b981", padding: "4px 8px", borderRadius: "12px", fontWeight: 700 }}>
-                      <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981", animation: "pulse-green 1.5s infinite" }} />
-                      AUTÓNOMO (1 MIN)
-                    </span>
-                  </div>
-
-                  <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", margin: "0 0 20px", lineHeight: 1.5 }}>
-                    {t(
-                      "Un colectivo de agentes especializados trabaja en equipo de forma autónoma cada minuto: buscando, redactando artículos de 500+ palabras, diseñando portadas mayas, generando video, verificando fuentes y publicando en Facebook en vivo.",
-                      "A specialized collective swarm of agents works seamlessly every minute: scouting feeds, writing 500+ word articles, generating Mayan cover art, editing documentaries, fact-checking, and live posting to Facebook.",
-                      "Meyaj much'táambal agentes AI ku t'oxik péektsil tuláakal minuto: kaaxan, ts'íibtik, beeta'an oochel yéetel t'oxik tu Facebook."
-                    )}
-                  </p>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    {agentTeams.map((agent, idx) => {
-                      const isActive = activeAgentIndex === idx;
-                      return (
-                        <div
-                          key={agent.name}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: "10px 14px",
-                            borderRadius: "12px",
-                            background: isActive ? "var(--bg-primary)" : "rgba(255,255,255,0.02)",
-                            border: isActive ? "1px solid #d4a853" : "1px solid var(--border-subtle)",
-                            transition: "all 0.3s ease",
-                            transform: isActive ? "scale(1.02)" : "scale(1)",
-                            boxShadow: isActive ? "0 4px 16px rgba(212,168,83,0.15)" : "none",
-                          }}
-                        >
-                          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            <span style={{ fontSize: "1.3rem" }}>{agent.icon}</span>
-                            <div>
-                              <p style={{ fontSize: "0.8rem", fontWeight: 800, margin: 0, color: isActive ? "#d4a853" : "var(--text-primary)" }}>
-                                {agent.name}
-                              </p>
-                              <p style={{ fontSize: "0.72rem", color: "var(--text-secondary)", margin: 0 }}>
-                                {agent.role}
-                              </p>
-                            </div>
-                          </div>
-                          <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#10b981", display: "flex", alignItems: "center", gap: "4px" }}>
-                            🟢 Operando
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-secondary)" }}>
-                    <span>Ciclo de Sincronización:</span>
-                    <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>Automático (AJAX)</span>
-                  </div>
-                </div>
-
-                {/* Facebook Live Sync Feed Card */}
+                {/* Facebook Follow Card — real page link */}
                 <div
                   className="card"
                   style={{
@@ -636,101 +554,39 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                     overflow: "hidden",
                     background: "var(--bg-card)",
                     border: "1px solid #1877f2",
-                    boxShadow: "0 8px 24px rgba(24, 119, 242, 0.15)",
+                    boxShadow: "0 8px 24px rgba(24, 119, 242, 0.12)",
                   }}
                 >
-                  {/* Banner Header */}
-                  <div style={{ position: "relative", height: "110px", background: "#0f172a" }}>
+                  {/* Banner */}
+                  <div style={{ position: "relative", height: "100px", background: "#0f172a" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/mayan_banner.jpg"
-                      alt="Mayan Banner Cover"
-                      style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }}
+                      alt="La Yucateca News Banner"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }}
                     />
-                    <div style={{ position: "absolute", top: "12px", right: "12px", background: "rgba(0,0,0,0.6)", padding: "4px 8px", borderRadius: "12px", display: "flex", alignItems: "center", gap: "6px" }}>
-                      <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981", animation: "pulse-green 2s infinite" }} />
-                      <span style={{ color: "#fff", fontSize: "0.7rem", fontWeight: 700 }}>AUTÓNOMO EN VIVO</span>
-                    </div>
                   </div>
 
-                  {/* Profile info overlapping banner */}
-                  <div style={{ padding: "0 20px 20px", position: "relative", marginTop: "-36px" }}>
-                    <div style={{ display: "flex", alignItems: "flex-end", gap: "12px", marginBottom: "16px" }}>
-                      <div
-                        style={{
-                          width: "72px",
-                          height: "72px",
-                          borderRadius: "50%",
-                          border: "4px solid var(--bg-card)",
-                          overflow: "hidden",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                          background: "#000",
-                        }}
-                      >
+                  {/* Profile section */}
+                  <div style={{ padding: "0 20px 20px", position: "relative", marginTop: "-32px" }}>
+                    <div style={{ display: "flex", alignItems: "flex-end", gap: "12px", marginBottom: "14px" }}>
+                      <div style={{ width: "64px", height: "64px", borderRadius: "50%", border: "3px solid var(--bg-card)", overflow: "hidden", background: "#1877f2", flexShrink: 0 }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src="/mayan_profile.jpg"
-                          alt="La Yucateca Noticias Profile"
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
+                        <img src="/mayan_profile.jpg" alt="La Yucateca News" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       </div>
                       <div style={{ paddingBottom: "4px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                          <h3 style={{ fontSize: "1.1rem", fontWeight: 900, margin: 0, color: "var(--text-primary)" }}>
-                            La Yucateca Noticias
-                          </h3>
-                          <span style={{ color: "#1877f2", fontSize: "1rem" }} title="Página Verificada en Facebook">☑️</span>
-                        </div>
-                        <p style={{ color: "var(--text-secondary)", fontSize: "0.78rem", margin: 0 }}>
-                          @LaYucatecaNoticias • Fan Page
+                        <h3 style={{ fontSize: "1rem", fontWeight: 900, margin: "0 0 2px", color: "var(--text-primary)" }}>
+                          La Yucateca News
+                        </h3>
+                        <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem", margin: 0 }}>
+                          Noticias de Yucatán y México
                         </p>
                       </div>
                     </div>
 
-                    <p style={{ fontSize: "0.85rem", color: "var(--text-primary)", lineHeight: 1.5, marginBottom: "16px" }}>
-                      📰 Canal viral con distribución autónoma minuto a minuto hacia Facebook. Cobertura de Yucatán, Inteligencia Artificial de enjambre y finanzas globales.
+                    <p style={{ fontSize: "0.83rem", color: "var(--text-secondary)", lineHeight: 1.55, marginBottom: "16px" }}>
+                      📰 Síguenos en Facebook para mantenerte al día con las últimas noticias de Yucatán, el sureste de México y el mundo.
                     </p>
-
-                    {/* Latest Post Simulation Card */}
-                    {heroPost && (
-                      <div
-                        style={{
-                          background: "var(--bg-primary)",
-                          borderRadius: "12px",
-                          padding: "16px",
-                          border: "1px solid var(--border-subtle)",
-                          marginBottom: "16px",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-                          <span style={{ fontSize: "1.1rem" }}>⚡</span>
-                          <div>
-                            <p style={{ fontSize: "0.78rem", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>
-                              Publicación Reciente
-                            </p>
-                            <span style={{ fontSize: "0.7rem", color: "var(--accent-teal)" }}>
-                              {fbLastSyncTime}
-                            </span>
-                          </div>
-                        </div>
-
-                        <h4 style={{ fontSize: "0.9rem", fontWeight: 800, margin: "0 0 6px", lineHeight: 1.3 }}>
-                          <Link href={`/news/${heroPost.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
-                            {translateDb(heroPost.title)}
-                          </Link>
-                        </h4>
-
-                        <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", margin: "0 0 12px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                          {translateDb(heroPost.content)}
-                        </p>
-
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.78rem", color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)", paddingTop: "10px" }}>
-                          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>👍 ❤️ {fbLikes}</span>
-                          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>💬 {fbComments} comentarios</span>
-                          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>🔄 {fbShares}</span>
-                        </div>
-                      </div>
-                    )}
 
                     <a
                       href="https://www.facebook.com/profile.php?id=61590071036770"
@@ -742,7 +598,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                         justifyContent: "center",
                         gap: "8px",
                         width: "100%",
-                        padding: "12px",
+                        padding: "11px",
                         borderRadius: "12px",
                         background: "#1877f2",
                         color: "#fff",
@@ -750,12 +606,13 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                         fontSize: "0.85rem",
                         textDecoration: "none",
                         boxShadow: "0 4px 12px rgba(24, 119, 242, 0.3)",
-                        transition: "background 0.2s, transform 0.15s",
+                        transition: "background 0.2s",
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.background = "#166fe5"}
                       onMouseLeave={(e) => e.currentTarget.style.background = "#1877f2"}
                     >
-                      <span style={{ fontSize: "1.1rem" }}>🌐</span> Visitar Fan Page en Facebook ↗
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                      Seguir en Facebook ↗
                     </a>
                   </div>
                 </div>
@@ -782,15 +639,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                         borderBottom: idx === trendingPosts.length - 1 ? "none" : "1px solid var(--border-subtle)",
                       }}
                     >
-                      <span
-                        style={{
-                          fontSize: "0.68rem",
-                          fontWeight: 700,
-                          color: "var(--accent-teal)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                        }}
-                      >
+                      <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "var(--accent-teal)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
                         {post.state}
                       </span>
                       <h4 style={{ fontSize: "0.875rem", fontWeight: 700, margin: "4px 0 0", lineHeight: 1.3 }}>

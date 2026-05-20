@@ -14,11 +14,7 @@ export default async function HomePage() {
     take: 3,
   });
 
-  const featuredPortfolio = await prisma.portfolioItem.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    take: 3,
-  });
+
 
   // Serialize dates to prevent hydration warnings/errors with custom date classes
   const serializedPosts = recentPosts.map((post) => ({
@@ -29,7 +25,7 @@ export default async function HomePage() {
   return (
     <HomeClient
       recentPosts={serializedPosts}
-      featuredPortfolio={featuredPortfolio}
+      featuredPortfolio={[]}
     />
   );
 }

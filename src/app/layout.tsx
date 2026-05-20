@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { ThemeProvider } from "@/components/ThemeContext";
+import { AuthProvider } from "@/components/AuthContext";
 import Sidebar from "@/components/Sidebar";
 import MunaChatbot from "@/components/MunaChatbot";
+import EmergencyAlertBanner from "@/components/EmergencyAlertBanner";
 
 export const metadata: Metadata = {
   title: "La Yucateca — News & Web Design Portal",
@@ -28,13 +30,16 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <LanguageProvider>
-            <div className="layout-wrapper">
-              <Sidebar />
-              <div className="content-container">
-                {children}
+            <AuthProvider>
+              <EmergencyAlertBanner />
+              <div className="layout-wrapper">
+                <Sidebar />
+                <div className="content-container">
+                  {children}
+                </div>
               </div>
-            </div>
-            <MunaChatbot />
+              <MunaChatbot />
+            </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

@@ -6,6 +6,8 @@ export const metadata = {
   description: "Mantente al día con las últimas noticias de La Yucateca. || Stay up to date with the latest news.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function NewsPage() {
   const posts = await prisma.post.findMany({
     where: { published: true },

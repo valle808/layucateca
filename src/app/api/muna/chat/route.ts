@@ -400,7 +400,8 @@ The human you are talking to is identified as \`[👤 OPERADOR]\`.`;
             async start(controller) {
                 let fullResponse = "";
                 for await (const chunk of stream) {
-                    let content = chunk.choices[0]?.delta?.content || "";
+                    const delta = chunk.choices[0]?.delta as any;
+                    let content = delta?.content || delta?.reasoning_content || "";
                     
                     if (content.includes('![') && content.includes('](')) {
                        content = content.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, url) => {

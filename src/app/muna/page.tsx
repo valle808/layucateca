@@ -13,6 +13,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import Link from 'next/link';
 import { useLanguage } from '@/components/LanguageContext';
+import { useTheme } from '@/components/ThemeContext';
 const HISTORY_KEY = 'muna_session_history';
 function loadLocalHistory(): {sessionId: string, prompt: string, mode: string}[] {
   if (typeof window === 'undefined') return [];
@@ -77,6 +78,7 @@ const getCreativeIntroduction = (lang: string) => {
 
 export default function MunaPage() {
   const { t, language } = useLanguage();
+  const { theme, setTheme } = useTheme();
 
   const starterPrompts = [
     {
@@ -429,8 +431,10 @@ export default function MunaPage() {
     );
   }
 
+  const isDark = theme === 'dark';
+
   return (
-    <div className="muna-monroe-theme flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative" style={{ height: "100vh" }}>
+    <div className={`muna-monroe-theme flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative${isDark ? ' muna-dark' : ''}`} style={{ height: "100vh" }}>
 
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
@@ -448,7 +452,7 @@ export default function MunaPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -320, opacity: 0 }}
               transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-72 z-[90] border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] backdrop-blur-3xl flex flex-col shadow-2xl xl:hidden"
+              className="absolute top-0 left-0 bottom-0 w-72 z-[90] border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] backdrop-blur-3xl flex flex-col shadow-2xl lg:hidden"
             >
               <SidebarContent 
                 knowledgeGraph={knowledgeGraph} 
@@ -482,7 +486,7 @@ export default function MunaPage() {
         </AnimatePresence>
 
         {/* Desktop Sidebar */}
-        <aside className="hidden xl:flex w-72 flex-shrink-0 flex-col border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative z-10">
+        <aside className="hidden lg:flex w-72 flex-shrink-0 flex-col border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative z-10">
           <SidebarContent 
               knowledgeGraph={knowledgeGraph} 
               history={historySessions} 
@@ -515,7 +519,7 @@ export default function MunaPage() {
           <header className="flex-none flex items-center gap-3 px-6 py-3.5 border-b border-[var(--border-subtle)] bg-transparent backdrop-blur-md z-20">
             <button
               onClick={() => setSidebarOpen(s => !s)}
-              className="xl:hidden h-8 w-8 rounded-xl border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all bg-white shadow-2xs"
+              className="lg:hidden h-8 w-8 rounded-xl border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all bg-white shadow-2xs"
             >
               <Layers size={15} />
             </button>
@@ -531,8 +535,10 @@ export default function MunaPage() {
                 <span className="text-[8px] text-[#ff5500] font-black tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
               </div>
             </div>
-            <div className="ml-auto flex items-center gap-1.5 text-[9px] text-[#ff5500] font-black uppercase tracking-widest bg-[#ff5500]/5 px-3 py-1.5 rounded-full border border-[#ff5500]/15 shadow-2xs">
-              <Wifi size={11} strokeWidth={2.5} className="text-[#ff5500]" /> {t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}
+            <div className="ml-auto flex items-center gap-3">
+              <div className="flex items-center gap-1.5 text-[9px] text-[#ff5500] font-black uppercase tracking-widest bg-[#ff5500]/5 px-3 py-1.5 rounded-full border border-[#ff5500]/15 shadow-2xs">
+                <Wifi size={11} strokeWidth={2.5} className="text-[#ff5500]" /> {t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}
+              </div>
             </div>
           </header>
 
@@ -550,17 +556,9 @@ export default function MunaPage() {
                     className={`flex w-full gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'bot' && (
-                      <button 
-                        onClick={() => speak(m.text, m.id)} 
-                        className={`h-8 w-8 shrink-0 rounded-full flex items-center justify-center mt-1.5 transition-all shadow-2xs border ${
-                          isPlaying === m.id 
-                            ? 'bg-[#ff5500] border-[#ff5500] text-white animate-pulse' 
-                            : 'bg-[#ff5500]/5 border-[#ff5500]/15 text-[#ff5500] hover:bg-[#ff5500]/15 hover:scale-105'
-                        }`}
-                        title={isPlaying === m.id ? t('Detener Audio', 'Stop Audio', 'Detener') : t('Escuchar Audio', 'Play Audio', 'Escuchar')}
-                      >
-                        <Volume2 size={13} className={isPlaying === m.id ? 'animate-bounce' : ''} />
-                      </button>
+                      <div className="h-8 w-8 shrink-0 rounded-full bg-[#ff5500]/5 border border-[#ff5500]/10 flex items-center justify-center mt-1 shadow-2xs">
+                        <BrainCircuit size={14} className="text-[#ff5500]" />
+                      </div>
                     )}
 
                     <div className={`max-w-[82%] flex flex-col gap-1.5 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
@@ -581,52 +579,66 @@ export default function MunaPage() {
                         </div>
                       )}
  
-                      <div className={`px-5 py-3.5 rounded-[22px] text-[13px] leading-relaxed transition-all border shadow-2xs ${
+                      <div className={`px-5 py-3.5 rounded-2xl text-[13px] leading-relaxed transition-all border shadow-2xs ${
                         m.role === 'user'
-                          ? 'bg-white border-black/[0.05] text-[#1e1b18] font-medium rounded-tr-xs'
-                          : 'bg-white border-[#e8e5de] text-[#1e1b18] rounded-tl-xs w-full'
+                          ? 'bg-white border-black/[0.05] text-[#1e1b18] font-medium rounded-tr-md'
+                          : 'bg-white border-black/[0.04] text-[#1e1b18] rounded-tl-md w-full'
                       }`}>
                         {m.role === 'bot' ? (
                           <div className="muna-markdown max-w-none text-[#1e1b18] w-full">
                             <ReactMarkdown
-                              remarkPlugins={[remarkGfm]}
-                              rehypePlugins={[rehypeRaw]}
-                              components={{
-                                img: ({ src, alt, ...props }) => (
-                                  <span style={{ display: 'block', position: 'relative' }} className="group my-2">
-                                    <img
-                                      src={typeof src === 'string' ? src : undefined}
-                                      alt={alt}
-                                      {...props}
-                                      style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', cursor: 'zoom-in' }}
-                                      className="border border-[var(--border-subtle)] shadow-md"
-                                      onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
-                                    />
-                                    <span
-                                      onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
-                                      style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
-                                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                      <ZoomIn size={14} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
+                                components={{
+                                  img: ({ src, alt, ...props }) => (
+                                    <span style={{ display: 'block', position: 'relative' }} className="group my-2">
+                                      <img
+                                        src={typeof src === 'string' ? src : undefined}
+                                        alt={alt}
+                                        {...props}
+                                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', cursor: 'zoom-in' }}
+                                        className="border border-[var(--border-subtle)] shadow-md"
+                                        onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
+                                      />
+                                      <span
+                                        onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
+                                        style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
+                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                      >
+                                        <ZoomIn size={14} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
+                                      </span>
                                     </span>
-                                  </span>
-                                )
-                              }}
-                            >{m.text}</ReactMarkdown>
-                          </div>
-                        ) : (
-                          <span>{m.text}</span>
-                        )}
+                                  )
+                                }}
+                              >{m.text}</ReactMarkdown>
+                            </div>
+                          ) : (
+                            <span>{m.text}</span>
+                          )}
+                        </div>
+   
+                        <div className="flex items-center gap-2 mt-1.5 opacity-65 text-[9px] font-mono uppercase tracking-widest px-1">
+                          <span className="text-[var(--text-secondary)]">
+                            {m.role === 'bot' ? t('Muna · Yucateca v1.0', 'Muna · Yucateca v1.0', 'Muna · Yucateca v1.0') : t('Operator · Sovereign Access', 'Operator · Sovereign Access', 'Operator · Sovereign Access')}
+                          </span>
+                          {m.role === 'bot' && (
+                            <>
+                              <span>·</span>
+                              <button
+                                onClick={() => speak(m.text, m.id)}
+                                className={`flex items-center gap-1 font-bold uppercase cursor-pointer transition-all ${
+                                  isPlaying === m.id ? 'text-[#ff5500] animate-pulse font-black' : 'text-[var(--text-secondary)] hover:text-[#ff5500]'
+                                }`}
+                              >
+                                {isPlaying === m.id ? <Radio size={10} className="animate-spin text-[#ff5500]" /> : <Volume2 size={10} />}
+                                {isPlaying === m.id ? t('DETENER', 'STOP AUDIO', 'DETENER') : t('PLAY AUDIO', 'PLAY AUDIO', 'PLAY AUDIO')}
+                              </button>
+                            </>
+                          )}
+                        </div>
+   
                       </div>
- 
-                      <div className="flex items-center gap-3 mt-1.5 opacity-65">
-                        <span className="text-[9px] text-[var(--text-secondary)] font-mono tracking-wider px-1">
-                          {m.role === 'bot' ? t('Muna — Yucateca v1.0', 'Muna — Yucateca v1.0', 'Muna — Yucateca v1.0') : t('Operator — Sovereign Access', 'Operator — Sovereign Access', 'Operator — Sovereign Access')}
-                        </span>
-                      </div>
- 
-                    </div>
-                  </motion.div>
+                    </motion.div>
                 ))}
               </AnimatePresence>
 
@@ -676,9 +688,9 @@ export default function MunaPage() {
                     <button
                       key={m.id}
                       onClick={() => setSelectedMode(m.id)}
-                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-2xs ${
+                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-2xs ${
                         isSelected 
-                          ? 'bg-[#ff5500] border-[#ff5500] text-white shadow-2xs font-bold scale-[1.02]' 
+                          ? 'bg-[#ff5500] border-[#ff5500] text-[#1e1b18] shadow-2xs font-bold scale-[1.02]' 
                           : 'bg-white border-black/[0.05] text-[var(--text-secondary)] hover:text-black hover:border-[#ff5500]/30'
                       }`}
                     >
@@ -689,7 +701,7 @@ export default function MunaPage() {
               </div>
 
               <div 
-                className="flex items-end gap-2.5 bg-white border border-black/[0.06] rounded-[24px] p-2 focus-within:border-[#ff5500] focus-within:shadow-[0_4px_25px_rgba(255,85,0,0.05)] transition-all shadow-md cursor-pointer pointer-events-auto"
+                className="flex items-end gap-2.5 bg-white border border-black/[0.06] rounded-full p-2 focus-within:border-[#ff5500] focus-within:shadow-[0_4px_25px_rgba(255,85,0,0.05)] transition-all shadow-md cursor-pointer pointer-events-auto"
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
@@ -713,10 +725,10 @@ export default function MunaPage() {
                 <button
                   onClick={(e) => { e.stopPropagation(); handleSend(); }}
                   disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                  className="h-9 w-9 shrink-0 bg-[#ff5500] hover:bg-[#e04b00] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-25 transition-all shadow-xs pointer-events-auto"
+                  className="h-9 w-9 shrink-0 bg-[#ff5500] hover:bg-[#e04b00] text-[#1e1b18] rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-25 transition-all shadow-xs pointer-events-auto"
                   title={t('Transmitir Pulso', 'Transmit Pulse', 'Túuxt Pulse')}
                 >
-                  <ChevronRight size={18} strokeWidth={3} />
+                  <ChevronRight size={18} strokeWidth={3} className="text-[#1e1b18]" />
                 </button>
               </div>
 
@@ -732,7 +744,7 @@ export default function MunaPage() {
 
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
-          <div className="xl:hidden fixed inset-0 z-[80] bg-black/80 backdrop-blur-md" onClick={() => setSidebarOpen(false)} />
+          <div className="lg:hidden absolute inset-0 z-[80] bg-black/80 backdrop-blur-md" onClick={() => setSidebarOpen(false)} />
         )}
       </div>
 
@@ -868,7 +880,7 @@ function SidebarContent({
 
   return (
     <div className="flex flex-col h-full p-6 pt-16 xl:pt-20 space-y-6 overflow-hidden text-[var(--text-primary)] font-sans">
-      <div className="flex items-center justify-between shrink-0">
+      <div className="flex items-center justify-between shrink-0 mb-6">
         <Link href="/" className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[#ff5500] transition-all text-[11px] font-black uppercase tracking-widest group">
           <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform text-[#ff5500]" /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
         </Link>
@@ -884,23 +896,23 @@ function SidebarContent({
           <span>MUNA.</span>
           <span className="text-[#ff5500]">YUCATECA.</span>
         </h1>
-        <div className="text-[9px] font-black uppercase tracking-widest text-[#ff5500]">
-          SOVEREIGN_ARRAY_V1.0
+        <div className="text-[9px] font-black uppercase tracking-widest text-[#ff5500] italic font-sans">
+          SOVEREIGN_ARRAY_V7.0
         </div>
         {onNewChat && (
-          <button onClick={onNewChat} className="w-full py-3 bg-[#ff5500] hover:bg-[#e04b00] text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-xs hover:scale-[1.01] transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer">
-            <Sparkles size={13} className="text-white" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
+          <button onClick={onNewChat} className="w-full py-2.5 bg-[#ff5500] hover:bg-[#e04b00] text-[#1e1b18] font-black rounded-full text-[10px] uppercase tracking-widest shadow-xs hover:scale-[1.01] transition-all flex items-center justify-center gap-1.5 mt-6 mb-2 cursor-pointer">
+            <Sparkles size={13} className="text-[#1e1b18]" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
           </button>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-black/[0.03] rounded-xl border border-[var(--border-subtle)] shrink-0 my-2">
+      <div className="flex gap-1 p-1 bg-black/[0.03] rounded-full border border-black/[0.04] shrink-0 my-2">
         <button 
           onClick={() => setMarketTab('HISTORY')}
-          className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
             marketTab === 'HISTORY' 
-              ? 'bg-white text-[var(--text-primary)] font-black shadow-xs border border-black/[0.02]' 
+              ? 'bg-white text-black font-black shadow-xs border border-black/[0.03]' 
               : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
@@ -908,9 +920,9 @@ function SidebarContent({
         </button>
         <button 
           onClick={() => setMarketTab('SKILLS')}
-          className={`flex-1 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
             marketTab === 'SKILLS' 
-              ? 'bg-white text-[var(--text-primary)] font-black shadow-xs border border-black/[0.02]' 
+              ? 'bg-white text-black font-black shadow-xs border border-black/[0.03]' 
               : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
@@ -927,7 +939,7 @@ function SidebarContent({
                 <div
                   key={session.sessionId}
                   onClick={() => { onSelectSession && onSelectSession(session.sessionId); }}
-                  className="mx-0.5 p-4 bg-white border border-[var(--border-subtle)] rounded-xl hover:border-[#ff5500]/40 transition-all cursor-pointer group shadow-2xs space-y-2 mb-3"
+                  className="mx-0.5 p-4.5 bg-white/40 border border-black/[0.03] rounded-[20px] hover:border-[#ff5500]/40 transition-all cursor-pointer group shadow-2xs space-y-2 mb-3"
                 >
                   <div className="flex justify-between items-center">
                     <span className="text-[9px] text-[#ff5500] font-black tracking-widest uppercase">{session.mode}</span>
@@ -944,11 +956,11 @@ function SidebarContent({
           </>
         ) : (
           <div className="space-y-3.5 animate-fadeIn">
-            <div className="text-[11px] font-black uppercase tracking-widest text-[var(--text-secondary)] mb-2 px-1">{t('Bóveda de Plugins', 'Plugin Vault', 'U Yáax Ba\'al')}</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-[#ff5500] mb-2 px-1">{t('PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE')}</div>
             {MOCK_SKILLS.map((skill, i) => (
-              <div key={i} className="mx-0.5 p-4 bg-white border border-[var(--border-subtle)] rounded-xl transition-all shadow-2xs space-y-2 mb-3 hover:border-[#ff5500]/30">
+              <div key={i} className="mx-0.5 p-4.5 bg-white/40 border border-black/[0.03] rounded-[20px] transition-all shadow-2xs space-y-2 mb-3 hover:border-[#ff5500]/30">
                 <div className="flex justify-between items-center">
-                  <span className="text-[11px] font-black text-[var(--text-primary)] uppercase tracking-tight">{skill.title}</span>
+                  <span className="text-[11px] font-bold text-black uppercase tracking-tight">{skill.title}</span>
                   <span className="text-[9px] text-[#ff5500] font-black tracking-wider">{skill.price}</span>
                 </div>
                 <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">{skill.desc}</p>
@@ -956,7 +968,7 @@ function SidebarContent({
             ))}
             <button 
               onClick={() => alert('Redirecting to Muna Skill Forge...')}
-              className="w-full py-3 mt-3 border border-dashed border-[var(--border-accent)] hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-xl text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] bg-white shadow-2xs cursor-pointer"
+              className="w-full py-3.5 mt-3 border border-dashed border-black/[0.08] hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-[20px] text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] bg-black/[0.01] shadow-2xs cursor-pointer"
             >
               {t('+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL')}
             </button>
@@ -969,28 +981,28 @@ function SidebarContent({
         <div className="flex gap-2.5">
           <button 
             onClick={onDownload}
-            className="flex-1 py-2.5 bg-white border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer"
+            className="flex-1 py-3 bg-white/40 border border-black/[0.03] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-[20px] transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer"
           >
             <Download size={14} /> {t('Descargar', 'Download', 'Emtik')}
           </button>
-          <label className="flex-1 py-2.5 bg-white border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+          <label className="flex-1 py-3 bg-white/40 border border-black/[0.03] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-[20px] transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
             <Database size={14} /> {t('Cargar', 'Upload', 'Na\'aksik')}
             <input type="file" className="hidden" accept=".json" onChange={onUpload} />
           </label>
         </div>
 
         {/* Swarm Telemetry */}
-        <div className="p-4 border border-[var(--border-subtle)] bg-white rounded-xl space-y-2 shadow-2xs">
-          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)]">
+        <div className="p-4 border border-[#ff5500]/15 bg-[#ff5500]/5 rounded-[20px] space-y-2.5 shadow-2xs">
+          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-[#ff5500]">
             <div className="flex items-center gap-1.5 text-[#ff5500]"><Orbit size={13} className="animate-spin" style={{ animationDuration: '20s' }} /> {t('SWARM', 'SWARM', 'SWARM')}</div>
             <span className="text-[#ff5500] font-black">98%</span>
           </div>
-          <div className="h-1 w-full bg-[var(--bg-secondary)] rounded-full overflow-hidden border border-black/[0.02]">
+          <div className="h-1.5 w-full bg-[#1e1b18]/10 rounded-full overflow-hidden">
             <motion.div animate={{ width: ['90%', '98%', '94%'] }} transition={{ duration: 12, repeat: Infinity }} className="h-full bg-[#ff5500]" />
           </div>
         </div>
 
-        <button onClick={onMachineView} className="w-full py-2.5 bg-white border border-[var(--border-subtle)] hover:bg-[#ff5500] hover:border-[#ff5500] hover:text-white text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+        <button onClick={onMachineView} className="w-full py-3.5 bg-white/40 border border-black/[0.03] hover:bg-[#ff5500] hover:border-[#ff5500] hover:text-white text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-[20px] transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
           <Terminal size={12} /> {t('>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION')}
         </button>
       </div>

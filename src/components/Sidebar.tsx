@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useTheme } from "@/components/ThemeContext";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/components/AuthContext";
 
 const Icons = {
   Home: () => (
@@ -67,6 +68,39 @@ const Icons = {
       <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
       <circle cx="12" cy="12" r="3"></circle>
     </svg>
+  ),
+  Solutions: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+      <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+      <line x1="6" y1="6" x2="6.01" y2="6"></line>
+      <line x1="6" y1="18" x2="6.01" y2="18"></line>
+    </svg>
+  ),
+  Report: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+  ),
+  Chat: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  ),
+  Market: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <path d="M16 10a4 4 0 0 1-8 0"></path>
+    </svg>
+  ),
+  User: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
   )
 };
 
@@ -77,6 +111,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme } = useTheme();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     if (pathname === "/muna") {
@@ -319,14 +354,28 @@ export default function Sidebar() {
             {[
               { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
               { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
-              { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob"), icon: <Icons.Portfolio /> },
+              { href: "/it-solutions", label: t("Soluciones IT", "IT Solutions", "Soluciones IT"), icon: <Icons.Solutions /> },
+              { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "Denunciar"), icon: <Icons.Report /> },
+              { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
+              { href: "/marketplace", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },
               { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
-              { href: "/contact", label: t("Contacto", "Contact", "Tsikbal"), icon: <Icons.Contact /> },
+              { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob"), icon: <Icons.Portfolio /> },
+              {
+                href: user ? "#" : "/login",
+                label: user ? `${user.name} (Salir)` : t("Ingresar", "Sign In", "Ingresar"),
+                icon: <Icons.User />,
+                action: user ? () => logout() : undefined,
+              },
             ].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  if (item.action) {
+                    item.action();
+                  }
+                }}
                 style={{
                   padding: "12px 16px",
                   color: "var(--text-secondary)",

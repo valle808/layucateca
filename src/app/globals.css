@@ -704,5 +704,82 @@ html[data-theme="light"] ::selection {
   border-color: rgba(255, 85, 0, 0.12) !important;
 }
 
+/* ── Muna Dark Mode (Obsidian & Glass) ── */
+.muna-dark {
+  --bg-primary: #07070a;
+  --bg-secondary: #0f1018;
+  --bg-card: rgba(18, 19, 28, 0.6);
+  --bg-card-hover: rgba(26, 27, 40, 0.8);
+  --accent-gold: #ff5500;
+  --text-primary: #f0eee8;
+  --text-secondary: rgba(240, 238, 232, 0.45);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-accent: rgba(255, 85, 0, 0.25);
+  --glow-gold: 0 0 30px rgba(255, 85, 0, 0.15);
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
 
+.muna-dark .muna-markdown { color: var(--text-primary) !important; }
+.muna-dark .muna-markdown strong { color: #ff7733 !important; }
+.muna-dark .muna-markdown code {
+  background: rgba(255, 85, 0, 0.1) !important;
+  color: #ffaa66 !important;
+  border-color: rgba(255, 85, 0, 0.2) !important;
+}
+.muna-dark .muna-markdown pre { background: rgba(5,5,10,0.95) !important; }
+.muna-dark .muna-markdown blockquote { background: rgba(255,85,0,0.06) !important; }
+
+.muna-dark aside {
+  background: rgba(10, 10, 16, 0.9) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+/* Dark mode message bubbles & input */
+.muna-dark .text-\[\#1e1b18\] { color: var(--text-primary) !important; }
+.muna-dark .bg-white { background: rgba(255,255,255,0.04) !important; }
+.muna-dark .border-black\/\[0\.05\] { border-color: rgba(255,255,255,0.06) !important; }
+.muna-dark .border-black\/\[0\.04\] { border-color: rgba(255,255,255,0.05) !important; }
+.muna-dark .border-black\/\[0\.06\] { border-color: rgba(255,255,255,0.07) !important; }
+.muna-dark .bg-white\/40 { background: rgba(255,255,255,0.04) !important; }
+.muna-dark .bg-white\/60 { background: rgba(255,255,255,0.06) !important; }
+.muna-dark textarea { color: var(--text-primary) !important; }
+.muna-dark textarea::placeholder { color: var(--text-secondary) !important; }
+.muna-dark .font-medium { color: var(--text-primary) !important; }
+
+/* Dark scrollbar */
+.muna-dark ::-webkit-scrollbar-track { background: var(--bg-primary); }
+.muna-dark ::-webkit-scrollbar-thumb { background: rgba(255,85,0,0.25); border-radius: 3px; }
+.muna-dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,85,0,0.45); }
+
+/* Dark tab pills */
+.muna-dark button.bg-white.text-black {
+  background: rgba(255,255,255,0.08) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* Dark mode session/skill cards */
+.muna-dark .bg-\[\#fdfbf7\] { background: rgba(255,255,255,0.04) !important; }
+.muna-dark .shadow-2xs { box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
+
+/* Dark mode ambient BG */
+.muna-dark .bg-\[\#ff5500\]\/4,
+.muna-dark .bg-\[\#ff5500\]\/3 { opacity: 0.7; }
+
+/* Dark mode mode-selector pills */
+.muna-dark button.bg-white.border-black\/\[0\.05\] {
+  background: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.07) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Dark glassmorphism panels */
+.muna-dark header {
+  background: rgba(7,7,10,0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: rgba(255,255,255,0.05) !important;
+}
 

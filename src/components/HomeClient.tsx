@@ -144,46 +144,7 @@ export default function HomeClient({ recentPosts, featuredPortfolio }: HomeClien
         <section id="dashboard" style={{ padding: "40px 24px 80px", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
             
-            {/* Live Workspace / Portfolio */}
-            <div>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "24px" }}>
-                {t("Espacio de Trabajo en Vivo", "Live Workspace", "Meyaj bejla'e'")}
-              </h2>
-              <div className="dashboard-grid">
-                {/* Featured Portfolio Card */}
-                <div className="dashboard-card featured-card-span">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                    <h3 style={{ fontSize: "1.1rem", fontWeight: 700 }}>{t("Tareas de Diseño", "Design Tasks", "Meyajo'ob")}</h3>
-                    <span className="badge-outline" style={{ color: "var(--accent-rose)", border: "1px solid var(--accent-rose)" }}>LIVE</span>
-                  </div>
-                  
-                  {featuredPortfolio.length > 0 ? (
-                    <Link href={`/portfolio/live-preview/${featuredPortfolio[0].slug}`} style={{ textDecoration: "none" }}>
-                      <div style={{ padding: "16px", background: "var(--bg-secondary)", borderRadius: "8px", border: "1px solid var(--border-subtle)", display: "flex", justifyContent: "space-between", alignItems: "center", transition: "all 0.2s" }} className="hover:bg-opacity-80">
-                        <div>
-                          <p style={{ fontWeight: 600, color: "var(--text-primary)" }}>{translateDb(featuredPortfolio[0].title)}</p>
-                          <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>TK-DEMO</p>
-                        </div>
-                        <span className="badge-outline" style={{ background: "rgba(244, 63, 94, 0.1)", color: "var(--accent-rose)", border: "none" }}>PREVIEW</span>
-                      </div>
-                    </Link>
-                  ) : (
-                    <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>No active tasks.</p>
-                  )}
-                </div>
 
-                {/* Privacy / Muna Core */}
-                <div className="dashboard-card" style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
-                  <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "8px" }}>Muna AI Core</h3>
-                  <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "16px" }}>
-                    Sovereign Intelligence Active
-                  </p>
-                  <div style={{ width: "48px", height: "24px", background: "rgba(255, 255, 255, 0.15)", borderRadius: "12px", position: "relative", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-                    <div style={{ position: "absolute", top: "2px", right: "2px", width: "18px", height: "18px", background: "#fff", borderRadius: "50%", boxShadow: "0 0 10px rgba(255, 255, 255, 0.5)" }} />
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Platform Core / News */}
             <div>
