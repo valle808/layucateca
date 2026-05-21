@@ -1,27 +1,37 @@
 generator client {
   provider        = "prisma-client-js"
-  engineType      = "binary"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Post {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  content     String
-  imageUrl    String?
-  base64Image String?
-  videoUrl    String?
-  audioUrl    String?
-  state       String   @default("Yucatán") // Yucatán, Campeche, Quintana Roo, CDMX, Jalisco, Nuevo León
-  category    String   @default("Local")   // Local, Política, Economía, Deportes, Cultura
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  comments    Comment[]
+  id               String    @id @default(cuid())
+  title            String
+  slug             String    @unique
+  content          String
+  imageUrl         String?
+  base64Image      String?
+  videoUrl         String?
+  audioUrl         String?
+  state            String    @default("Yucatán")   // Yucatán, Campeche, Quintana Roo, CDMX, Jalisco, Nuevo León
+  category         String    @default("Local")         // Local, Política, Economía, Deportes, Cultura, Tecnología, Internacional, Entretenimiento
+  published        Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  // AI News Engine fields
+  aiGenerated      Boolean   @default(false)
+  language         String    @default("es")            // es, en
+  metaDescription  String?                             // SEO meta description
+  sourceUrls       String    @default("[]")            // JSON array of source URLs
+  tags             String    @default("[]")            // JSON array of tags
+  facebookPostId   String?                             // Facebook post ID after publishing
+  readTimeMinutes  Int       @default(3)
+  qualityScore     Int       @default(0)               // 0-100 quality score from editor agent
+  adSlot           String?                             // Google AdSense ad unit slot ID
+  views            Int       @default(0)
+  comments         Comment[]
 }
 
 model PortfolioItem {
@@ -156,3 +166,17 @@ model Inquiry {
   status      String   @default("NEW") // NEW, IN_PROGRESS, CONVERTED, CLOSED
   createdAt   DateTime @default(now())
 }
+
+// AI News Engine — generation log
+model NewsGenerationLog {
+  id             String   @id @default(cuid())
+  category       String
+  postId         String?                    // null if generation failed
+  success        Boolean
+  qualityScore   Int      @default(0)
+  facebookPosted Boolean  @default(false)
+  errorMessage   String?
+  durationMs     Int      @default(0)
+  createdAt      DateTime @default(now())
+}
+

@@ -96,6 +96,13 @@ const Icons = {
       <path d="M16 10a4 4 0 0 1-8 0"></path>
     </svg>
   ),
+  Marketing: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    </svg>
+  ),
   User: () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -354,12 +361,12 @@ export default function Sidebar() {
             {[
               { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
               { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
-              { href: "/it-solutions", label: t("Soluciones IT", "IT Solutions", "Soluciones IT"), icon: <Icons.Solutions /> },
+              { href: "/soluciones-digitales", label: t("Soluciones Digitales", "Digital Solutions", "Soluciones Digitales"), icon: <Icons.Solutions /> },
               { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "Denunciar"), icon: <Icons.Report /> },
               { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
               { href: "/marketplace", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },
+              { href: "/marketing", label: t("Marketing HQ", "Marketing HQ", "Marketing HQ"), icon: <Icons.Marketing /> },
               { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
-              { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob"), icon: <Icons.Portfolio /> },
               {
                 href: user ? "#" : "/login",
                 label: user ? `${user.name} (Salir)` : t("Ingresar", "Sign In", "Ingresar"),

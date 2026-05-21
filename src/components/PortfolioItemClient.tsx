@@ -26,7 +26,7 @@ export default function PortfolioItemClient({ item }: PortfolioItemClientProps) 
       <main style={{ paddingTop: "100px" }}>
         <article style={{ padding: "60px 24px 80px", maxWidth: "900px", margin: "0 auto" }}>
           <Link
-            href="/portfolio"
+            href="/soluciones-digitales"
             style={{
               color: "var(--text-secondary)",
               textDecoration: "none",
@@ -78,7 +78,7 @@ export default function PortfolioItemClient({ item }: PortfolioItemClientProps) 
             <Link href="/contact" className="btn-secondary">
               {t("Adquirir Este Diseño", "Get This Design")}
             </Link>
-            <Link href="/portfolio" className="btn-ghost">
+            <Link href="/soluciones-digitales" className="btn-ghost">
               ← {t("Portafolio", "Portfolio")}
             </Link>
           </div>
