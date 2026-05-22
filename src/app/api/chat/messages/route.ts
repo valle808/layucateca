@@ -1,13 +1,34 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
+import { logTelemetry } from "@/lib/telemetry";
 
 export const dynamic = "force-dynamic";
 
 // Rapid AI Content Moderation for Chat Messages
 async function moderateChatMessage(content: string): Promise<string> {
   const apiKey = process.env.FIREWORKS_API_KEY;
-  if (!apiKey) return content;
+  
+  await logTelemetry({
+    type: "AGENT_ACTION",
+    event: "chat_moderation_started",
+    details: { contentLength: content.length },
+    agentId: "chat-moderator-agent",
+    path: "/api/chat/messages",
+    status: "INFO",
+  });
+
+  if (!apiKey) {
+    await logTelemetry({
+      type: "AGENT_ACTION",
+      event: "chat_moderation_skipped",
+      details: { reason: "Missing FIREWORKS_API_KEY, defaulting message to CLEAN" },
+      agentId: "chat-moderator-agent",
+      path: "/api/chat/messages",
+      status: "SUCCESS",
+    });
+    return content;
+  }
 
   // Quick heuristic to avoid calling LLM for simple/short messages
   if (content.length < 5) return content;
@@ -35,11 +56,29 @@ async function moderateChatMessage(content: string): Promise<string> {
     });
 
     const result = ((response.choices[0].message as any).content || "").trim().toUpperCase();
+    
+    await logTelemetry({
+      type: "AGENT_ACTION",
+      event: "chat_moderation_completed",
+      details: { outcome: result },
+      agentId: "chat-moderator-agent",
+      path: "/api/chat/messages",
+      status: "SUCCESS",
+    });
+
     if (result.includes("FLAGGED")) {
       return "🚫 [Mensaje bloqueado por moderación de IA: Contenido ofensivo o spam]";
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error("[CHAT MODERATION ERROR]", err);
+    await logTelemetry({
+      type: "ERROR",
+      event: "chat_moderation_failed",
+      details: { error: err.message },
+      agentId: "chat-moderator-agent",
+      path: "/api/chat/messages",
+      status: "FAILED",
+    });
   }
   return content;
 }
@@ -68,8 +107,15 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json({ success: true, messages });
-  } catch (error) {
+  } catch (error: any) {
     console.error("[CHAT MESSAGES GET ERROR]", error);
+    await logTelemetry({
+      type: "ERROR",
+      event: "chat_messages_fetch_error",
+      details: { error: error.message },
+      path: "/api/chat/messages",
+      status: "FAILED",
+    });
     return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });
   }
 }
@@ -77,6 +123,15 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const { content, authorName, authorId, roomSlug } = await req.json();
+
+    await logTelemetry({
+      type: "USER_ACTION",
+      event: "chat_message_submission_attempt",
+      details: { authorName, roomSlug, contentLength: content?.length },
+      userId: authorId || undefined,
+      path: "/api/chat/messages",
+      status: "INFO",
+    });
 
     if (!content || !roomSlug) {
       return NextResponse.json({ error: "Content and roomSlug are required" }, { status: 400 });
@@ -102,6 +157,15 @@ export async function POST(req: Request) {
       },
     });
 
+    await logTelemetry({
+      type: "DATA_MUTATION",
+      event: "chat_message_created",
+      details: { id: message.id, roomId: room.id, isModerated: moderatedContent !== content },
+      userId: authorId || undefined,
+      path: "/api/chat/messages",
+      status: "SUCCESS",
+    });
+
     // If authorId is present and content is clean, give a tiny boost (+1) to their reputation score!
     if (authorId && !moderatedContent.includes("bloqueado")) {
       try {
@@ -122,15 +186,39 @@ export async function POST(req: Request) {
               badges: JSON.stringify(currentBadges),
             },
           });
+
+          await logTelemetry({
+            type: "DATA_MUTATION",
+            event: "reputation_updated",
+            details: { newScore, badges: currentBadges },
+            userId: authorId,
+            path: "/api/chat/messages",
+            status: "SUCCESS",
+          });
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("[REPUTATION UPDATE ERROR]", err);
+        await logTelemetry({
+          type: "ERROR",
+          event: "reputation_update_error",
+          details: { error: err.message },
+          userId: authorId,
+          path: "/api/chat/messages",
+          status: "FAILED",
+        });
       }
     }
 
     return NextResponse.json({ success: true, message }, { status: 201 });
   } catch (error: any) {
     console.error("[CHAT MESSAGES POST ERROR]", error);
+    await logTelemetry({
+      type: "ERROR",
+      event: "chat_messages_post_error",
+      details: { error: error.message },
+      path: "/api/chat/messages",
+      status: "FAILED",
+    });
     return NextResponse.json({ error: "Failed to post message" }, { status: 500 });
   }
 }

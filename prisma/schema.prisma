@@ -180,3 +180,16 @@ model NewsGenerationLog {
   createdAt      DateTime @default(now())
 }
 
+// Centralized AI Agent & User Telemetry
+model Telemetry {
+  id        String   @id @default(cuid())
+  type      String   // USER_ACTION, AGENT_ACTION, ERROR, DATA_MUTATION
+  event     String   // e.g. "user_login", "agent_news_generated", "comment_created"
+  details   String   // JSON string of event metadata
+  userId    String?  // Optional: User associated with event
+  agentId   String?  // Optional: Agent associated with event
+  path      String?  // Optional: URL path associated with event
+  status    String   // SUCCESS, FAILED, INFO
+  createdAt DateTime @default(now())
+}
+

@@ -10,13 +10,7 @@ interface Props {
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    select: { slug: true },
-  });
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  return [];
 }
 
 export async function generateMetadata({ params }: Props) {

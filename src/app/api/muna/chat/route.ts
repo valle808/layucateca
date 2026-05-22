@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { logTelemetry } from '@/lib/telemetry';
 import OpenAI from 'openai';
 import { db } from '@/lib/firebase';
 import { collection, query, where, orderBy, limit, getDocs, addDoc } from 'firebase/firestore';
@@ -7,6 +8,14 @@ export const dynamic = 'force-dynamic';
 
 async function search_internet(query: string) {
     console.log(`[MUNA TOOL] Querying DuckDuckGo for: ${query}`);
+    await logTelemetry({
+        type: "AGENT_ACTION",
+        event: "muna_tool_search_internet",
+        details: { query },
+        agentId: "muna-ai-agent",
+        path: "/api/muna/chat",
+        status: "INFO",
+    });
     try {
         const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1`, {
             headers: { 'User-Agent': 'Muna-AI/1.0' }
@@ -32,6 +41,14 @@ async function search_internet(query: string) {
 }
 
 async function get_weather_forecast(location: string) {
+    await logTelemetry({
+        type: "AGENT_ACTION",
+        event: "muna_tool_get_weather_forecast",
+        details: { location },
+        agentId: "muna-ai-agent",
+        path: "/api/muna/chat",
+        status: "INFO",
+    });
     try {
         const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=en&format=json`);
         const geoData = await geoRes.json();
@@ -77,6 +94,14 @@ ${daily.time.map((t: string, i: number) => `- ${t}: ${daily.temperature_2m_min[i
 
 async function generate_scientific_image(prompt: string) {
     console.log(`[MUNA TOOL] Image Generation: ${prompt}`);
+    await logTelemetry({
+        type: "AGENT_ACTION",
+        event: "muna_tool_generate_image",
+        details: { prompt },
+        agentId: "muna-ai-agent",
+        path: "/api/muna/chat",
+        status: "INFO",
+    });
     const seed = Math.floor(Math.random() * 1000000);
     const proxyUrl = `/api/muna/image-proxy?prompt=${encodeURIComponent(prompt)}&seed=${seed}`;
     return `<div style="margin: 15px 0; border-radius: 20px; overflow: hidden; border: 1px solid #ff5500; background: rgba(0,0,0,0.3); box-shadow: 0 10px 40px rgba(255,85,0,0.15);">
@@ -86,6 +111,14 @@ async function generate_scientific_image(prompt: string) {
 
 async function generate_file(filename: string, content: string) {
     console.log(`[MUNA TOOL] Generating file: ${filename}`);
+    await logTelemetry({
+        type: "AGENT_ACTION",
+        event: "muna_tool_generate_file",
+        details: { filename, contentSize: content.length },
+        agentId: "muna-ai-agent",
+        path: "/api/muna/chat",
+        status: "INFO",
+    });
     try {
         const safeContentForTextarea = content.replace(/<\/textarea>/ig, '&lt;/textarea&gt;');
         const safeFilename = filename.replace(/"/g, '&quot;');
@@ -165,6 +198,14 @@ const TOOLS = [
 export async function POST(req: Request) {
     try {
         const { message, history = [], sessionId = 'muna-session-1', language = 'es' } = await req.json();
+
+        await logTelemetry({
+            type: "USER_ACTION",
+            event: "muna_chat_message_received",
+            details: { sessionId, language, contentLength: message?.length },
+            path: "/api/muna/chat",
+            status: "INFO",
+        });
 
         // --- ETERNAL MEMORY RETRIEVAL (Firebase) ---
         let eternalHistory: any[] = [];
