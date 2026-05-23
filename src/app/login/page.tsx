@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
+import { useTheme } from "@/components/ThemeContext";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -18,6 +19,7 @@ import {
 
 export default function LoginPage() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
   const { login, register, user } = useAuth();
   const router = useRouter();
 
@@ -32,6 +34,8 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
+  const isDark = theme === "dark";
+
   if (user) {
     // Redirect if already logged in
     setTimeout(() => {
@@ -39,18 +43,22 @@ export default function LoginPage() {
     }, 1200);
 
     return (
-      <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[#050508] transition-colors duration-300 relative overflow-hidden">
+      <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
         {/* Soft Background Orbs */}
         <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[rgba(255,85,0,0.04)] blur-[100px] pointer-events-none" />
         
-        <div className="p-12 max-w-md w-full text-center border border-[var(--border-accent)] bg-[var(--bg-card)] rounded-[32px] animate-fadeInUp shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] dark:shadow-[var(--glow-gold)] backdrop-blur-xl relative z-10">
+        <div className={`p-12 max-w-md w-full text-center border rounded-[32px] animate-fadeInUp backdrop-blur-xl relative z-10 ${
+          isDark
+            ? "border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]"
+            : "border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.85)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
+        }`}>
           <div className="w-20 h-20 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mx-auto mb-6 animate-pulse">
             <CheckCircle className="w-10 h-10 text-[#ff5500]" />
           </div>
-          <h2 className="text-3xl font-black text-white tracking-wide">
+          <h2 className="text-3xl font-black text-[var(--text-primary)] tracking-wide">
             {t("Sesión Activa", "Active Session", "Tsolob Kuxtal")}
           </h2>
-          <p className="text-sm text-[rgba(255,255,255,0.6)] mt-4 leading-relaxed font-medium">
+          <p className="text-sm text-[var(--text-secondary)] mt-4 leading-relaxed font-medium">
             {t(`Hola ${user.name}, redirigiéndote al inicio...`, `Hello ${user.name}, redirecting to home...`, `Ki'ola ${user.name}, sutnaj to'on ti' yáax...`)}
           </p>
         </div>
@@ -98,7 +106,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[#050508] transition-colors duration-300 relative overflow-hidden">
+    <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
       
       {/* Floating Background Ambient Gradient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(255,85,0,0.03)] blur-[120px] pointer-events-none select-none" />
@@ -108,11 +116,19 @@ export default function LoginPage() {
       <motion.div 
         layout
         transition={{ type: "spring", stiffness: 300, damping: 28 }}
-        className="w-full max-w-md p-10 rounded-[32px] border border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] backdrop-blur-3xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)] transition-all duration-300 relative z-10 overflow-hidden"
+        className={`w-full max-w-md p-10 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative z-10 overflow-hidden ${
+          isDark 
+            ? "border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]" 
+            : "border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.85)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
+        }`}
       >
         
         {/* Toggle tabs — Framer Motion sliding capsule design */}
-        <div className="flex p-1.5 bg-[rgba(0,0,0,0.3)] rounded-full mb-8 border border-[rgba(255,255,255,0.06)] relative overflow-hidden transition-all duration-300">
+        <div className={`flex p-1.5 rounded-full mb-8 border relative overflow-hidden transition-all duration-300 ${
+          isDark 
+            ? "bg-[rgba(0,0,0,0.3)] border-[rgba(255,255,255,0.06)]" 
+            : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.05)]"
+        }`}>
           <button
             type="button"
             onClick={() => {
@@ -120,8 +136,8 @@ export default function LoginPage() {
               setErrorMsg("");
               setSuccessMsg("");
             }}
-            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center"
-            style={{ color: isLoginTab ? "#ffffff" : "rgba(255, 255, 255, 0.45)" }}
+            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center animate-none"
+            style={{ color: isLoginTab ? (isDark ? "#ffffff" : "#1a1208") : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.45)") }}
           >
             {t("Iniciar Sesión", "Sign In", "Okol")}
           </button>
@@ -132,8 +148,8 @@ export default function LoginPage() {
               setErrorMsg("");
               setSuccessMsg("");
             }}
-            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center"
-            style={{ color: !isLoginTab ? "#ffffff" : "rgba(255, 255, 255, 0.45)" }}
+            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center animate-none"
+            style={{ color: !isLoginTab ? (isDark ? "#ffffff" : "#1a1208") : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.45)") }}
           >
             {t("Registrarse", "Register", "Ts'íib")}
           </button>
@@ -155,10 +171,10 @@ export default function LoginPage() {
           <div className="w-14 h-14 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mb-4">
             <Shield className="w-6 h-6 text-[#ff5500] animate-pulse" />
           </div>
-          <h2 className="text-2xl font-black text-white tracking-wide">
+          <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-wide">
             {t("Portal de Comunidad", "Community Portal", "Kajil Portal")}
           </h2>
-          <p className="text-xs text-[rgba(255,255,255,0.45)] mt-2 leading-relaxed text-center max-w-[280px] font-medium">
+          <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed text-center max-w-[280px] font-medium">
             {t(
               "Únete para comentar en noticias, crear salas de debate y acumular reputación.",
               "Join to comment on news, create debate rooms, and build reputation.",
@@ -197,10 +213,14 @@ export default function LoginPage() {
                   className="overflow-hidden space-y-2"
                 >
                   {/* Clean Flexbox floating-label field — 100% immune to overlaps */}
-                  <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group mt-1">
+                  <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group mt-1 ${
+                    isDark 
+                      ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
+                      : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+                  }`}>
                     {/* Dedicated Icon box */}
                     <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                      <User className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                      <User className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
                     </div>
                     {/* Floating Label Container */}
                     <div className="flex-1 relative">
@@ -211,9 +231,11 @@ export default function LoginPage() {
                         placeholder=" "
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
+                        className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
                       />
-                      <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                      <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
+                        isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                      }`}>
                         {t("Nombre de Entidad", "Entity Name", "Kaba'")}
                       </label>
                     </div>
@@ -223,10 +245,14 @@ export default function LoginPage() {
             </AnimatePresence>
 
             {/* IDENTITY EMAIL FIELD */}
-            <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group">
+            <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
+              isDark 
+                ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
+                : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+            }`}>
               {/* Dedicated Icon box */}
               <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                <Mail className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                <Mail className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
               </div>
               {/* Floating Label Container */}
               <div className="flex-1 relative">
@@ -237,19 +263,25 @@ export default function LoginPage() {
                   placeholder=" "
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
+                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
                 />
-                <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
+                  isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                }`}>
                   {t("Correo Electrónico", "Email Address", "Correo")}
                 </label>
               </div>
             </div>
 
             {/* SOVEREIGN PASSPHRASE FIELD */}
-            <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group">
+            <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
+              isDark 
+                ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
+                : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+            }`}>
               {/* Dedicated Icon box */}
               <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                <Lock className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                <Lock className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
               </div>
               {/* Floating Label Container */}
               <div className="flex-1 relative">
@@ -260,9 +292,11 @@ export default function LoginPage() {
                   placeholder=" "
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
+                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
                 />
-                <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
+                  isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                }`}>
                   {t("Contraseña", "Password", "Ta'akil")}
                 </label>
               </div>
@@ -270,7 +304,9 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-[rgba(255,255,255,0.4)] hover:text-[#ff5500] transition-colors duration-200 cursor-pointer ml-2"
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer ml-2 hover:text-[#ff5500] ${
+                  isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"
+                }`}
               >
                 {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
               </button>

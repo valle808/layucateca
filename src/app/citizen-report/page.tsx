@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
+import { useTheme } from "@/components/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   AlertTriangle, 
@@ -44,6 +45,7 @@ interface Report {
 export default function CitizenReportPage() {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { theme } = useTheme();
 
   const [reports, setReports] = useState<Report[]>([]);
   const [loadingReports, setLoadingReports] = useState(true);
@@ -63,6 +65,8 @@ export default function CitizenReportPage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const isDark = theme === "dark";
 
   // Map coordinates conversion values
   const getCoordinates = (x: number, y: number) => {
@@ -194,7 +198,7 @@ export default function CitizenReportPage() {
   };
 
   return (
-    <main className="min-h-screen pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto bg-[#050508] transition-colors duration-300 relative overflow-hidden">
+    <main className="min-h-screen pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
       
       {/* Immersive Cyber-HUD Background Blobs */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(255,85,0,0.03)] blur-[120px] pointer-events-none select-none" />
@@ -207,10 +211,10 @@ export default function CitizenReportPage() {
           <Activity className="w-3.5 h-3.5 animate-pulse text-[#ff5500]" />
           <span>{t("SISTEMA DE TELEMETRÍA CIUDADANA", "CITIZEN TELEMETRY SYSTEM", "RED DE DENUNCIAS")}</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-black mt-2 tracking-tight text-white">
+        <h1 className="text-4xl md:text-6xl font-black mt-2 tracking-tight text-[var(--text-primary)]">
           {t("Reporte Ciudadano Interactivo", "Interactive Citizen Report", "Reporte Ciudadano")}
         </h1>
-        <p className="text-sm md:text-base text-[rgba(255,255,255,0.55)] mt-4 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm md:text-base text-[var(--text-secondary)] mt-4 max-w-2xl mx-auto leading-relaxed">
           {t(
             "Reporta incidentes viales, cortes de servicios públicos o baches en la península. Los reportes se procesan automáticamente por IA y se sincronizan en tiempo real.",
             "Report road incidents, utility outages, or potholes across the peninsula. Submissions are processed by AI and broadcasted live.",
@@ -219,19 +223,19 @@ export default function CitizenReportPage() {
         </p>
 
         {/* HUD Stats Dashboard */}
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-[10px] font-mono text-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] max-w-lg mx-auto py-2 px-6 rounded-2xl backdrop-blur-md">
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-[10px] font-mono text-[var(--text-secondary)] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] max-w-lg mx-auto py-2 px-6 rounded-2xl backdrop-blur-md">
           <div className="flex items-center gap-1.5">
             <Radio className="w-3.5 h-3.5 text-green-400 animate-pulse" />
-            <span>LINK: <span className="text-white">ONLINE</span></span>
+            <span>LINK: <span className="text-[var(--text-primary)] font-bold">ONLINE</span></span>
           </div>
           <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
           <div>
-            <span>NODE: <span className="text-white">PENINSULA_YUCATAN</span></span>
+            <span>NODE: <span className="text-[var(--text-primary)] font-bold">PENINSULA_YUCATAN</span></span>
           </div>
           <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
           <div className="flex items-center gap-1">
             <Database className="w-3 h-3 text-[#ff5500]" />
-            <span>SYNCED: <span className="text-white">{loadingReports ? "..." : reports.length} RECORDS</span></span>
+            <span>SYNCED: <span className="text-[var(--text-primary)] font-bold">{loadingReports ? "..." : reports.length} RECORDS</span></span>
           </div>
         </div>
       </div>
@@ -243,7 +247,11 @@ export default function CitizenReportPage() {
         <motion.div 
           layout
           transition={{ type: "spring", stiffness: 300, damping: 28 }}
-          className="lg:col-span-7 p-8 rounded-[32px] border border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] backdrop-blur-3xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden"
+          className={`lg:col-span-7 p-8 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative overflow-hidden ${
+            isDark 
+              ? "border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] shadow-2xl" 
+              : "border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.85)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
+          }`}
         >
           {/* Subtle animated neon scan bar in background */}
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5500]/40 to-transparent animate-pulse" />
@@ -257,10 +265,10 @@ export default function CitizenReportPage() {
               <div className="w-20 h-20 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mx-auto mb-6">
                 <CheckCircle className="w-10 h-10 text-[#ff5500] animate-bounce" />
               </div>
-              <h3 className="text-3xl font-black text-white tracking-wide">
+              <h3 className="text-3xl font-black text-[var(--text-primary)] tracking-wide">
                 {t("¡Reporte Registrado!", "Telemetry Broadcasted!", "¡Enviado con Éxito!")}
               </h3>
-              <p className="text-sm text-[rgba(255,255,255,0.6)] mt-4 leading-relaxed max-w-md mx-auto">
+              <p className="text-sm text-[var(--text-secondary)] mt-4 leading-relaxed max-w-md mx-auto">
                 {t(
                   "Tu reporte ha sido exitosamente indexado en la red descentralizada de La Yucateca. Nuestro agente de IA ha tags calificados y procedido al auto-post en redes sociales.",
                   "Your telemetry report has been broadcasted. AI classification completed and live synchronization is now active.",
@@ -270,7 +278,7 @@ export default function CitizenReportPage() {
               
               <button
                 onClick={() => setSuccess(false)}
-                className="mt-8 bg-[rgba(255,255,255,0.02)] hover:bg-[#ff5500] text-white border border-[rgba(255,255,255,0.08)] hover:border-[#ff5500] hover:shadow-[0_0_20px_rgba(255,85,0,0.25)] px-8 py-3.5 rounded-full text-xs font-black tracking-widest uppercase transition-all duration-300 cursor-pointer"
+                className="mt-8 bg-[rgba(255,255,255,0.02)] hover:bg-[#ff5500] text-[var(--text-primary)] border border-[rgba(255,255,255,0.08)] hover:border-[#ff5500] hover:shadow-[0_0_20px_rgba(255,85,0,0.25)] px-8 py-3.5 rounded-full text-xs font-black tracking-widest uppercase transition-all duration-300 cursor-pointer"
               >
                 {t("Registrar Nueva Telemetría", "New Telemetry Log", "Otro reporte")}
               </button>
@@ -285,10 +293,10 @@ export default function CitizenReportPage() {
                     <ShieldAlert className="w-5 h-5 text-[#ff5500]" />
                   </div>
                   <div>
-                    <h2 className="text-base font-black text-white uppercase tracking-wider">
+                    <h2 className="text-base font-black text-[var(--text-primary)] uppercase tracking-wider">
                       {t("Nueva Denuncia Ciudadana", "New Telemetry Record", "Crear Denuncia")}
                     </h2>
-                    <span className="text-[9px] font-mono text-[rgba(255,255,255,0.4)]">
+                    <span className="text-[9px] font-mono text-[var(--text-secondary)]">
                       STATUS: TRANSMITTING_NODE_SECURE
                     </span>
                   </div>
@@ -306,9 +314,13 @@ export default function CitizenReportPage() {
               )}
 
               {/* REPORT TITLE FIELD */}
-              <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group">
+              <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
+                isDark 
+                  ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
+                  : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+              }`}>
                 <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                  <FileText className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                  <FileText className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
                 </div>
                 <div className="flex-1 relative">
                   <input
@@ -318,18 +330,24 @@ export default function CitizenReportPage() {
                     placeholder=" "
                     value={formData.title}
                     onChange={handleInputChange}
-                    className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
+                    className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
                   />
-                  <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                  <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
+                    isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                  }`}>
                     {t("Título de la Denuncia", "Report Title / Alert Headline", "Título")}
                   </label>
                 </div>
               </div>
 
               {/* DETAILED DESCRIPTION FIELD */}
-              <div className="relative flex items-start bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group">
+              <div className={`relative flex items-start border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
+                isDark 
+                  ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
+                  : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+              }`}>
                 <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 mt-0.5 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                  <FileText className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                  <FileText className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
                 </div>
                 <div className="flex-1 relative">
                   <textarea
@@ -338,9 +356,11 @@ export default function CitizenReportPage() {
                     placeholder=" "
                     value={formData.description}
                     onChange={handleInputChange}
-                    className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none min-h-[90px] resize-y"
+                    className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none min-h-[90px] resize-y"
                   />
-                  <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                  <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
+                    isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                  }`}>
                     {t("Descripción Detallada", "Detailed Telemetry Description", "Descripción")}
                   </label>
                 </div>
@@ -350,32 +370,40 @@ export default function CitizenReportPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 
                 {/* STATE SELECTOR */}
-                <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500]">
+                <div className={`relative flex items-center border rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] ${
+                  isDark 
+                    ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]" 
+                    : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)]"
+                }`}>
                   <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0">
                     <Landmark className="w-4 h-4 text-[rgba(255,255,255,0.4)]" />
                   </div>
                   <div className="flex-1">
-                    <span className="block text-[8px] font-black text-[rgba(255,255,255,0.35)] uppercase tracking-wider mb-0.5">
+                    <span className="block text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-wider mb-0.5">
                       {t("Estado", "State", "Estado")}
                     </span>
                     <select 
                       name="state" 
                       value={formData.state} 
                       onChange={handleInputChange} 
-                      className="w-full bg-transparent border-none outline-none text-xs text-white font-bold cursor-pointer p-0 appearance-none focus:ring-0"
+                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold cursor-pointer p-0 appearance-none focus:ring-0"
                     >
-                      <option className="bg-[#0c0c14] text-white">Yucatán</option>
-                      <option className="bg-[#0c0c14] text-white">Campeche</option>
-                      <option className="bg-[#0c0c14] text-white">Quintana Roo</option>
-                      <option className="bg-[#0c0c14] text-white">CDMX</option>
-                      <option className="bg-[#0c0c14] text-white">Jalisco</option>
-                      <option className="bg-[#0c0c14] text-white">Nuevo León</option>
+                      <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Yucatán</option>
+                      <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Campeche</option>
+                      <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Quintana Roo</option>
+                      <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>CDMX</option>
+                      <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Jalisco</option>
+                      <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Nuevo León</option>
                     </select>
                   </div>
                 </div>
 
                 {/* CITY / MUNICIPIO INPUT */}
-                <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group">
+                <div className={`relative flex items-center border rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group ${
+                  isDark 
+                    ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]" 
+                    : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)]"
+                }`}>
                   <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0 group-focus-within:border-[#ff5500]">
                     <Compass className="w-4 h-4 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500]" />
                   </div>
@@ -387,16 +415,22 @@ export default function CitizenReportPage() {
                       placeholder=" "
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-xs text-white font-bold pt-4 pb-0 peer"
+                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold pt-4 pb-0 peer"
                     />
-                    <label className="absolute left-0 top-3 text-[9px] text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider">
+                    <label className={`absolute left-0 top-3 text-[9px] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider ${
+                      isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                    }`}>
                       {t("Municipio / Ciudad", "City / Municipality", "Municipio")}
                     </label>
                   </div>
                 </div>
 
                 {/* TOWN / COLONIA INPUT */}
-                <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group">
+                <div className={`relative flex items-center border rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group ${
+                  isDark 
+                    ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]" 
+                    : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)]"
+                }`}>
                   <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0">
                     <MapPin className="w-4 h-4 text-[rgba(255,255,255,0.4)]" />
                   </div>
@@ -407,9 +441,11 @@ export default function CitizenReportPage() {
                       placeholder=" "
                       value={formData.town}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-xs text-white font-bold pt-4 pb-0 peer"
+                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold pt-4 pb-0 peer"
                     />
-                    <label className="absolute left-0 top-3 text-[9px] text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider">
+                    <label className={`absolute left-0 top-3 text-[9px] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider ${
+                      isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                    }`}>
                       {t("Colonia / Localidad", "Town / Neighborhood", "Colonia")}
                     </label>
                   </div>
@@ -418,9 +454,13 @@ export default function CitizenReportPage() {
               </div>
 
               {/* PHOTO URL MOCK UPLOAD FIELD */}
-              <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3 transition-all duration-300 focus-within:border-[#ff5500] group">
+              <div className={`relative flex items-center border rounded-2xl px-4 py-3 transition-all duration-300 focus-within:border-[#ff5500] group ${
+                isDark 
+                  ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
+                  : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+              }`}>
                 <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                  <Upload className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                  <Upload className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
                 </div>
                 <div className="flex-1 relative pr-16">
                   <input
@@ -429,9 +469,11 @@ export default function CitizenReportPage() {
                     placeholder=" "
                     value={formData.photoUrl}
                     onChange={handleInputChange}
-                    className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
+                    className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
                   />
-                  <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                  <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
+                    isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+                  }`}>
                     {t("URL de Imagen (Opcional)", "Photo URL / Evidence Image", "Imagen")}
                   </label>
                   
@@ -453,13 +495,17 @@ export default function CitizenReportPage() {
 
               {/* SPECTACULAR INTERACTIVE SVG RADAR MAP (COGNITIVE DYNAMIC HUD) */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-[rgba(255,255,255,0.4)] uppercase tracking-widest block mb-2 px-1">
+                <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1">
                   {t("Ubicación Exacta en Radar Satelital (Click para posicionar pin)", "Tactical GIS Radar Grid (Click to drop coordinate pin)", "Radar de Ubicación")}
                 </label>
                 
                 <div
                   onClick={handleMapClick}
-                  className="relative w-full h-[250px] rounded-2xl border border-[rgba(255,85,0,0.2)] bg-[#030305] overflow-hidden cursor-crosshair shadow-[inset_0_0_30px_rgba(255,85,0,0.05)] group"
+                  className={`relative w-full h-[250px] rounded-2xl border overflow-hidden cursor-crosshair transition-all duration-300 group ${
+                    isDark 
+                      ? "border-[rgba(255,85,0,0.2)] bg-[#030305] shadow-[inset_0_0_30px_rgba(255,85,0,0.05)]" 
+                      : "border-[rgba(255,85,0,0.25)] bg-[#faf8f4] shadow-[inset_0_0_30px_rgba(255,85,0,0.03)]"
+                  }`}
                 >
                   
                   {/* 1. Radar Grid Overlay */}
@@ -483,17 +529,19 @@ export default function CitizenReportPage() {
                     transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
                     className="absolute w-[400px] h-[400px] top-1/2 left-1/2 origin-top-left -translate-x-[200px] -translate-y-[200px] pointer-events-none select-none"
                     style={{
-                      background: "conic-gradient(from 0deg, rgba(255,85,0,0.1) 0deg, rgba(255,85,0,0.02) 40deg, transparent 180deg)",
+                      background: isDark
+                        ? "conic-gradient(from 0deg, rgba(255,85,0,0.1) 0deg, rgba(255,85,0,0.02) 40deg, transparent 180deg)"
+                        : "conic-gradient(from 0deg, rgba(255,85,0,0.08) 0deg, rgba(255,85,0,0.01) 40deg, transparent 180deg)",
                     }}
                   />
 
                   {/* 4. Telemetry Corner Labels (High Tech HUD Watermark) */}
-                  <div className="absolute top-3 left-4 text-[8px] font-mono text-[rgba(255,255,255,0.3)] pointer-events-none space-y-1 select-none">
+                  <div className={`absolute top-3 left-4 text-[8px] font-mono pointer-events-none space-y-1 select-none ${isDark ? "text-[rgba(255,255,255,0.3)]" : "text-[rgba(26,18,8,0.45)]"}`}>
                     <div>SYS_ARC: PENINSULAR_GIS_LINK</div>
                     <div>SECTOR: LA_YUCATECA_ALPHA</div>
                   </div>
                   
-                  <div className="absolute top-3 right-4 text-[8px] font-mono text-cyan-400/50 pointer-events-none space-y-1 select-none text-right">
+                  <div className={`absolute top-3 right-4 text-[8px] font-mono pointer-events-none space-y-1 select-none text-right ${isDark ? "text-cyan-400/50" : "text-cyan-600/70"}`}>
                     <div>ZOOM: 12.8X</div>
                     <div>SIGNAL: STRONG [100%]</div>
                   </div>
@@ -504,7 +552,7 @@ export default function CitizenReportPage() {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
                     </span>
-                    <span className="text-[7.5px] text-cyan-400/60 font-mono tracking-widest uppercase">MÉRIDA_METRO</span>
+                    <span className={`text-[7.5px] font-mono tracking-widest uppercase ${isDark ? "text-cyan-400/60" : "text-cyan-600/80"}`}>MÉRIDA_METRO</span>
                   </div>
 
                   <div className="absolute top-[30px] left-[130px] flex items-center pointer-events-none select-none">
@@ -520,7 +568,7 @@ export default function CitizenReportPage() {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
                     </span>
-                    <span className="text-[7.5px] text-cyan-400/60 font-mono tracking-widest uppercase">VALLADOLID_ESTE</span>
+                    <span className={`text-[7.5px] font-mono tracking-widest uppercase ${isDark ? "text-cyan-400/60" : "text-cyan-600/80"}`}>VALLADOLID_ESTE</span>
                   </div>
 
                   {/* 6. Dynamic Dropped Pin HUD Overlay */}
@@ -537,14 +585,18 @@ export default function CitizenReportPage() {
                   </motion.div>
 
                   {/* 7. Live Telemetry Data HUD Watermark footer */}
-                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none bg-[rgba(0,0,0,0.8)] border border-[rgba(255,255,255,0.06)] px-3.5 py-1.5 rounded-lg backdrop-blur-md">
+                  <div className={`absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none border px-3.5 py-1.5 rounded-lg backdrop-blur-md transition-all ${
+                    isDark 
+                      ? "bg-[rgba(0,0,0,0.8)] border-[rgba(255,255,255,0.06)]" 
+                      : "bg-[rgba(255,255,255,0.9)] border-[rgba(0,0,0,0.06)] shadow-sm"
+                  }`}>
                     <div className="flex items-center gap-2">
                       <Globe className="w-3.5 h-3.5 text-cyan-400 animate-spin" style={{ animationDuration: "12s" }} />
-                      <span className="text-[9px] font-mono text-[rgba(255,255,255,0.45)]">
-                        COORDINATES: <span className="text-white font-bold">{currentCoords.lat}°N, {currentCoords.lng}°W</span>
+                      <span className={`text-[9px] font-mono ${isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(0,0,0,0.6)]"}`}>
+                        COORDINATES: <span className="text-[var(--text-primary)] font-bold">{currentCoords.lat}°N, {currentCoords.lng}°W</span>
                       </span>
                     </div>
-                    <span className="text-[8px] font-mono text-cyan-400 font-bold uppercase tracking-widest">
+                    <span className="text-[8px] font-mono text-cyan-400 font-bold uppercase tracking-widest text-right shrink-0 ml-1">
                       GIS LOCK ON
                     </span>
                   </div>
@@ -553,20 +605,24 @@ export default function CitizenReportPage() {
               </div>
 
               {/* ANONYMITY CONFIGURATION BUTTON */}
-              <div className="flex items-center justify-between p-5 bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.05)] rounded-2xl transition-all duration-300 hover:bg-[rgba(255,255,255,0.02)]">
+              <div className={`flex items-center justify-between p-5 border rounded-2xl transition-all duration-300 ${
+                isDark 
+                  ? "bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.02)]" 
+                  : "bg-[rgba(0,0,0,0.01)] border-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.02)]"
+              }`}>
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] flex items-center justify-center">
                     {formData.isAnonymous ? (
-                      <EyeOff className="w-5 h-5 text-[rgba(255,255,255,0.4)]" />
+                      <EyeOff className="w-5 h-5 text-[var(--text-secondary)]" />
                     ) : (
                       <Eye className="w-5 h-5 text-[#ff5500]" />
                     )}
                   </div>
                   <div>
-                    <span className="text-xs font-black text-white block uppercase tracking-wider">
+                    <span className="text-xs font-black text-[var(--text-primary)] block uppercase tracking-wider">
                       {t("Publicar de forma Anónima", "Publish Anonymously", "Anónimo")}
                     </span>
-                    <span className="text-[10px] text-[rgba(255,255,255,0.4)] block mt-0.5 max-w-[280px] leading-relaxed">
+                    <span className="text-[10px] text-[var(--text-secondary)] block mt-0.5 max-w-[280px] leading-relaxed">
                       {t(
                         "Oculta tu perfil y credenciales. La denuncia se registrará de forma soberana.",
                         "Your identity will be completely hidden on the public broadcast feed.",
@@ -585,7 +641,9 @@ export default function CitizenReportPage() {
                     onChange={handleInputChange} 
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-[rgba(255,255,255,0.08)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[rgba(255,255,255,0.45)] peer-checked:after:bg-white after:border-none after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ff5500] shadow-inner"></div>
+                  <div className={`w-11 h-6 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ff5500] shadow-inner ${
+                    isDark ? "bg-[rgba(255,255,255,0.08)] after:bg-[rgba(255,255,255,0.45)]" : "bg-[rgba(0,0,0,0.08)] after:bg-[rgba(0,0,0,0.35)]"
+                  }`}></div>
                 </label>
               </div>
 
@@ -593,7 +651,7 @@ export default function CitizenReportPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4 mt-8 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4 mt-8 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 animate-none"
               >
                 {submitting ? (
                   <>
@@ -602,7 +660,7 @@ export default function CitizenReportPage() {
                   </>
                 ) : (
                   <>
-                    <span>{t("Transmitir Denuncia Satelital", "Submit Telemetry Alert", "Enviar Reporte")}</span>
+                    <span>{t("Enviar Denuncia Satelital", "Submit Telemetry Alert", "Enviar Reporte")}</span>
                     <Send className="w-4 h-4" />
                   </>
                 )}
@@ -622,7 +680,7 @@ export default function CitizenReportPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_#ef4444]"></span>
               </span>
-              <h2 className="text-xs font-black text-[rgba(255,255,255,0.45)] uppercase tracking-widest">
+              <h2 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-widest">
                 {t("Reportes Recientes", "Satellite Incident Feed", "Denuncias Recientes")}
               </h2>
             </div>
@@ -631,7 +689,7 @@ export default function CitizenReportPage() {
             <button
               onClick={fetchReports}
               disabled={isRefreshing}
-              className="text-[10px] font-mono text-[rgba(255,255,255,0.35)] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              className="text-[10px] font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 animate-none"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-[#ff5500]" : ""}`} />
               RELOAD
@@ -645,10 +703,12 @@ export default function CitizenReportPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-center py-20 border border-[rgba(255,255,255,0.05)] rounded-[24px] bg-[rgba(10,10,18,0.3)] backdrop-blur-md"
+                className={`text-center py-20 border rounded-[24px] backdrop-blur-md ${
+                  isDark ? "border-[rgba(255,255,255,0.05)] bg-[rgba(10,10,18,0.3)]" : "border-[rgba(0,0,0,0.05)] bg-[rgba(255,255,255,0.3)]"
+                }`}
               >
                 <RefreshCw className="w-8 h-8 animate-spin text-[#ff5500] mx-auto mb-4" />
-                <span className="text-xs font-mono text-[rgba(255,255,255,0.4)] uppercase tracking-wider block">
+                <span className="text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider block">
                   RESOLVING_TELEMETRY_LOGS...
                 </span>
               </motion.div>
@@ -661,10 +721,10 @@ export default function CitizenReportPage() {
                 className="text-center py-20 border border-dashed border-[rgba(255,85,0,0.15)] bg-[rgba(255,85,0,0.01)] rounded-[24px] px-6"
               >
                 <AlertTriangle className="w-8 h-8 text-[#ff5500]/50 mx-auto mb-3 animate-pulse" />
-                <span className="text-xs font-bold text-white block uppercase tracking-wider">
+                <span className="text-xs font-bold text-[var(--text-primary)] block uppercase tracking-wider">
                   {t("Sin Telemetrías Activas", "No Incident Logs", "Sin Reportes")}
                 </span>
-                <span className="text-[10px] text-[rgba(255,255,255,0.4)] mt-1 block max-w-xs mx-auto leading-relaxed">
+                <span className="text-[10px] text-[var(--text-secondary)] mt-1 block max-w-xs mx-auto leading-relaxed">
                   {t(
                     "No se registran denuncias ciudadanas activas en este nodo satelital.",
                     "No telemetry logs registered for this peninsula sector yet.",
@@ -688,7 +748,11 @@ export default function CitizenReportPage() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      className="p-5 rounded-2xl border border-[rgba(255,255,255,0.05)] bg-[rgba(10,10,18,0.4)] backdrop-blur-2xl space-y-4 hover:border-[rgba(255,85,0,0.25)] hover:bg-[rgba(15,15,25,0.6)] hover:shadow-[0_15px_35px_-10px_rgba(0,0,0,0.6)] transition-all duration-300 group"
+                      className={`p-5 rounded-2xl border space-y-4 hover:border-[rgba(255,85,0,0.25)] hover:bg-[rgba(15,15,25,0.6)] hover:shadow-[0_15px_35px_-10px_rgba(0,0,0,0.6)] transition-all duration-300 group ${
+                        isDark 
+                          ? "border-[rgba(255,255,255,0.05)] bg-[rgba(10,10,18,0.4)] backdrop-blur-2xl" 
+                          : "border-[rgba(0,0,0,0.05)] bg-[rgba(255,255,255,0.95)] shadow-sm"
+                      }`}
                     >
                       {/* Top feed metadata */}
                       <div className="flex items-start justify-between gap-3">
@@ -699,7 +763,7 @@ export default function CitizenReportPage() {
                           
                           {/* Floating coordinates indicator */}
                           {rep.lat && rep.lng && (
-                            <span className="text-[8px] font-mono text-cyan-400/60 font-semibold bg-cyan-400/5 border border-cyan-500/10 px-1 rounded select-none">
+                            <span className="text-[8px] font-mono text-cyan-500/80 font-semibold bg-cyan-400/5 border border-cyan-500/10 px-1 rounded select-none">
                               {rep.lat.toFixed(2)}N, {rep.lng.toFixed(2)}W
                             </span>
                           )}
@@ -711,10 +775,10 @@ export default function CitizenReportPage() {
 
                       {/* Title & Description */}
                       <div className="space-y-2">
-                        <h3 className="font-black text-sm text-white group-hover:text-[#ff5500] transition-colors duration-200 uppercase tracking-wide leading-snug">
+                        <h3 className="font-black text-sm text-[var(--text-primary)] group-hover:text-[#ff5500] transition-colors duration-200 uppercase tracking-wide leading-snug">
                           {rep.title}
                         </h3>
-                        <p className="text-xs text-[rgba(255,255,255,0.55)] leading-relaxed font-medium">
+                        <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-medium">
                           {rep.description}
                         </p>
                       </div>
@@ -725,7 +789,11 @@ export default function CitizenReportPage() {
                           {tags.map((tag: string, tagIdx: number) => (
                             <span 
                               key={tagIdx} 
-                              className="text-[8px] font-black font-mono text-[rgba(255,255,255,0.4)] hover:text-white px-2 py-0.5 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded uppercase transition-colors"
+                              className={`text-[8px] font-black font-mono hover:text-[var(--text-primary)] px-2 py-0.5 border rounded uppercase transition-colors ${
+                                isDark 
+                                  ? "text-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.05)]" 
+                                  : "text-[rgba(0,0,0,0.5)] bg-[rgba(0,0,0,0.03)] border-[rgba(0,0,0,0.05)]"
+                              }`}
                             >
                               #{tag}
                             </span>
@@ -734,15 +802,19 @@ export default function CitizenReportPage() {
                       )}
 
                       {/* Footer telemetry timestamp & anonymity badge */}
-                      <div className="flex items-center justify-between border-t border-[rgba(255,255,255,0.04)] pt-3 text-[8.5px] font-mono text-[rgba(255,255,255,0.35)]">
+                      <div className={`flex items-center justify-between border-t pt-3 text-[8.5px] font-mono ${
+                        isDark 
+                          ? "border-[rgba(255,255,255,0.04)] text-[rgba(255,255,255,0.35)]" 
+                          : "border-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.45)]"
+                      }`}>
                         <div className="flex items-center gap-1.5">
-                          <Clock className="w-3 h-3 text-[rgba(255,255,255,0.4)]" />
+                          <Clock className="w-3 h-3 text-[var(--text-secondary)]" />
                           <span>{new Date(rep.createdAt).toLocaleDateString()} {new Date(rep.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         
                         <div className="flex items-center gap-1">
                           <span>SOURCE:</span>
-                          <span className="text-white font-bold">
+                          <span className="text-[var(--text-primary)] font-bold">
                             {rep.isAnonymous ? "ANONYMOUS_BEACON" : "IDENTIFIED_NODE"}
                           </span>
                         </div>
