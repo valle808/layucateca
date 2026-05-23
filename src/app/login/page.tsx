@@ -43,14 +43,18 @@ export default function LoginPage() {
     }, 1200);
 
     return (
-      <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
-        {/* Soft Background Orbs */}
+      <main className={`min-h-screen pt-32 pb-16 flex items-center justify-center px-4 transition-colors duration-300 relative overflow-hidden bg-gradient-to-br ${
+        isDark 
+          ? "from-[#020205] via-[#050510] to-[#0a0518]" 
+          : "from-[#f7f4ed] via-[#f2ecd9] to-[#ebdcb9]"
+      }`}>
+        {/* Ambient Gradient Orbs */}
         <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[rgba(255,85,0,0.04)] blur-[100px] pointer-events-none" />
         
         <div className={`p-12 max-w-md w-full text-center border rounded-[32px] animate-fadeInUp backdrop-blur-xl relative z-10 ${
           isDark
-            ? "border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]"
-            : "border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.85)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
+            ? "border-white/10 bg-black/40 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]"
+            : "border-black/5 bg-white/70 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
         }`}>
           <div className="w-20 h-20 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mx-auto mb-6 animate-pulse">
             <CheckCircle className="w-10 h-10 text-[#ff5500]" />
@@ -106,9 +110,13 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
+    <main className={`min-h-screen pt-32 pb-16 flex items-center justify-center px-4 transition-colors duration-300 relative overflow-hidden bg-gradient-to-br ${
+      isDark 
+        ? "from-[#020205] via-[#050510] to-[#0a0518]" 
+        : "from-[#f7f4ed] via-[#f2ecd9] to-[#ebdcb9]"
+    }`}>
       
-      {/* Floating Background Ambient Gradient Orbs */}
+      {/* Floating Background Ambient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(255,85,0,0.03)] blur-[120px] pointer-events-none select-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(212,168,83,0.02)] blur-[120px] pointer-events-none select-none" />
 
@@ -118,16 +126,16 @@ export default function LoginPage() {
         transition={{ type: "spring", stiffness: 300, damping: 28 }}
         className={`w-full max-w-md p-10 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative z-10 overflow-hidden ${
           isDark 
-            ? "border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]" 
-            : "border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.85)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
+            ? "border-white/10 bg-black/40 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]" 
+            : "border-black/5 bg-white/70 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
         }`}
       >
         
-        {/* Toggle tabs — Framer Motion sliding capsule design */}
+        {/* 1. Animated Segmented control Toggle tabs */}
         <div className={`flex p-1.5 rounded-full mb-8 border relative overflow-hidden transition-all duration-300 ${
           isDark 
-            ? "bg-[rgba(0,0,0,0.3)] border-[rgba(255,255,255,0.06)]" 
-            : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.05)]"
+            ? "bg-black/30 border-white/10" 
+            : "bg-black/5 border-black/5"
         }`}>
           <button
             type="button"
@@ -139,7 +147,7 @@ export default function LoginPage() {
             className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center animate-none"
             style={{ color: isLoginTab ? (isDark ? "#ffffff" : "#1a1208") : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.45)") }}
           >
-            {t("Iniciar Sesión", "Sign In", "Okol")}
+            {t("SIGN IN", "SIGN IN", "SIGN IN")}
           </button>
           <button
             type="button"
@@ -151,12 +159,12 @@ export default function LoginPage() {
             className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center animate-none"
             style={{ color: !isLoginTab ? (isDark ? "#ffffff" : "#1a1208") : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.45)") }}
           >
-            {t("Registrarse", "Register", "Ts'íib")}
+            {t("REGISTER", "REGISTER", "REGISTER")}
           </button>
           
-          {/* Framer motion sliding capsule background */}
+          {/* Framer motion sliding active background pill */}
           <motion.div
-            className="absolute top-1.5 bottom-1.5 bg-[#ff5500] rounded-full shadow-[0_4px_16px_rgba(255,85,0,0.35)] z-0"
+            className="absolute top-1.5 bottom-1.5 bg-gradient-to-r from-orange-500 to-red-600 rounded-full shadow-[0_4px_16px_rgba(239,68,68,0.25)] z-0"
             initial={false}
             animate={{
               left: isLoginTab ? "6px" : "calc(50% + 3px)",
@@ -166,15 +174,24 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* Portal Header Greeting */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mb-4">
+        {/* 2. Shield Icon with Pulsing Energy Forcefield */}
+        <div className="flex flex-col items-center mb-8 relative">
+          <div className="w-16 h-16 rounded-full bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.15)] flex items-center justify-center mb-4 relative">
             <Shield className="w-6 h-6 text-[#ff5500] animate-pulse" />
+            
+            {/* Forcefield ring effect */}
+            <motion.div
+              animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+              className="absolute inset-0 rounded-full border border-[#ff5500]/30 pointer-events-none"
+            />
           </div>
-          <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-wide">
-            {t("Portal de Comunidad", "Community Portal", "Kajil Portal")}
+          
+          {/* 3. Headers */}
+          <h2 className="text-3xl font-black tracking-tight text-[var(--text-primary)] drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] text-center uppercase">
+            {t("Community Portal", "Community Portal", "Community Portal")}
           </h2>
-          <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed text-center max-w-[280px] font-medium">
+          <p className="text-xs text-[var(--text-secondary)] mt-3 leading-relaxed text-center max-w-[280px] font-medium">
             {t(
               "Únete para comentar en noticias, crear salas de debate y acumular reputación.",
               "Join to comment on news, create debate rooms, and build reputation.",
@@ -198,8 +215,8 @@ export default function LoginPage() {
         {/* Form elements */}
         <form onSubmit={handleSubmit} className="space-y-6">
           
-          {/* Framer Motion Animating Container for dynamic height adjustment */}
-          <motion.div layout className="space-y-5">
+          {/* Framer Motion Animating Container */}
+          <motion.div layout className="space-y-6">
             
             {/* ENTITY NAME FIELD (Only visible in Register mode) */}
             <AnimatePresence initial={false} mode="popLayout">
@@ -212,113 +229,110 @@ export default function LoginPage() {
                   transition={{ type: "spring", stiffness: 350, damping: 28 }}
                   className="overflow-hidden space-y-2"
                 >
-                  {/* Clean Flexbox floating-label field — 100% immune to overlaps */}
-                  <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group mt-1 ${
+                  {/* Outside label placement (No text collision) */}
+                  <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-widest block mb-2 px-1">
+                    {t("Nombre de Entidad", "Entity Name / Call Sign", "Nombre")}
+                  </label>
+                  
+                  {/* Floating Data Crystal input structure */}
+                  <div className={`relative flex items-center border rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
                     isDark 
-                      ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
-                      : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
+                      ? "bg-black/35 border-white/10" 
+                      : "bg-white/40 border-black/10 shadow-sm"
                   }`}>
-                    {/* Dedicated Icon box */}
-                    <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                      <User className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
-                    </div>
-                    {/* Floating Label Container */}
-                    <div className="flex-1 relative">
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        placeholder=" "
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
-                      />
-                      <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
-                        isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                      }`}>
-                        {t("Nombre de Entidad", "Entity Name", "Kaba'")}
-                      </label>
-                    </div>
+                    {/* Embedded icon absolute with padding */}
+                    <User className={`absolute left-4 w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-white/40" : "text-black/40"}`} />
+                    
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      placeholder={t("e.g. Sergio Valle", "e.g. Sergio Valle", "e.g. Sergio Valle")}
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-4 pl-12 pr-4 font-semibold"
+                    />
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
             {/* IDENTITY EMAIL FIELD */}
-            <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
-              isDark 
-                ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
-                : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
-            }`}>
-              {/* Dedicated Icon box */}
-              <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                <Mail className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
-              </div>
-              {/* Floating Label Container */}
-              <div className="flex-1 relative">
+            <div className="space-y-2">
+              {/* Outside label placement */}
+              <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-widest block mb-2 px-1">
+                {t("EMAIL ADDRESS", "EMAIL ADDRESS", "EMAIL ADDRESS")}
+              </label>
+              
+              {/* Floating Data Crystal input structure */}
+              <div className={`relative flex items-center border rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                isDark 
+                  ? "bg-black/35 border-white/10" 
+                  : "bg-white/40 border-black/10 shadow-sm"
+              }`}>
+                {/* Embedded icon */}
+                <Mail className={`absolute left-4 w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-white/40" : "text-black/40"}`} />
+                
                 <input
                   type="email"
                   name="email"
                   required
-                  placeholder=" "
+                  placeholder="sergio@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
+                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-4 pl-12 pr-4 font-semibold"
                 />
-                <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
-                  isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                }`}>
-                  {t("Correo Electrónico", "Email Address", "Correo")}
-                </label>
               </div>
             </div>
 
-            {/* SOVEREIGN PASSPHRASE FIELD */}
-            <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
-              isDark 
-                ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
-                : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
-            }`}>
-              {/* Dedicated Icon box */}
-              <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                <Lock className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
-              </div>
-              {/* Floating Label Container */}
-              <div className="flex-1 relative">
+            {/* SOVEREIGN PASSWORD FIELD */}
+            <div className="space-y-2">
+              {/* Outside label placement */}
+              <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-widest block mb-2 px-1">
+                {t("PASSWORD", "PASSWORD", "PASSWORD")}
+              </label>
+              
+              {/* Floating Data Crystal input structure */}
+              <div className={`relative flex items-center border rounded-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                isDark 
+                  ? "bg-black/35 border-white/10" 
+                  : "bg-white/40 border-black/10 shadow-sm"
+              }`}>
+                {/* Embedded icon */}
+                <Lock className={`absolute left-4 w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-white/40" : "text-black/40"}`} />
+                
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   required
-                  placeholder=" "
+                  placeholder="••••••••"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
+                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-4 pl-12 pr-12 font-semibold"
                 />
-                <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
-                  isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                }`}>
-                  {t("Contraseña", "Password", "Ta'akil")}
-                </label>
+                
+                {/* Password visibility toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute right-4 w-6 h-6 flex items-center justify-center transition-colors duration-200 cursor-pointer hover:text-[#ff5500] ${
+                    isDark ? "text-white/40" : "text-black/40"
+                  }`}
+                >
+                  {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                </button>
               </div>
-              {/* Password visibility toggle */}
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-200 cursor-pointer ml-2 hover:text-[#ff5500] ${
-                  isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"
-                }`}
-              >
-                {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-              </button>
             </div>
 
           </motion.div>
 
-          {/* Primary Action Button */}
-          <button
+          {/* 5. Primary Action Button */}
+          <motion.button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4 mt-8 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-4.5 mt-8 rounded-full shadow-[0_8px_30px_rgba(239,68,68,0.25)] hover:shadow-[0_8px_40px_rgba(239,68,68,0.35)] transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
               <span>{t("Procesando...", "Processing...", "Meyajil...")}</span>
@@ -326,13 +340,13 @@ export default function LoginPage() {
               <>
                 <span>
                   {isLoginTab 
-                    ? t("Iniciar Sesión", "Sign In", "Okol") 
-                    : t("Crear Cuenta", "Create Account", "Beeta'al ts'íib")}
+                    ? t("SIGN IN", "SIGN IN", "SIGN IN") 
+                    : t("CREATE ACCOUNT", "CREATE ACCOUNT", "CREATE ACCOUNT")}
                 </span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4.5 h-4.5" />
               </>
             )}
-          </button>
+          </motion.button>
         </form>
 
       </motion.div>
