@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { EDITORIAL_PROFILE } from '@/lib/news-engine/editorial-profile';
 
 export async function POST(req: NextRequest) {
