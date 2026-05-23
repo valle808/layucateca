@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 
 export default async function AdminPostsPage() {
-  const posts = await prisma.post.findMany({ orderBy: { createdAt: "desc" } });
+  const { data: postsData } = await supabase
+    .from('Post')
+    .select('*')
+    .order('createdAt', { ascending: false });
+  const posts = postsData || [];
 
   return (
     <div style={{ padding: "40px" }}>

@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 
 export default async function AdminPortfolioPage() {
-  const items = await prisma.portfolioItem.findMany({ orderBy: { createdAt: "desc" } });
+  const { data: itemsData } = await supabase
+    .from('PortfolioItem')
+    .select('*')
+    .order('createdAt', { ascending: false });
+  const items = itemsData || [];
 
   return (
     <div style={{ padding: "40px" }}>

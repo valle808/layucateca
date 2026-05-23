@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 
 export async function GET() {
   try {
@@ -14,10 +14,11 @@ export async function GET() {
     const sessionData = JSON.parse(sessionCookie.value);
     
     // Fetch fresh user data from DB (in case role/avatar changed)
-    const user = await (prisma as any).user.findUnique({
-      where: { id: sessionData.id },
-      include: { reputation: true },
-    });
+    const { data: user, error } = await supabase
+      .from('User')
+      .select('*, reputation:Reputation(*)')
+      .eq('id', sessionData.id)
+      .single();
 
     if (!user) {
       return NextResponse.json({ user: null });

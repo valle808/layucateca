@@ -1,20 +1,33 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
-  const [totalPosts, publishedPosts, totalPortfolio, publishedPortfolio] = await Promise.all([
-    prisma.post.count(),
-    prisma.post.count({ where: { published: true } }),
-    prisma.portfolioItem.count(),
-    prisma.portfolioItem.count({ where: { published: true } }),
+  const [
+    { count: totalPostsCount },
+    { count: publishedPostsCount },
+    { count: totalPortfolioCount },
+    { count: publishedPortfolioCount }
+  ] = await Promise.all([
+    supabase.from('Post').select('*', { count: 'exact', head: true }),
+    supabase.from('Post').select('*', { count: 'exact', head: true }).eq('published', true),
+    supabase.from('PortfolioItem').select('*', { count: 'exact', head: true }),
+    supabase.from('PortfolioItem').select('*', { count: 'exact', head: true }).eq('published', true),
   ]);
 
-  const recentPosts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
+  const totalPosts = totalPostsCount || 0;
+  const publishedPosts = publishedPostsCount || 0;
+  const totalPortfolio = totalPortfolioCount || 0;
+  const publishedPortfolio = publishedPortfolioCount || 0;
+
+  const { data: recentPostsData } = await supabase
+    .from('Post')
+    .select('*')
+    .order('createdAt', { ascending: false })
+    .limit(5);
+
+  const recentPosts = recentPostsData || [];
 
   const stats = [
     { label: "Total Posts", value: totalPosts, sub: `${publishedPosts} published`, icon: "📰", color: "#2dd4bf" },
