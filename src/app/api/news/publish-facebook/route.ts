@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 import { EDITORIAL_PROFILE } from '@/lib/news-engine/editorial-profile';
 
 export async function POST(req: NextRequest) {
@@ -20,11 +20,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch article from DB
-    const post = await prisma.post.findFirst({
-      where: articleId ? { id: articleId } : { slug: articleSlug },
-    });
+    const query = supabase.from('Post').select('*');
+    if (articleId) {
+      query.eq('id', articleId);
+    } else if (articleSlug) {
+      query.eq('slug', articleSlug);
+    }
 
-    if (!post) {
+    const { data: posts, error: fetchError } = await query;
+    const post = posts?.[0];
+
+    if (fetchError || !post) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
@@ -93,10 +99,14 @@ export async function POST(req: NextRequest) {
     const facebookPostId = fbData.id;
 
     // Update DB with Facebook post ID
-    await prisma.post.update({
-      where: { id: post.id },
-      data: { facebookPostId },
-    });
+    const { error: updateError } = await supabase
+      .from('Post')
+      .update({ facebookPostId })
+      .eq('id', post.id);
+
+    if (updateError) {
+      console.error('Failed to update post with FB ID', updateError);
+    }
 
     return NextResponse.json({
       success: true,
