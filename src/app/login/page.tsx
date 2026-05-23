@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Shield, Sparkles, CheckCircle } from "lucide-react";
+import { User, Mail, Lock, Shield, CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
   const { t } = useLanguage();
@@ -25,14 +25,18 @@ export default function LoginPage() {
     // Redirect if already logged in
     setTimeout(() => {
       router.push("/");
-    }, 1000);
+    }, 1200);
 
     return (
-      <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4">
-        <div className="p-8 max-w-sm w-full text-center border border-[rgba(255,85,0,0.2)] bg-[rgba(15,15,25,0.45)] rounded-2xl animate-fadeInUp">
-          <CheckCircle className="w-12 h-12 text-[#ff5500] mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-white">Sesión Activa</h2>
-          <p className="text-xs text-[rgba(255,255,255,0.55)] mt-2">Hola {user.name}, redirigiéndote al inicio...</p>
+      <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300">
+        <div className="p-8 max-w-sm w-full text-center border border-[var(--border-accent)] bg-[var(--bg-card)] rounded-3xl animate-fadeInUp shadow-[var(--glow-gold)] backdrop-blur-xl">
+          <CheckCircle className="w-16 h-16 text-[#ff5500] mx-auto mb-5 animate-pulse" />
+          <h2 className="text-2xl font-black text-[var(--text-primary)]">
+            {t("Sesión Activa", "Active Session", "Tsolob Kuxtal")}
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)] mt-3">
+            {t(`Hola ${user.name}, redirigiéndote al inicio...`, `Hello ${user.name}, redirecting to home...`, `Ki'ola ${user.name}, sutnaj to'on ti' yáax...`)}
+          </p>
         </div>
       </main>
     );
@@ -57,94 +61,114 @@ export default function LoginPage() {
         if (res.success) {
           router.push("/");
         } else {
-          setErrorMsg(res.error || "Error de inicio de sesión.");
+          setErrorMsg(res.error || t("Error de inicio de sesión.", "Sign-in error.", "Talamil okol."));
         }
       } else {
         const res = await register(formData);
         if (res.success) {
-          setSuccessMsg("¡Registro exitoso! Iniciando sesión...");
+          setSuccessMsg(t("¡Registro exitoso! Iniciando sesión...", "Registration successful! Signing in...", "¡Jats'uts ts'íib! Okol bejla'e'..."));
           setTimeout(() => {
             router.push("/");
           }, 1500);
         } else {
-          setErrorMsg(res.error || "Error al registrarse.");
+          setErrorMsg(res.error || t("Error al registrarse.", "Registration error.", "Talamil ts'íib."));
         }
       }
     } catch (err) {
-      setErrorMsg("Error de red.");
+      setErrorMsg(t("Error de red.", "Network error.", "Talamil k'áax."));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4">
-      <div className="w-full max-w-md p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(15,15,25,0.45)] backdrop-blur-md shadow-[0_0_50px_rgba(255,85,0,0.05)]">
+    <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300">
+      <div className="w-full max-w-md p-8 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)] backdrop-blur-xl shadow-[var(--glow-gold)] transition-all duration-300">
         {/* Toggle tabs */}
-        <div className="flex border-b border-[rgba(255,255,255,0.08)] pb-4 mb-6">
+        <div className="flex border-b border-[var(--border-subtle)] pb-4 mb-6">
           <button
             onClick={() => {
               setIsLoginTab(true);
               setErrorMsg("");
             }}
-            className={`flex-1 text-center font-bold text-xs uppercase tracking-wider pb-2 transition-all ${
-              isLoginTab ? "text-white border-b-2 border-[#ff5500]" : "text-[rgba(255,255,255,0.45)]"
+            className={`flex-1 text-center font-black text-xs uppercase tracking-widest pb-2 transition-all duration-200 ${
+              isLoginTab 
+                ? "text-[var(--text-primary)] border-b-2 border-[#ff5500]" 
+                : "text-[var(--text-secondary)] opacity-60 hover:opacity-100"
             }`}
           >
-            Iniciar Sesión
+            {t("Iniciar Sesión", "Sign In", "Okol")}
           </button>
           <button
             onClick={() => {
               setIsLoginTab(false);
               setErrorMsg("");
             }}
-            className={`flex-1 text-center font-bold text-xs uppercase tracking-wider pb-2 transition-all ${
-              !isLoginTab ? "text-white border-b-2 border-[#ff5500]" : "text-[rgba(255,255,255,0.45)]"
+            className={`flex-1 text-center font-black text-xs uppercase tracking-widest pb-2 transition-all duration-200 ${
+              !isLoginTab 
+                ? "text-[var(--text-primary)] border-b-2 border-[#ff5500]" 
+                : "text-[var(--text-secondary)] opacity-60 hover:opacity-100"
             }`}
           >
-            Registrarse
+            {t("Registrarse", "Register", "Ts'íib")}
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-black text-white flex justify-center items-center gap-2">
-              <Shield className="w-5 h-5 text-[#ff5500]" />
-              Portal de Comunidad
+            <h2 className="text-2xl font-black text-[var(--text-primary)] flex justify-center items-center gap-2">
+              <Shield className="w-6 h-6 text-[#ff5500]" />
+              {t("Portal de Comunidad", "Community Portal", "Kajil Portal")}
             </h2>
-            <p className="text-[10px] text-[rgba(255,255,255,0.5)] mt-1">
-              Únete para comentar en noticias, crear salas de debate y acumular puntos de reputación.
+            <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed">
+              {t(
+                "Únete para comentar en noticias, crear salas de debate y acumular reputación.",
+                "Join to comment on news, create debate rooms, and build reputation points.",
+                "Okol ti'al a t'aan ti' péektsil, beeta'al tsikbal yéetel náajaltik reputación."
+              )}
             </p>
           </div>
 
-          {errorMsg && <div className="p-3 text-xs bg-[rgba(255,0,0,0.1)] border border-red-500/30 text-red-400 rounded-lg">{errorMsg}</div>}
-          {successMsg && <div className="p-3 text-xs bg-[rgba(0,255,0,0.1)] border border-emerald-500/30 text-emerald-400 rounded-lg">{successMsg}</div>}
+          {errorMsg && (
+            <div className="p-3.5 text-xs bg-red-500/10 border border-red-500/30 text-red-500 rounded-xl animate-shake">
+              {errorMsg}
+            </div>
+          )}
+          {successMsg && (
+            <div className="p-3.5 text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 rounded-xl">
+              {successMsg}
+            </div>
+          )}
 
           {!isLoginTab && (
             <div>
-              <label className="text-[10px] font-bold text-[rgba(255,255,255,0.4)] uppercase block mb-1">Nombre</label>
+              <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-wider block mb-1.5">
+                {t("Nombre", "Name", "Kaba'")}
+              </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[rgba(255,255,255,0.45)] pointer-events-none">
-                  <User className="w-4 h-4" />
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-secondary)] pointer-events-none">
+                  <User className="w-4 h-4 opacity-75" />
                 </span>
                 <input
                   type="text"
                   name="name"
                   required
-                  placeholder="e.g. Sergio Valle"
+                  placeholder={t("e.g. Sergio Valle", "e.g. Sergio Valle", "e.g. Sergio Valle")}
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="input pl-10 text-xs"
+                  className="input pl-10 text-xs text-[var(--text-primary)] font-medium"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="text-[10px] font-bold text-[rgba(255,255,255,0.4)] uppercase block mb-1">Correo Electrónico</label>
+            <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-wider block mb-1.5">
+              {t("Correo Electrónico", "Email Address", "Correo")}
+            </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[rgba(255,255,255,0.45)] pointer-events-none">
-                <Mail className="w-4 h-4" />
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-secondary)] pointer-events-none">
+                <Mail className="w-4 h-4 opacity-75" />
               </span>
               <input
                 type="email"
@@ -153,16 +177,18 @@ export default function LoginPage() {
                 placeholder="sergio@example.com"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="input pl-10 text-xs"
+                className="input pl-10 text-xs text-[var(--text-primary)] font-medium"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-[rgba(255,255,255,0.4)] uppercase block mb-1">Contraseña</label>
+            <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-wider block mb-1.5">
+              {t("Contraseña", "Password", "Ta'akil")}
+            </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[rgba(255,255,255,0.45)] pointer-events-none">
-                <Lock className="w-4 h-4" />
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-secondary)] pointer-events-none">
+                <Lock className="w-4 h-4 opacity-75" />
               </span>
               <input
                 type="password"
@@ -171,7 +197,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="input pl-10 text-xs"
+                className="input pl-10 text-xs text-[var(--text-primary)] font-medium"
               />
             </div>
           </div>
@@ -179,9 +205,13 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-3 mt-6 text-xs font-bold"
+            className="w-full btn-primary justify-center border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-3.5 mt-6 text-xs font-black tracking-widest uppercase transition-all duration-300"
           >
-            {loading ? "Procesando..." : isLoginTab ? "Iniciar Sesión" : "Crear Cuenta"}
+            {loading 
+              ? t("Procesando...", "Processing...", "Meyajil...") 
+              : isLoginTab 
+                ? t("Iniciar Sesión", "Sign In", "Okol") 
+                : t("Crear Cuenta", "Create Account", "Beeta'al ts'íib")}
           </button>
         </form>
       </div>

@@ -29,14 +29,17 @@ export async function POST(req: Request) {
     // Secure SHA-256 hash using Node's crypto
     const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
 
+    const userId = crypto.randomUUID();
     const { data: userArray, error: insertError } = await supabase
       .from('User')
       .insert([{
+        id: userId,
         email,
         name,
         password: hashedPassword,
         avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`,
         role: "USER",
+        updatedAt: new Date().toISOString(),
       }])
       .select();
 
@@ -44,13 +47,17 @@ export async function POST(req: Request) {
     const user = userArray[0];
 
     // Create reputation record
-    await supabase
+    const { error: repError } = await supabase
       .from('Reputation')
       .insert([{
+        id: crypto.randomUUID(),
         userId: user.id,
         score: 100,
         badges: JSON.stringify(["Citizen"]),
+        updatedAt: new Date().toISOString(),
       }]);
+
+    if (repError) throw repError;
 
     // Strip password from response
     const { password: _, ...userWithoutPassword } = user;

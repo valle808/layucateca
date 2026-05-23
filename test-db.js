@@ -13,8 +13,12 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function run() {
-  const { data, error } = await supabase.from('Post').select('id, title, category, published, createdAt').order('createdAt', { ascending: false }).limit(5);
-  console.log("Posts:", data);
+  const { data, error } = await supabase.from('Post').select('id, title, category, imageUrl, content, published, createdAt').order('createdAt', { ascending: false }).limit(5);
+  if (data && data.length > 0) {
+    console.log("Latest Post title:", data[0].title);
+    console.log("Latest Post image:", data[0].imageUrl);
+    console.log("Latest Post content length (chars):", data[0].content.length);
+  }
   console.log("Error:", error);
 }
 
