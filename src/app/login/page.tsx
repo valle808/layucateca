@@ -29,12 +29,12 @@ export default function LoginPage() {
 
     return (
       <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300">
-        <div className="p-8 max-w-sm w-full text-center border border-[var(--border-accent)] bg-[var(--bg-card)] rounded-3xl animate-fadeInUp shadow-[var(--glow-gold)] backdrop-blur-xl">
-          <CheckCircle className="w-16 h-16 text-[#ff5500] mx-auto mb-5 animate-pulse" />
-          <h2 className="text-2xl font-black text-[var(--text-primary)]">
+        <div className="p-10 max-w-md w-full text-center border border-[var(--border-accent)] bg-[var(--bg-card)] rounded-3xl animate-fadeInUp shadow-[var(--glow-gold)] backdrop-blur-xl">
+          <CheckCircle className="w-16 h-16 text-[#ff5500] mx-auto mb-6 animate-pulse" />
+          <h2 className="text-3xl font-black text-[var(--text-primary)] tracking-wide">
             {t("Sesión Activa", "Active Session", "Tsolob Kuxtal")}
           </h2>
-          <p className="text-xs text-[var(--text-secondary)] mt-3">
+          <p className="text-sm text-[var(--text-secondary)] mt-4 leading-relaxed font-medium">
             {t(`Hola ${user.name}, redirigiéndote al inicio...`, `Hello ${user.name}, redirecting to home...`, `Ki'ola ${user.name}, sutnaj to'on ti' yáax...`)}
           </p>
         </div>
@@ -83,15 +83,15 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300">
-      <div className="w-full max-w-md p-8 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)] backdrop-blur-xl shadow-[var(--glow-gold)] transition-all duration-300">
+      <div className="w-full max-w-md p-10 rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)] backdrop-blur-xl shadow-[var(--glow-gold)] transition-all duration-300">
         {/* Toggle tabs */}
-        <div className="flex border-b border-[var(--border-subtle)] pb-4 mb-6">
+        <div className="flex border-b border-[var(--border-subtle)] pb-4 mb-8">
           <button
             onClick={() => {
               setIsLoginTab(true);
               setErrorMsg("");
             }}
-            className={`flex-1 text-center font-black text-xs uppercase tracking-widest pb-2 transition-all duration-200 ${
+            className={`flex-1 text-center font-black text-xs uppercase tracking-widest pb-3 transition-all duration-200 ${
               isLoginTab 
                 ? "text-[var(--text-primary)] border-b-2 border-[#ff5500]" 
                 : "text-[var(--text-secondary)] opacity-60 hover:opacity-100"
@@ -104,7 +104,7 @@ export default function LoginPage() {
               setIsLoginTab(false);
               setErrorMsg("");
             }}
-            className={`flex-1 text-center font-black text-xs uppercase tracking-widest pb-2 transition-all duration-200 ${
+            className={`flex-1 text-center font-black text-xs uppercase tracking-widest pb-3 transition-all duration-200 ${
               !isLoginTab 
                 ? "text-[var(--text-primary)] border-b-2 border-[#ff5500]" 
                 : "text-[var(--text-secondary)] opacity-60 hover:opacity-100"
@@ -114,13 +114,13 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-black text-[var(--text-primary)] flex justify-center items-center gap-2">
-              <Shield className="w-6 h-6 text-[#ff5500]" />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-black text-[var(--text-primary)] flex justify-center items-center gap-2.5 tracking-wide">
+              <Shield className="w-7 h-7 text-[#ff5500]" />
               {t("Portal de Comunidad", "Community Portal", "Kajil Portal")}
             </h2>
-            <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed">
+            <p className="text-xs text-[var(--text-secondary)] mt-3 leading-relaxed font-medium px-2">
               {t(
                 "Únete para comentar en noticias, crear salas de debate y acumular reputación.",
                 "Join to comment on news, create debate rooms, and build reputation points.",
@@ -130,24 +130,24 @@ export default function LoginPage() {
           </div>
 
           {errorMsg && (
-            <div className="p-3.5 text-xs bg-red-500/10 border border-red-500/30 text-red-500 rounded-xl animate-shake">
+            <div className="p-4 text-xs bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl animate-shake font-semibold">
               {errorMsg}
             </div>
           )}
           {successMsg && (
-            <div className="p-3.5 text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 rounded-xl">
+            <div className="p-4 text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 rounded-2xl font-semibold">
               {successMsg}
             </div>
           )}
 
           {!isLoginTab && (
             <div>
-              <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-wider block mb-1.5">
+              <label className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider block mb-2 px-1">
                 {t("Nombre", "Name", "Kaba'")}
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-secondary)] pointer-events-none">
-                  <User className="w-4 h-4 opacity-75" />
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-secondary)] pointer-events-none">
+                  <User className="w-4 h-4 opacity-70" />
                 </span>
                 <input
                   type="text"
@@ -156,19 +156,19 @@ export default function LoginPage() {
                   placeholder={t("e.g. Sergio Valle", "e.g. Sergio Valle", "e.g. Sergio Valle")}
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="input pl-10 text-xs text-[var(--text-primary)] font-medium"
+                  className="input pl-11 py-3.5 text-xs text-[var(--text-primary)] bg-[var(--bg-primary)] border-[var(--border-subtle)] focus:border-[#ff5500] rounded-xl font-medium transition-all duration-200"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-wider block mb-1.5">
+            <label className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider block mb-2 px-1">
               {t("Correo Electrónico", "Email Address", "Correo")}
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-secondary)] pointer-events-none">
-                <Mail className="w-4 h-4 opacity-75" />
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-secondary)] pointer-events-none">
+                <Mail className="w-4 h-4 opacity-70" />
               </span>
               <input
                 type="email"
@@ -177,18 +177,18 @@ export default function LoginPage() {
                 placeholder="sergio@example.com"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="input pl-10 text-xs text-[var(--text-primary)] font-medium"
+                className="input pl-11 py-3.5 text-xs text-[var(--text-primary)] bg-[var(--bg-primary)] border-[var(--border-subtle)] focus:border-[#ff5500] rounded-xl font-medium transition-all duration-200"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-wider block mb-1.5">
+            <label className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider block mb-2 px-1">
               {t("Contraseña", "Password", "Ta'akil")}
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[var(--text-secondary)] pointer-events-none">
-                <Lock className="w-4 h-4 opacity-75" />
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-secondary)] pointer-events-none">
+                <Lock className="w-4 h-4 opacity-70" />
               </span>
               <input
                 type="password"
@@ -197,7 +197,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="input pl-10 text-xs text-[var(--text-primary)] font-medium"
+                className="input pl-11 py-3.5 text-xs text-[var(--text-primary)] bg-[var(--bg-primary)] border-[var(--border-subtle)] focus:border-[#ff5500] rounded-xl font-medium transition-all duration-200"
               />
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary justify-center border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-3.5 mt-6 text-xs font-black tracking-widest uppercase transition-all duration-300"
+            className="w-full justify-center bg-[#ff5500] hover:bg-[#e04b00] text-white border-none py-4 mt-6 rounded-xl shadow-[0_4px_20px_rgba(255,85,0,0.25)] font-black tracking-widest text-xs uppercase transition-all duration-300 cursor-pointer disabled:opacity-50"
           >
             {loading 
               ? t("Procesando...", "Processing...", "Meyajil...") 
