@@ -166,10 +166,8 @@ export default function LoginPage() {
               <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1 opacity-75">
                 {t("Nombre", "Name", "Kaba'")}
               </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-secondary)] pointer-events-none z-20">
-                  <User className="w-4 h-4 opacity-75" />
-                </span>
+              <div className="flex items-center bg-[var(--bg-primary)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-2xl px-4 py-3.5 transition-all duration-200 shadow-sm relative">
+                <User className="w-5 h-5 text-[var(--text-secondary)] opacity-70 mr-3 flex-shrink-0" />
                 <input
                   type="text"
                   name="name"
@@ -177,8 +175,7 @@ export default function LoginPage() {
                   placeholder={t("e.g. Sergio Valle", "e.g. Sergio Valle", "e.g. Sergio Valle")}
                   value={formData.name}
                   onChange={handleInputChange}
-                  style={{ paddingLeft: "44px" }}
-                  className="input py-4 text-sm text-[var(--text-primary)] bg-[var(--bg-primary)] border-[var(--border-subtle)] focus:border-[#ff5500] rounded-2xl font-medium transition-all duration-200 shadow-sm relative z-10"
+                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-medium p-0 placeholder:opacity-60"
                 />
               </div>
             </div>
@@ -188,10 +185,8 @@ export default function LoginPage() {
             <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1 opacity-75">
               {t("Correo Electrónico", "Email Address", "Correo")}
             </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-secondary)] pointer-events-none z-20">
-                <Mail className="w-4 h-4 opacity-75" />
-              </span>
+            <div className="flex items-center bg-[var(--bg-primary)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-2xl px-4 py-3.5 transition-all duration-200 shadow-sm relative">
+              <Mail className="w-5 h-5 text-[var(--text-secondary)] opacity-70 mr-3 flex-shrink-0" />
               <input
                 type="email"
                 name="email"
@@ -199,8 +194,7 @@ export default function LoginPage() {
                 placeholder="sergio@example.com"
                 value={formData.email}
                 onChange={handleInputChange}
-                style={{ paddingLeft: "44px" }}
-                className="input py-4 text-sm text-[var(--text-primary)] bg-[var(--bg-primary)] border-[var(--border-subtle)] focus:border-[#ff5500] rounded-2xl font-medium transition-all duration-200 shadow-sm relative z-10"
+                className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-medium p-0 placeholder:opacity-60"
               />
             </div>
           </div>
@@ -209,10 +203,8 @@ export default function LoginPage() {
             <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1 opacity-75">
               {t("Contraseña", "Password", "Ta'akil")}
             </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-secondary)] pointer-events-none z-20">
-                <Lock className="w-4 h-4 opacity-75" />
-              </span>
+            <div className="flex items-center bg-[var(--bg-primary)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-2xl px-4 py-3.5 transition-all duration-200 shadow-sm relative">
+              <Lock className="w-5 h-5 text-[var(--text-secondary)] opacity-70 mr-3 flex-shrink-0" />
               <input
                 type="password"
                 name="password"
@@ -220,8 +212,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleInputChange}
-                style={{ paddingLeft: "44px" }}
-                className="input py-4 text-sm text-[var(--text-primary)] bg-[var(--bg-primary)] border-[var(--border-subtle)] focus:border-[#ff5500] rounded-2xl font-medium transition-all duration-200 shadow-sm relative z-10"
+                className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-medium p-0 placeholder:opacity-60"
               />
             </div>
           </div>
