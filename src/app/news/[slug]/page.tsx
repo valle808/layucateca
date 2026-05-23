@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 import NewsArticleClient from "@/components/NewsArticleClient";
 import { getBotNewsBySlug } from "@/lib/botNewsData";
 
@@ -8,6 +8,7 @@ interface Props {
 }
 
 export const dynamicParams = true;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return [];
@@ -17,7 +18,8 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   let post = null;
   try {
-    post = await prisma.post.findUnique({ where: { slug } });
+    const { data } = await supabase.from('Post').select('*').eq('slug', slug).single();
+    post = data;
   } catch (e) {
     // DB error fallback
   }
@@ -35,7 +37,8 @@ export default async function NewsArticlePage({ params }: Props) {
   const { slug } = await params;
   let post = null;
   try {
-    post = await prisma.post.findUnique({ where: { slug, published: true } });
+    const { data } = await supabase.from('Post').select('*').eq('slug', slug).eq('published', true).single();
+    post = data;
   } catch (e) {
     // DB error fallback
   }
@@ -45,7 +48,7 @@ export default async function NewsArticlePage({ params }: Props) {
   if (post) {
     serializedPost = {
       ...post,
-      createdAt: post.createdAt instanceof Date ? post.createdAt.toISOString() : post.createdAt,
+      createdAt: post.createdAt ? new Date(post.createdAt).toISOString() : post.createdAt,
     };
   } else {
     const botItem = getBotNewsBySlug(slug);

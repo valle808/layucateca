@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -13,9 +13,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    const { data: existingUser } = await supabase
+      .from('User')
+      .select('id')
+      .eq('email', email)
+      .single();
 
     if (existingUser) {
       return NextResponse.json(
@@ -27,21 +29,28 @@ export async function POST(req: Request) {
     // Secure SHA-256 hash using Node's crypto
     const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
 
-    const user = await prisma.user.create({
-      data: {
+    const { data: userArray, error: insertError } = await supabase
+      .from('User')
+      .insert([{
         email,
         name,
         password: hashedPassword,
         avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`,
         role: "USER",
-        reputation: {
-          create: {
-            score: 100,
-            badges: JSON.stringify(["Citizen"]),
-          },
-        },
-      },
-    });
+      }])
+      .select();
+
+    if (insertError) throw insertError;
+    const user = userArray[0];
+
+    // Create reputation record
+    await supabase
+      .from('Reputation')
+      .insert([{
+        userId: user.id,
+        score: 100,
+        badges: JSON.stringify(["Citizen"]),
+      }]);
 
     // Strip password from response
     const { password: _, ...userWithoutPassword } = user;

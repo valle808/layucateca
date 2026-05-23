@@ -1,32 +1,18 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { Pool } from "pg";
+import dns from "dns";
 
-export const dynamic = "force-dynamic";
+dns.setDefaultResultOrder("ipv6first");
 
 export async function GET() {
+  const connectionString = "postgresql://postgres:Layucateca2026Secret!@db.dnomwkheggsvcvauvwik.supabase.co:6543/postgres?pgbouncer=true";
+  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false } });
   try {
-    let alerts = await (prisma as any).emergencyAlert.findMany({
-      where: { active: true },
-      orderBy: { createdAt: "desc" },
-    });
-
-    // Seed default emergency warning alert if empty
-    if (alerts.length === 0) {
-      const defaultAlert = await (prisma as any).emergencyAlert.create({
-        data: {
-          title: "⚠️ AVISO METEOROLÓGICO: ALERTA DE ONDA DE CALOR EXTREMA",
-          message: "Se registran temperaturas de hasta 43°C en la península de Yucatán. Evite exponerse directamente al sol entre 11 AM y 4 PM.",
-          level: "WARNING",
-          location: "Yucatán",
-          active: true,
-        },
-      });
-      alerts = [defaultAlert];
-    }
-
-    return NextResponse.json({ success: true, alerts });
-  } catch (error) {
-    console.error("[ALERTS GET ERROR]", error);
-    return NextResponse.json({ error: "Failed to fetch alerts" }, { status: 500 });
+    const client = await pool.connect();
+    const result = await client.query('SELECT NOW()');
+    client.release();
+    return NextResponse.json({ success: true, time: result.rows[0], url: connectionString, dnsOrder: 'ipv6first' });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message, code: err.code, stack: err.stack, url: connectionString });
   }
 }

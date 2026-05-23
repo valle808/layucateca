@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 
 export async function GET() {
   try {
-    const posts = await prisma.post.findMany({
-      where: { published: true },
-      orderBy: { createdAt: "desc" },
-    });
+    const { data: posts, error } = await supabase
+      .from('Post')
+      .select('*')
+      .eq('published', true)
+      .order('createdAt', { ascending: false });
 
-    // Serialize dates for secure client parsing
-    const serializedPosts = posts.map((post) => ({
-      ...post,
-      createdAt: post.createdAt.toISOString(),
-    }));
+    if (error) throw error;
 
-    return NextResponse.json(serializedPosts);
+    return NextResponse.json(posts);
   } catch (error: any) {
     console.error("Failed to fetch posts:", error);
     return NextResponse.json(

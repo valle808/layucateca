@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -13,12 +13,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: { reputation: true },
-    });
+    const { data: user, error } = await supabase
+      .from('User')
+      .select('*, reputation:Reputation(*)')
+      .eq('email', email)
+      .single();
 
-    if (!user || !user.password) {
+    if (error || !user || !user.password) {
       return NextResponse.json(
         { error: "Credenciales incorrectas" },
         { status: 400 }

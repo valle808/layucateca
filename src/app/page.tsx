@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 import HomeClient from "@/components/HomeClient";
 
 export const metadata = {
@@ -7,19 +7,32 @@ export const metadata = {
     "Tu fuente principal de noticias y servicios profesionales de diseño web a medida. || Your premier source for news and professional bespoke web design services.",
 };
 
+// Revalidate this page every 60 seconds (ISR)
+export const revalidate = 60;
+
 export default async function HomePage() {
-  const recentPosts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    take: 3,
-  });
+  let recentPosts: any[] = [];
+  try {
+    const { data, error } = await supabase
+      .from('Post')
+      .select('*')
+      .eq('published', true)
+      .order('createdAt', { ascending: false })
+      .limit(3);
 
-
+    if (error) {
+      throw error;
+    }
+    recentPosts = data || [];
+  } catch (error) {
+    console.error("Failed to fetch posts from DB:", error);
+    // Return empty fallback array
+  }
 
   // Serialize dates to prevent hydration warnings/errors with custom date classes
   const serializedPosts = recentPosts.map((post) => ({
     ...post,
-    createdAt: post.createdAt.toISOString(),
+    createdAt: new Date(post.createdAt).toISOString(),
   }));
 
   return (

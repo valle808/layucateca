@@ -9,6 +9,8 @@ import MunaChatbot from "@/components/MunaChatbot";
 import EmergencyAlertBanner from "@/components/EmergencyAlertBanner";
 import Script from "next/script";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "La Yucateca — News & Web Design Portal",
   description:

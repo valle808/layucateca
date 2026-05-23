@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 import NewsClient from "@/components/NewsClient";
 
 export const metadata = {
@@ -6,17 +6,28 @@ export const metadata = {
   description: "Mantente al día con las últimas noticias de La Yucateca. || Stay up to date with the latest news.",
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function NewsPage() {
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-  });
+  let posts: any[] = [];
+  try {
+    const { data, error } = await supabase
+      .from('Post')
+      .select('*')
+      .eq('published', true)
+      .order('createdAt', { ascending: false });
+    
+    if (error) {
+      throw error;
+    }
+    posts = data || [];
+  } catch (error) {
+    console.error("DB error in NewsPage:", error);
+  }
 
   const serializedPosts = posts.map((post) => ({
     ...post,
-    createdAt: post.createdAt.toISOString(),
+    createdAt: new Date(post.createdAt).toISOString(),
   }));
 
   return <NewsClient posts={serializedPosts} />;

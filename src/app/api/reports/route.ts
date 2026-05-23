@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabaseClient";
 import OpenAI from "openai";
 import { logTelemetry } from "@/lib/telemetry";
 
@@ -189,9 +189,13 @@ async function autoShareToFacebook(report: any) {
 
 export async function GET() {
   try {
-    const reports = await (prisma as any).report.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const { data: reports, error } = await supabase
+      .from('Report')
+      .select('*')
+      .order('createdAt', { ascending: false });
+
+    if (error) throw error;
+    
     return NextResponse.json({ success: true, reports });
   } catch (error: any) {
     await logTelemetry({
@@ -226,8 +230,9 @@ export async function POST(req: Request) {
     const aiResult = await runAiOrchestration(title, description);
 
     // Save report to database
-    const report = await (prisma as any).report.create({
-      data: {
+    const { data: reportArray, error: insertError } = await supabase
+      .from('Report')
+      .insert([{
         title,
         description,
         mediaUrls: JSON.stringify(mediaUrls || []),
@@ -241,8 +246,11 @@ export async function POST(req: Request) {
         aiTags: JSON.stringify(aiResult.tags),
         moderation: aiResult.moderation,
         authorId: authorId || null,
-      },
-    });
+      }])
+      .select();
+
+    if (insertError) throw insertError;
+    const report = reportArray[0];
 
     await logTelemetry({
       type: "DATA_MUTATION",
@@ -257,10 +265,10 @@ export async function POST(req: Request) {
     if (report.status === "APPROVED") {
       const fbId = await autoShareToFacebook(report);
       if (fbId) {
-        await (prisma as any).report.update({
-          where: { id: report.id },
-          data: { fbPostId: fbId },
-        });
+        await supabase
+          .from('Report')
+          .update({ fbPostId: fbId })
+          .eq('id', report.id);
       }
     }
 
