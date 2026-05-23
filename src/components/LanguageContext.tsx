@@ -42,7 +42,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const translateDb = (text: string | null | undefined) => {
     if (!text) return "";
-    const parts = text.split(" || ");
+    // Standardize all potential delimiters (||, II, //) to a single standard ' || '
+    const cleanText = text.replace(/\s*\|\|\s*|\s*\bII\b\s*|\s*\/\/\s*/g, " || ");
+    const parts = cleanText.split(" || ");
     if (parts.length > 1) {
       if (!mounted) return parts[0]; // Default to Spanish during hydration
       if (language === "my") {
@@ -69,7 +71,8 @@ export function useLanguage() {
       t: (es: string, en: string, my?: string) => es,
       translateDb: (text: string | null | undefined) => {
         if (!text) return "";
-        return text.split(" || ")[0];
+        const cleanText = text.replace(/\s*\|\|\s*|\s*\bII\b\s*|\s*\/\/\s*/g, " || ");
+        return cleanText.split(" || ")[0];
       },
     };
   }

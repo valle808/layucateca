@@ -14,21 +14,24 @@ import { runPublisher, type PublishResult } from '../agents/publisher';
 import { NEWS_CATEGORIES, type NewsCategory } from '@/lib/rss-sources';
 import { logTelemetry } from '@/lib/telemetry';
 
+import { supabase } from '@/lib/supabaseClient';
+
 // In-memory category rotation queue (persisted via DB for production)
 let currentCategoryIndex = 0;
 
 export async function getNextCategory(): Promise<NewsCategory> {
   // Try to get from DB to persist across serverless invocations
   try {
-    const { prisma } = await import('@/lib/prisma');
+    const { data: recentLogs, error } = await supabase
+      .from('NewsGenerationLog')
+      .select('category')
+      .eq('success', true)
+      .order('createdAt', { ascending: false })
+      .limit(NEWS_CATEGORIES.length * 2);
     
-    // Find which category was used least recently
-    const recentLogs = await prisma.newsGenerationLog.findMany({
-      where: { success: true },
-      orderBy: { createdAt: 'desc' },
-      take: NEWS_CATEGORIES.length * 2,
-      select: { category: true },
-    });
+    if (error || !recentLogs) {
+      throw new Error(error?.message);
+    }
     
     const recentCategories = recentLogs.map(l => l.category as NewsCategory);
     

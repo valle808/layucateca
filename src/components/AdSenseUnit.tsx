@@ -49,6 +49,11 @@ export default function AdSenseUnit({
     }
   }, [clientId]);
 
+  const isPlaceholderSlot = ['1234567890', '0987654321', '1122334455', ''].includes(slot);
+  if (isPlaceholderSlot && process.env.NODE_ENV === 'production') {
+    return null;
+  }
+
   if (!clientId) {
     // Development placeholder — shows a nice placeholder in dev mode
     if (process.env.NODE_ENV === 'development') {

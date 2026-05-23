@@ -3,7 +3,7 @@
  * Saves approved articles to DB and posts to Facebook
  */
 
-import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabaseClient';
 import { DedupChecker } from '../tools/dedup-db';
 import { EDITORIAL_PROFILE } from '../editorial-profile';
 import type { EditedArticle } from './editor';
@@ -39,8 +39,9 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
   
   try {
     // 1. Save to database
-    const post = await prisma.post.create({
-      data: {
+    const { data: post, error: dbError } = await supabase
+      .from('Post')
+      .insert({
         title: article.title,
         slug: article.slug,
         content: article.content,
@@ -55,8 +56,13 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
         tags: JSON.stringify(article.tags ?? []),
         readTimeMinutes: article.readTimeMinutes,
         qualityScore: article.qualityScore,
-      },
-    });
+      })
+      .select()
+      .single();
+    
+    if (dbError || !post) {
+      throw new Error(dbError?.message || "Failed to save post");
+    }
     
     console.log(`[publisher] ✅ Saved to DB: ${post.id}`);
 
@@ -84,23 +90,31 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
 
     // 4. Update FB post ID if we got one
     if (facebookPostId) {
-      await prisma.post.update({
-        where: { id: post.id },
-        data: { facebookPostId },
-      }).catch(() => {});
+      try {
+        await supabase
+          .from('Post')
+          .update({ facebookPostId })
+          .eq('id', post.id);
+      } catch (e) {
+        console.error("Non-fatal: failed to update FB post ID in database:", e);
+      }
       console.log(`[publisher] 📘 Posted to Facebook: ${facebookPostId}`);
     }
 
     // 5. Log generation
-    await prisma.newsGenerationLog.create({
-      data: {
-        category: article.category,
-        postId: post.id,
-        success: true,
-        qualityScore: article.qualityScore,
-        facebookPosted: !!facebookPostId,
-      },
-    }).catch(() => {}); // Non-fatal
+    try {
+      await supabase
+        .from('NewsGenerationLog')
+        .insert({
+          category: article.category,
+          postId: post.id,
+          success: true,
+          qualityScore: article.qualityScore,
+          facebookPosted: !!facebookPostId,
+        });
+    } catch (e) {
+      console.error("Non-fatal: failed to write generation log:", e);
+    }
 
     return {
       success: true,
@@ -114,14 +128,18 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
     console.error('[publisher] ❌ Failed to publish:', err.message);
     
     // Log failure
-    await prisma.newsGenerationLog.create({
-      data: {
-        category: article.category,
-        success: false,
-        errorMessage: err.message,
-        facebookPosted: false,
-      },
-    }).catch(() => {});
+    try {
+      await supabase
+        .from('NewsGenerationLog')
+        .insert({
+          category: article.category,
+          success: false,
+          errorMessage: err.message,
+          facebookPosted: false,
+        });
+    } catch (e) {
+      console.error("Failed to write generation log failure:", e);
+    }
 
     return {
       success: false,

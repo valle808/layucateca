@@ -37,6 +37,10 @@ export default function AdSenseAd({
     }
   }, []);
 
+  if (!adSlot) {
+    return null;
+  }
+
   return (
     <div
       style={{
