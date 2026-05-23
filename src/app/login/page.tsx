@@ -4,18 +4,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { useRouter } from "next/navigation";
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Shield, 
-  CheckCircle, 
-  Eye, 
-  EyeOff, 
-  ChevronLeft, 
-  Globe, 
-  ArrowRight 
-} from "lucide-react";
+import { User, Mail, Lock, Shield, CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
   const { t } = useLanguage();
@@ -23,7 +12,6 @@ export default function LoginPage() {
   const router = useRouter();
 
   const [isLoginTab, setIsLoginTab] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,10 +29,11 @@ export default function LoginPage() {
 
     return (
       <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
-        {/* Soft Background Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[rgba(255,85,0,0.03)] blur-[100px] pointer-events-none" />
-        
-        <div className="p-12 max-w-md w-full text-center border border-[var(--border-accent)] bg-[var(--bg-card)] rounded-[32px] animate-fadeInUp shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] dark:shadow-[var(--glow-gold)] backdrop-blur-xl relative z-10">
+        {/* Modern Ambient Glow Effects */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[rgba(255,85,0,0.06)] blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[rgba(212,168,83,0.04)] blur-[100px] pointer-events-none" />
+
+        <div className="p-12 max-w-md w-full text-center border border-[var(--border-accent)] bg-[var(--bg-card)] rounded-[32px] animate-fadeInUp shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] dark:shadow-[var(--glow-gold)] backdrop-blur-xl relative z-10">
           <div className="w-20 h-20 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mx-auto mb-6 animate-pulse">
             <CheckCircle className="w-10 h-10 text-[#ff5500]" />
           </div>
@@ -99,200 +88,148 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen pt-28 pb-16 flex flex-col items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
-      {/* Exquisite minimal background grid and subtle orbs */}
-      <div className="absolute inset-0 bg-[radial-gradient(#ff5500/[0.015]_1.5px,transparent_1.5px)] [background-size:24px_24px] pointer-events-none select-none opacity-80" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-[rgba(255,85,0,0.02)] dark:bg-[rgba(255,85,0,0.01)] blur-[120px] pointer-events-none" />
+    <main className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-[var(--bg-primary)] transition-colors duration-300 relative overflow-hidden">
+      {/* Modern Ambient Glow Effects */}
+      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-[rgba(255,85,0,0.05)] dark:bg-[rgba(255,85,0,0.03)] blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-[rgba(212,168,83,0.03)] dark:bg-[rgba(212,168,83,0.02)] blur-[120px] pointer-events-none" />
 
-      {/* TOP DECORATIVE LABEL: 🌐 UNIFIED UXL INTERFACE */}
-      <div className="text-center mb-6 relative z-10 animate-fadeInUp">
-        <span className="text-[10px] font-black italic tracking-[0.25em] text-[#ff5500] uppercase flex items-center justify-center gap-2 opacity-95">
-          <Globe className="w-3.5 h-3.5" />
-          <span>{t("INTERFAZ UXL UNIFICADA", "UNIFIED UXL INTERFACE", "UNIFIED UXL INTERFACE")}</span>
-        </span>
-      </div>
-
-      {/* STUNNING NEXUS CARD CONTAINER */}
-      <div className="w-full max-w-xl p-8 md:p-14 rounded-[48px] border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.75)] dark:bg-[rgba(15,15,25,0.6)] backdrop-blur-2xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_30px_70px_-15px_rgba(0,0,0,0.4)] transition-all duration-300 relative z-10">
-        
-        {/* CARD HEADER ROW */}
-        <div className="flex items-center justify-between mb-10">
-          {/* Back Chevron Icon box */}
+      <div className="w-full max-w-md p-10 rounded-[32px] border border-[var(--border-subtle)] bg-[var(--bg-card)] backdrop-blur-xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] transition-all duration-300 relative z-10">
+        {/* Toggle tabs — sliding pill design */}
+        <div className="flex p-1.5 bg-[var(--bg-primary)] rounded-full mb-8 border border-[var(--border-subtle)] relative transition-colors duration-300">
           <button
-            onClick={() => router.push("/")}
-            className="w-12 h-12 rounded-2xl bg-[rgba(0,0,0,0.04)] dark:bg-[rgba(255,255,255,0.04)] flex items-center justify-center border border-[var(--border-subtle)] hover:bg-[rgba(0,0,0,0.07)] dark:hover:bg-[rgba(255,255,255,0.07)] transition-all duration-200 cursor-pointer"
+            type="button"
+            onClick={() => {
+              setIsLoginTab(true);
+              setErrorMsg("");
+            }}
+            className={`flex-1 py-3.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 relative z-10 cursor-pointer ${
+              isLoginTab 
+                ? "text-white" 
+                : "text-[var(--text-secondary)] opacity-85 hover:opacity-100"
+            }`}
           >
-            <ChevronLeft className="w-5 h-5 text-[var(--text-primary)]" />
+            {t("Iniciar Sesión", "Sign In", "Okol")}
           </button>
-
-          {/* Styled Tech Logo */}
-          <h1 className="text-2xl md:text-3xl font-black italic tracking-tight text-[var(--text-primary)] select-none">
-            {isLoginTab ? "NEXUS LOGIN_" : "NEXUS JOIN_"}
-          </h1>
-
-          {/* Mode tag pill */}
-          <div className="px-4 py-1.5 rounded-full bg-[rgba(255,85,0,0.08)] border border-[rgba(255,85,0,0.2)] text-[10px] font-black italic tracking-[0.2em] text-[#ff5500] uppercase">
-            {t("HUMANO", "HUMAN", "HUMAN")}
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsLoginTab(false);
+              setErrorMsg("");
+            }}
+            className={`flex-1 py-3.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 relative z-10 cursor-pointer ${
+              !isLoginTab 
+                ? "text-white" 
+                : "text-[var(--text-secondary)] opacity-85 hover:opacity-100"
+            }`}
+          >
+            {t("Registrarse", "Register", "Ts'íib")}
+          </button>
+          <div 
+            className="absolute top-1.5 bottom-1.5 transition-all duration-300 bg-[#ff5500] rounded-full shadow-[0_4px_16px_rgba(255,85,0,0.35)]" 
+            style={{ 
+              left: isLoginTab ? '6px' : '50%', 
+              right: isLoginTab ? '50%' : '6px' 
+            }} 
+          />
         </div>
 
-        {/* Action Feedbacks */}
-        {errorMsg && (
-          <div className="mb-6 p-4 text-xs bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl font-semibold text-center leading-relaxed">
-            {errorMsg}
-          </div>
-        )}
-        {successMsg && (
-          <div className="mb-6 p-4 text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 rounded-2xl font-semibold text-center leading-relaxed">
-            {successMsg}
-          </div>
-        )}
-
-        {/* Dynamic Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          
-          {/* ENTITY NAME (Only on Register tab) */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-14 h-14 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mb-4 animate-float">
+              <Shield className="w-6 h-6 text-[#ff5500]" />
+            </div>
+            <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-wide">
+              {t("Portal de Comunidad", "Community Portal", "Kajil Portal")}
+            </h2>
+            <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed text-center max-w-[280px] font-medium opacity-80">
+              {t(
+                "Únete para comentar en noticias, crear salas de debate y acumular reputación.",
+                "Join to comment on news, create debate rooms, and build reputation.",
+                "Okol ti'al a t'aan ti' péektsil, beeta'al tsikbal yéetel náajaltik reputación."
+              )}
+            </p>
+          </div>
+
+          {errorMsg && (
+            <div className="p-4 text-xs bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl animate-shake font-semibold text-center leading-relaxed">
+              {errorMsg}
+            </div>
+          )}
+          {successMsg && (
+            <div className="p-4 text-xs bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 rounded-2xl font-semibold text-center leading-relaxed">
+              {successMsg}
+            </div>
+          )}
+
           {!isLoginTab && (
-            <div className="space-y-2">
-              <label className="text-[10px] font-black italic text-[var(--text-secondary)] uppercase tracking-[0.2em] block px-1">
-                {t("NOMBRE DE ENTIDAD", "ENTITY NAME", "ENTITY NAME")}
+            <div>
+              <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1 opacity-75">
+                {t("Nombre", "Name", "Kaba'")}
               </label>
-              {/* Isolated Flex input container with centered input text */}
-              <div className="flex items-center bg-[rgba(0,0,0,0.02)] dark:bg-[rgba(255,255,255,0.02)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-[28px] px-6 py-4.5 transition-all duration-300">
-                <User className="w-5 h-5 text-[var(--text-secondary)] opacity-60 mr-4 flex-shrink-0" />
+              <div className="flex items-center bg-[var(--bg-primary)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-2xl px-4 py-3.5 transition-all duration-200 shadow-sm relative">
+                <User className="w-5 h-5 text-[var(--text-secondary)] opacity-70 mr-3 flex-shrink-0" />
                 <input
                   type="text"
                   name="name"
                   required
-                  placeholder={t("SERGIO VALLE", "SERGIO VALLE", "SERGIO VALLE")}
+                  placeholder={t("e.g. Sergio Valle", "e.g. Sergio Valle", "e.g. Sergio Valle")}
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-mono italic uppercase tracking-wider text-center p-0 placeholder:opacity-30"
+                  className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-medium p-0 placeholder:opacity-60"
                 />
               </div>
             </div>
           )}
 
-          {/* IDENTITY EMAIL */}
-          <div className="space-y-2">
-            <label className="text-[10px] font-black italic text-[var(--text-secondary)] uppercase tracking-[0.2em] block px-1">
-              {t("EMAIL DE IDENTIDAD", "IDENTITY EMAIL", "IDENTITY EMAIL")}
+          <div>
+            <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1 opacity-75">
+              {t("Correo Electrónico", "Email Address", "Correo")}
             </label>
-            {/* Isolated Flex input container with centered input text */}
-            <div className="flex items-center bg-[rgba(0,0,0,0.02)] dark:bg-[rgba(255,255,255,0.02)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-[28px] px-6 py-4.5 transition-all duration-300">
-              <Mail className="w-5 h-5 text-[var(--text-secondary)] opacity-60 mr-4 flex-shrink-0" />
+            <div className="flex items-center bg-[var(--bg-primary)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-2xl px-4 py-3.5 transition-all duration-200 shadow-sm relative">
+              <Mail className="w-5 h-5 text-[var(--text-secondary)] opacity-70 mr-3 flex-shrink-0" />
               <input
                 type="email"
                 name="email"
                 required
-                placeholder="ENTITY@RESONANCE.NET"
+                placeholder="sergio@example.com"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-mono italic uppercase tracking-wider text-center p-0 placeholder:opacity-30"
+                className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-medium p-0 placeholder:opacity-60"
               />
             </div>
           </div>
 
-          {/* SOVEREIGN PASSPHRASE */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between px-1">
-              <label className="text-[10px] font-black italic text-[var(--text-secondary)] uppercase tracking-[0.2em] block">
-                {t("CONTRASEÑA SOBERANA", "SOVEREIGN PASSPHRASE", "SOVEREIGN PASSPHRASE")}
-              </label>
-              <button
-                type="button"
-                onClick={() => setErrorMsg(t("Contacto con Soporte de Nodo requerido.", "Node Support Contact required.", "Node Support Contact required."))}
-                className="text-[10px] font-black italic text-[#ff5500] uppercase tracking-[0.15em] hover:underline cursor-pointer"
-              >
-                {t("¿OLVIDÓ PROTOCOLO?", "FORGOT PROTOCOL?", "FORGOT PROTOCOL?")}
-              </button>
-            </div>
-            {/* Isolated Flex input container with centered input text */}
-            <div className="flex items-center bg-[rgba(0,0,0,0.02)] dark:bg-[rgba(255,255,255,0.02)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-[28px] px-6 py-4.5 transition-all duration-300">
-              <Lock className="w-5 h-5 text-[var(--text-secondary)] opacity-60 mr-4 flex-shrink-0" />
+          <div>
+            <label className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-2 px-1 opacity-75">
+              {t("Contraseña", "Password", "Ta'akil")}
+            </label>
+            <div className="flex items-center bg-[var(--bg-primary)] border border-[var(--border-subtle)] focus-within:border-[#ff5500] focus-within:ring-2 focus-within:ring-[#ff5500]/10 rounded-2xl px-4 py-3.5 transition-all duration-200 shadow-sm relative">
+              <Lock className="w-5 h-5 text-[var(--text-secondary)] opacity-70 mr-3 flex-shrink-0" />
               <input
-                type={showPassword ? "text" : "password"}
+                type="password"
                 name="password"
                 required
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-mono italic uppercase tracking-widest text-center p-0 placeholder:opacity-35"
+                className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] font-medium p-0 placeholder:opacity-60"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all cursor-pointer ml-2"
-              >
-                {showPassword ? <EyeOff className="w-4.5 h-4.5 opacity-70" /> : <Eye className="w-4.5 h-4.5 opacity-70" />}
-              </button>
             </div>
           </div>
 
-          {/* SYNC MATRIX SUBMIT BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-5 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black italic tracking-[0.2em] text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4 mt-8 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.25)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.35)] transform hover:-translate-y-0.5 transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50"
           >
-            {loading ? (
-              <span>{t("PROCESANDO...", "PROCESSING...", "MEYAJIL...")}</span>
-            ) : (
-              <>
-                <span>
-                  {isLoginTab 
-                    ? t("SINCRONIZAR MATRIZ", "SYNC MATRIX", "SYNC MATRIX") 
-                    : t("CREAR ENTIDAD", "CREATE ENTITY", "CREATE ENTITY")}
-                </span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            {loading 
+              ? t("Procesando...", "Processing...", "Meyajil...") 
+              : isLoginTab 
+                ? t("Iniciar Sesión", "Sign In", "Okol") 
+                : t("Crear Cuenta", "Create Account", "Beeta'al ts'íib")}
           </button>
         </form>
-
-        {/* BOTTOM REGISTER LINK */}
-        <div className="text-center mt-8">
-          <button
-            type="button"
-            onClick={() => {
-              setIsLoginTab(!isLoginTab);
-              setErrorMsg("");
-              setSuccessMsg("");
-            }}
-            className="text-[10px] font-black italic uppercase tracking-[0.15em] text-[var(--text-secondary)] cursor-pointer"
-          >
-            {isLoginTab ? (
-              <>
-                {t("¿NUEVO EN EL ENJAMBRE? ", "NEW TO THE SWARM? ", "¿NUEVO EN EL ENJAMBRE? ")}
-                <span className="text-[#ff5500] hover:underline">{t("REGISTRAR ENTIDAD", "REGISTER ENTITY", "REGISTRAR ENTIDAD")}</span>
-              </>
-            ) : (
-              <>
-                {t("¿YA REGISTRADO? ", "ALREADY REGISTERED? ", "¿YA REGISTRADO? ")}
-                <span className="text-[#ff5500] hover:underline">{t("INICIAR SESIÓN", "SIGN IN ENTITY", "INICIAR SESIÓN")}</span>
-              </>
-            )}
-          </button>
-        </div>
-
       </div>
-
-      {/* FOOTER METRICS & PROTOCOL LINKS */}
-      <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-12 text-center text-[10px] font-black italic tracking-[0.2em] text-[var(--text-secondary)] uppercase opacity-85 relative z-10">
-        <a href="/privacy-policy" className="hover:text-[#ff5500] transition-colors">{t("PROTOCOLO DE PRIVACIDAD", "PRIVACY PROTOCOL", "PRIVACY PROTOCOL")}</a>
-        <a href="/terms-and-conditions" className="hover:text-[#ff5500] transition-colors">{t("CONSTITUCIÓN DIGITAL", "DIGITAL CONSTITUTION", "CONSTITUCIÓN DIGITAL")}</a>
-        <a href="/contact" className="hover:text-[#ff5500] transition-colors">{t("SOPORTE DE NODO", "NODE SUPPORT", "NODE SUPPORT")}</a>
-      </div>
-
-      {/* VERSION WATERMARK */}
-      <div className="text-center mt-6 text-[8px] font-black tracking-[0.2em] text-[var(--text-secondary)] uppercase opacity-45 leading-relaxed max-w-xs mx-auto relative z-10">
-        {t(
-          "NEXUS MATRIX INTEGRACIÓN V7.0.0-OMEGA • FIRMADO POR GIO BASTIDAS",
-          "NEXUS MATRIX INTEGRATION V7.0.0-OMEGA • SIGNED BY GIO BASTIDAS",
-          "NEXUS MATRIX INTEGRATION V7.0.0-OMEGA • SIGNED BY GIO BASTIDAS"
-        )}
-      </div>
-
     </main>
   );
 }
