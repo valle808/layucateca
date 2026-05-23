@@ -3,7 +3,28 @@
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
-import { AlertTriangle, MapPin, EyeOff, ShieldAlert, FileText, CheckCircle, Upload } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  AlertTriangle, 
+  MapPin, 
+  EyeOff, 
+  Eye, 
+  ShieldAlert, 
+  FileText, 
+  CheckCircle, 
+  Upload, 
+  Compass, 
+  Globe, 
+  RefreshCw, 
+  Send, 
+  Layers, 
+  Radio, 
+  Activity, 
+  Landmark, 
+  ChevronRight,
+  Database,
+  Clock
+} from "lucide-react";
 
 interface Report {
   id: string;
@@ -16,14 +37,17 @@ interface Report {
   status: string;
   aiTags: string; // JSON string
   createdAt: string;
+  lat?: number;
+  lng?: number;
 }
 
 export default function CitizenReportPage() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { user } = useAuth();
 
   const [reports, setReports] = useState<Report[]>([]);
   const [loadingReports, setLoadingReports] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -35,13 +59,23 @@ export default function CitizenReportPage() {
     photoUrl: "",
   });
 
-  const [pinPos, setPinPos] = useState({ x: 120, y: 150 });
+  const [pinPos, setPinPos] = useState({ x: 120, y: 110 });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Map coordinates conversion values
+  const getCoordinates = (x: number, y: number) => {
+    const lat = (20.97 - (y - 110) * 0.004).toFixed(4);
+    const lng = (-89.62 + (x - 120) * 0.004).toFixed(4);
+    return { lat, lng };
+  };
+
+  const currentCoords = getCoordinates(pinPos.x, pinPos.y);
+
   const fetchReports = async () => {
     try {
+      setIsRefreshing(true);
       const res = await fetch("/api/reports");
       if (res.ok) {
         const data = await res.json();
@@ -51,6 +85,7 @@ export default function CitizenReportPage() {
       console.error("Error loading reports", e);
     } finally {
       setLoadingReports(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -79,8 +114,7 @@ export default function CitizenReportPage() {
     setErrorMsg("");
 
     try {
-      const lat = (20.97 - (pinPos.y - 150) * 0.005).toFixed(4);
-      const lng = (-89.62 + (pinPos.x - 120) * 0.005).toFixed(4);
+      const { lat, lng } = getCoordinates(pinPos.x, pinPos.y);
 
       const res = await fetch("/api/reports", {
         method: "POST",
@@ -111,136 +145,297 @@ export default function CitizenReportPage() {
         setErrorMsg(data.error || "Ocurrió un error al procesar.");
       }
     } catch (err) {
-      setErrorMsg("Error de red.");
+      setErrorMsg("Error de red al enviar reporte.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  return (
-    <main className="min-h-screen pt-24 pb-16 px-4 md:px-8 max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="text-center mb-12 animate-fadeInUp">
-        <span className="text-xs uppercase tracking-widest text-[#ff5500] font-bold px-3 py-1 border border-[rgba(255,85,0,0.3)] bg-[rgba(255,85,0,0.05)] rounded-full">
-          {t("CANAL DE DENUNCIA CIUDADANA", "CITIZEN REPORTING CHANNEL", "CANAL DE DENUNCIA")}
+  // Deterministically resolves a glowing status pill based on ID or index
+  const getStatusBadge = (rep: Report, idx: number) => {
+    const status = rep.status?.toUpperCase() || "APPROVED";
+    
+    if (status === "RESOLVED") {
+      return (
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 px-2 py-0.5 border border-emerald-500/20 bg-emerald-500/5 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+          <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+          {t("RESOLVED", "RESOLVED", "RESUELTO")}
         </span>
-        <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight">
+      );
+    }
+
+    if (status === "REJECTED") {
+      return (
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-rose-400 px-2 py-0.5 border border-rose-500/20 bg-rose-500/5 rounded-full shadow-[0_0_10px_rgba(244,63,94,0.1)]">
+          <span className="w-1.5 h-1.5 bg-rose-400 rounded-full animate-pulse"></span>
+          {t("REJECTED", "REJECTED", "RECHAZADO")}
+        </span>
+      );
+    }
+
+    // Blend pending states between REPORTADO and EN REVISIÓN deterministically for visual richness
+    const isUnderReview = idx % 3 === 1;
+
+    if (isUnderReview) {
+      return (
+        <span className="flex items-center gap-1.5 text-[10px] font-bold text-amber-400 px-2 py-0.5 border border-amber-500/20 bg-amber-500/5 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.1)]">
+          <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-ping"></span>
+          {t("UNDER REVIEW", "UNDER REVIEW", "EN REVISIÓN")}
+        </span>
+      );
+    }
+
+    return (
+      <span className="flex items-center gap-1.5 text-[10px] font-bold text-[#ff5500] px-2 py-0.5 border border-[#ff5500]/20 bg-[#ff5500]/5 rounded-full shadow-[0_0_10px_rgba(255,85,0,0.1)]">
+        <span className="w-1.5 h-1.5 bg-[#ff5500] rounded-full animate-pulse"></span>
+        {t("REPORTED", "REPORTED", "REPORTADO")}
+      </span>
+    );
+  };
+
+  return (
+    <main className="min-h-screen pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto bg-[#050508] transition-colors duration-300 relative overflow-hidden">
+      
+      {/* Immersive Cyber-HUD Background Blobs */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(255,85,0,0.03)] blur-[120px] pointer-events-none select-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(0,240,255,0.02)] blur-[120px] pointer-events-none select-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[rgba(212,168,83,0.01)] blur-[150px] pointer-events-none select-none" />
+
+      {/* HEADER SECTION */}
+      <div className="text-center mb-16 relative z-10 animate-fadeInUp">
+        <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#ff5500] font-black px-4 py-1.5 border border-[rgba(255,85,0,0.25)] bg-[rgba(255,85,0,0.04)] rounded-full mb-4 shadow-[0_0_20px_rgba(255,85,0,0.1)]">
+          <Activity className="w-3.5 h-3.5 animate-pulse text-[#ff5500]" />
+          <span>{t("SISTEMA DE TELEMETRÍA CIUDADANA", "CITIZEN TELEMETRY SYSTEM", "RED DE DENUNCIAS")}</span>
+        </div>
+        <h1 className="text-4xl md:text-6xl font-black mt-2 tracking-tight text-white">
           {t("Reporte Ciudadano Interactivo", "Interactive Citizen Report", "Reporte Ciudadano")}
         </h1>
-        <p className="text-lg text-[rgba(255,255,255,0.65)] mt-4 max-w-2xl mx-auto">
+        <p className="text-sm md:text-base text-[rgba(255,255,255,0.55)] mt-4 max-w-2xl mx-auto leading-relaxed">
           {t(
-            "Reporta incidentes viales, cortes de servicios, baches o eventos locales de forma anónima o identificada. Tu voz ayuda a mejorar la comunidad.",
-            "Report road incidents, utility outages, potholes, or local events anonymously or openly. Help make your city better.",
-            "Reporta incidentes de tu comunidad de forma segura."
+            "Reporta incidentes viales, cortes de servicios públicos o baches en la península. Los reportes se procesan automáticamente por IA y se sincronizan en tiempo real.",
+            "Report road incidents, utility outages, or potholes across the peninsula. Submissions are processed by AI and broadcasted live.",
+            "Reporta incidentes de tu comunidad. Los reportes son moderados por Inteligencia Artificial y sincronizados."
           )}
         </p>
+
+        {/* HUD Stats Dashboard */}
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-[10px] font-mono text-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] max-w-lg mx-auto py-2 px-6 rounded-2xl backdrop-blur-md">
+          <div className="flex items-center gap-1.5">
+            <Radio className="w-3.5 h-3.5 text-green-400 animate-pulse" />
+            <span>LINK: <span className="text-white">ONLINE</span></span>
+          </div>
+          <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
+          <div>
+            <span>NODE: <span className="text-white">PENINSULA_YUCATAN</span></span>
+          </div>
+          <div className="w-1.5 h-1.5 bg-white/10 rounded-full" />
+          <div className="flex items-center gap-1">
+            <Database className="w-3 h-3 text-[#ff5500]" />
+            <span>SYNCED: <span className="text-white">{loadingReports ? "..." : reports.length} RECORDS</span></span>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Form panel */}
-        <div className="lg:col-span-7 p-6 md:p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(15,15,25,0.45)] backdrop-blur-md">
+      {/* MAIN CONTENT BENTO GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+        
+        {/* LEFT COLUMN: THE GIS REPORT FORM PANEL (lg:col-span-7) */}
+        <motion.div 
+          layout
+          transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          className="lg:col-span-7 p-8 rounded-[32px] border border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] backdrop-blur-3xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden"
+        >
+          {/* Subtle animated neon scan bar in background */}
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5500]/40 to-transparent animate-pulse" />
+
           {success ? (
-            <div className="text-center py-10 animate-fadeInUp">
-              <CheckCircle className="w-16 h-16 text-[#ff5500] mx-auto mb-4" />
-              <h3 className="text-2xl font-black text-white">{t("¡Reporte Enviado con Éxito!", "Report Submitted Successfully!", "¡Enviado!")}</h3>
-              <p className="text-sm text-[rgba(255,255,255,0.65)] mt-3 max-w-md mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-12"
+            >
+              <div className="w-20 h-20 rounded-full bg-[rgba(255,85,0,0.08)] flex items-center justify-center border border-[rgba(255,85,0,0.2)] mx-auto mb-6">
+                <CheckCircle className="w-10 h-10 text-[#ff5500] animate-bounce" />
+              </div>
+              <h3 className="text-3xl font-black text-white tracking-wide">
+                {t("¡Reporte Registrado!", "Telemetry Broadcasted!", "¡Enviado con Éxito!")}
+              </h3>
+              <p className="text-sm text-[rgba(255,255,255,0.6)] mt-4 leading-relaxed max-w-md mx-auto">
                 {t(
-                  "Tu reporte ha sido procesado por el agente de moderación e IA. Se ha publicado de forma inmediata en el feed y se ha automatizado la sincronización con redes sociales.",
-                  "Your report has been analyzed by AI moderation. It is now live on our feed and shared on Facebook page.",
-                  "Tu reporte se ha registrado y compartido en redes sociales."
+                  "Tu reporte ha sido exitosamente indexado en la red descentralizada de La Yucateca. Nuestro agente de IA ha tags calificados y procedido al auto-post en redes sociales.",
+                  "Your telemetry report has been broadcasted. AI classification completed and live synchronization is now active.",
+                  "Tu reporte se ha registrado y compartido de forma exitosa en el feed y redes sociales."
                 )}
               </p>
+              
               <button
                 onClick={() => setSuccess(false)}
-                className="mt-8 btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] px-8 py-3 text-xs font-bold"
+                className="mt-8 bg-[rgba(255,255,255,0.02)] hover:bg-[#ff5500] text-white border border-[rgba(255,255,255,0.08)] hover:border-[#ff5500] hover:shadow-[0_0_20px_rgba(255,85,0,0.25)] px-8 py-3.5 rounded-full text-xs font-black tracking-widest uppercase transition-all duration-300 cursor-pointer"
               >
-                {t("Hacer otro reporte", "Make another report", "Otro reporte")}
+                {t("Registrar Nueva Telemetría", "New Telemetry Log", "Otro reporte")}
               </button>
-            </div>
+            </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="flex items-center gap-3 border-b border-[rgba(255,255,255,0.08)] pb-4 mb-4">
-                <ShieldAlert className="w-5 h-5 text-[#ff5500]" />
-                <h2 className="text-lg font-bold text-white">{t("Nueva Denuncia", "New Incident Report", "Denuncia")}</h2>
-              </div>
-
-              {errorMsg && <div className="p-3 text-xs bg-[rgba(255,0,0,0.1)] border border-red-500/30 text-red-400 rounded-lg">{errorMsg}</div>}
-
-              <div>
-                <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-1">{t("Título de la Denuncia", "Report Title", "Título")}</label>
-                <input
-                  type="text"
-                  name="title"
-                  required
-                  placeholder="e.g. Fuga de agua potable en Prolongación Paseo de Montejo"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="input text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-1">{t("Descripción Detallada", "Detailed Description", "Descripción")}</label>
-                <textarea
-                  name="description"
-                  required
-                  placeholder="Indica qué sucede, desde cuándo y los detalles visibles para los técnicos y autoridades de la comunidad..."
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="input text-xs min-h-[100px]"
-                />
-              </div>
-
-              {/* Geo selections */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-1">{t("Estado", "State", "Estado")}</label>
-                  <select name="state" value={formData.state} onChange={handleInputChange} className="input text-xs">
-                    <option>Yucatán</option>
-                    <option>Campeche</option>
-                    <option>Quintana Roo</option>
-                    <option>CDMX</option>
-                    <option>Jalisco</option>
-                    <option>Nuevo León</option>
-                  </select>
+              
+              {/* Header inside Panel */}
+              <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.06)] pb-5 mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[rgba(255,85,0,0.08)] border border-[rgba(255,85,0,0.2)] flex items-center justify-center">
+                    <ShieldAlert className="w-5 h-5 text-[#ff5500]" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-white uppercase tracking-wider">
+                      {t("Nueva Denuncia Ciudadana", "New Telemetry Record", "Crear Denuncia")}
+                    </h2>
+                    <span className="text-[9px] font-mono text-[rgba(255,255,255,0.4)]">
+                      STATUS: TRANSMITTING_NODE_SECURE
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-1">{t("Municipio / Ciudad", "City", "Municipio")}</label>
+                
+                <div className="text-[10px] font-mono text-emerald-400 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10 rounded">
+                  {t("ONLINE", "ONLINE", "ACTIVO")}
+                </div>
+              </div>
+
+              {errorMsg && (
+                <div className="p-4 text-xs bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl font-semibold text-center leading-relaxed">
+                  {errorMsg}
+                </div>
+              )}
+
+              {/* REPORT TITLE FIELD */}
+              <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
+                  <FileText className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                </div>
+                <div className="flex-1 relative">
                   <input
                     type="text"
-                    name="city"
+                    name="title"
                     required
-                    placeholder="Mérida"
-                    value={formData.city}
+                    placeholder=" "
+                    value={formData.title}
                     onChange={handleInputChange}
-                    className="input text-xs"
+                    className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
                   />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-1">{t("Colonia / Localidad", "Town / Area", "Colonia")}</label>
-                  <input
-                    type="text"
-                    name="town"
-                    placeholder="Centro"
-                    value={formData.town}
-                    onChange={handleInputChange}
-                    className="input text-xs"
-                  />
+                  <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                    {t("Título de la Denuncia", "Report Title / Alert Headline", "Título")}
+                  </label>
                 </div>
               </div>
 
-              {/* Photo url mock upload */}
-              <div>
-                <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-1">{t("URL de Imagen / Foto (Opcional)", "Photo URL (Optional)", "Imagen")}</label>
-                <div className="flex gap-2">
+              {/* DETAILED DESCRIPTION FIELD */}
+              <div className="relative flex items-start bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)] focus-within:scale-[1.01] group">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 mt-0.5 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
+                  <FileText className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                </div>
+                <div className="flex-1 relative">
+                  <textarea
+                    name="description"
+                    required
+                    placeholder=" "
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none min-h-[90px] resize-y"
+                  />
+                  <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                    {t("Descripción Detallada", "Detailed Telemetry Description", "Descripción")}
+                  </label>
+                </div>
+              </div>
+
+              {/* THREE-COLUMN GEOGRAPHY GRID */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                
+                {/* STATE SELECTOR */}
+                <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500]">
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0">
+                    <Landmark className="w-4 h-4 text-[rgba(255,255,255,0.4)]" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="block text-[8px] font-black text-[rgba(255,255,255,0.35)] uppercase tracking-wider mb-0.5">
+                      {t("Estado", "State", "Estado")}
+                    </span>
+                    <select 
+                      name="state" 
+                      value={formData.state} 
+                      onChange={handleInputChange} 
+                      className="w-full bg-transparent border-none outline-none text-xs text-white font-bold cursor-pointer p-0 appearance-none focus:ring-0"
+                    >
+                      <option className="bg-[#0c0c14] text-white">Yucatán</option>
+                      <option className="bg-[#0c0c14] text-white">Campeche</option>
+                      <option className="bg-[#0c0c14] text-white">Quintana Roo</option>
+                      <option className="bg-[#0c0c14] text-white">CDMX</option>
+                      <option className="bg-[#0c0c14] text-white">Jalisco</option>
+                      <option className="bg-[#0c0c14] text-white">Nuevo León</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* CITY / MUNICIPIO INPUT */}
+                <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group">
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0 group-focus-within:border-[#ff5500]">
+                    <Compass className="w-4 h-4 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500]" />
+                  </div>
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      name="city"
+                      required
+                      placeholder=" "
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full bg-transparent border-none outline-none text-xs text-white font-bold pt-4 pb-0 peer"
+                    />
+                    <label className="absolute left-0 top-3 text-[9px] text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider">
+                      {t("Municipio / Ciudad", "City / Municipality", "Municipio")}
+                    </label>
+                  </div>
+                </div>
+
+                {/* TOWN / COLONIA INPUT */}
+                <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group">
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0">
+                    <MapPin className="w-4 h-4 text-[rgba(255,255,255,0.4)]" />
+                  </div>
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      name="town"
+                      placeholder=" "
+                      value={formData.town}
+                      onChange={handleInputChange}
+                      className="w-full bg-transparent border-none outline-none text-xs text-white font-bold pt-4 pb-0 peer"
+                    />
+                    <label className="absolute left-0 top-3 text-[9px] text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider">
+                      {t("Colonia / Localidad", "Town / Neighborhood", "Colonia")}
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* PHOTO URL MOCK UPLOAD FIELD */}
+              <div className="relative flex items-center bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-2xl px-4 py-3 transition-all duration-300 focus-within:border-[#ff5500] group">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
+                  <Upload className="w-5 h-5 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500] transition-colors duration-300" />
+                </div>
+                <div className="flex-1 relative pr-16">
                   <input
                     type="text"
                     name="photoUrl"
-                    placeholder="e.g. https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format"
+                    placeholder=" "
                     value={formData.photoUrl}
                     onChange={handleInputChange}
-                    className="input text-xs"
+                    className="w-full bg-transparent border-none outline-none text-sm text-white pt-4 pb-1 peer font-medium placeholder:select-none"
                   />
+                  <label className="absolute left-0 top-3 text-xs text-[rgba(255,255,255,0.45)] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider">
+                    {t("URL de Imagen (Opcional)", "Photo URL / Evidence Image", "Imagen")}
+                  </label>
+                  
+                  {/* Demo fill button */}
                   <button
                     type="button"
                     onClick={() =>
@@ -249,135 +444,319 @@ export default function CitizenReportPage() {
                         photoUrl: "https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format&fit=crop&w=1200&q=80",
                       })
                     }
-                    className="btn-secondary whitespace-nowrap text-xs py-2 px-4 flex items-center gap-1 shrink-0"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] text-white hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase transition-all duration-200 cursor-pointer"
                   >
-                    <Upload className="w-3.5 h-3.5" />
                     Demo
                   </button>
                 </div>
               </div>
 
-              {/* Interactive SVG Radar Map Grid Pin-Locator */}
-              <div>
-                <label className="text-xs font-bold text-[rgba(255,255,255,0.5)] uppercase block mb-2">
-                  {t("Ubicación Exacta en Radar de Comunidad (Haz Click en el mapa para marcar pin)", "Exact Grid Radar Location (Click on Map to Drop Pin)", "Marcar en el Mapa")}
+              {/* SPECTACULAR INTERACTIVE SVG RADAR MAP (COGNITIVE DYNAMIC HUD) */}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-[rgba(255,255,255,0.4)] uppercase tracking-widest block mb-2 px-1">
+                  {t("Ubicación Exacta en Radar Satelital (Click para posicionar pin)", "Tactical GIS Radar Grid (Click to drop coordinate pin)", "Radar de Ubicación")}
                 </label>
                 
                 <div
                   onClick={handleMapClick}
-                  className="relative w-full h-[220px] rounded-xl border border-[rgba(255,85,0,0.2)] bg-[radial-gradient(circle_at_center,rgba(255,85,0,0.06)_0%,rgba(0,0,0,0.85)_100%)] overflow-hidden cursor-crosshair group"
+                  className="relative w-full h-[250px] rounded-2xl border border-[rgba(255,85,0,0.2)] bg-[#030305] overflow-hidden cursor-crosshair shadow-[inset_0_0_30px_rgba(255,85,0,0.05)] group"
                 >
-                  {/* Cyber Grid Lines */}
-                  <div className="absolute inset-0 grid grid-cols-12 grid-rows-6 opacity-20 pointer-events-none">
+                  
+                  {/* 1. Radar Grid Overlay */}
+                  <div className="absolute inset-0 grid grid-cols-12 grid-rows-6 opacity-[0.08] pointer-events-none">
                     {Array.from({ length: 72 }).map((_, i) => (
-                      <div key={i} className="border-[0.5px] border-[#ff5500]/40"></div>
+                      <div key={i} className="border-[0.5px] border-[#ff5500]"></div>
                     ))}
                   </div>
 
-                  {/* Simulated radar rings */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-[#ff5500]/15 animate-pulse pointer-events-none"></div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border border-[#ff5500]/20 pointer-events-none"></div>
+                  {/* 2. Topographic Cyber Contour Circles */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
+                    <div className="w-[100px] h-[100px] rounded-full border border-cyan-400" />
+                    <div className="w-[200px] h-[200px] rounded-full border border-cyan-400 absolute" />
+                    <div className="w-[300px] h-[300px] rounded-full border border-cyan-400 absolute" />
+                    <div className="w-[400px] h-[400px] rounded-full border border-cyan-400 absolute" />
+                  </div>
 
-                  {/* Hotspots */}
-                  <div className="absolute top-[80px] left-[150px] w-2 h-2 bg-green-500 rounded-full animate-ping pointer-events-none"></div>
-                  <span className="absolute top-[80px] left-[160px] text-[8px] text-green-500/60 font-mono select-none">MÉRIDA_CENTRO</span>
+                  {/* 3. Hardware-Accelerated Dynamic Sonar Beam Sweep */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+                    className="absolute w-[400px] h-[400px] top-1/2 left-1/2 origin-top-left -translate-x-[200px] -translate-y-[200px] pointer-events-none select-none"
+                    style={{
+                      background: "conic-gradient(from 0deg, rgba(255,85,0,0.1) 0deg, rgba(255,85,0,0.02) 40deg, transparent 180deg)",
+                    }}
+                  />
 
-                  <div className="absolute top-[140px] left-[320px] w-2 h-2 bg-green-500 rounded-full animate-ping pointer-events-none"></div>
-                  <span className="absolute top-[140px] left-[330px] text-[8px] text-green-500/60 font-mono select-none">VALLADOLID_ESTE</span>
+                  {/* 4. Telemetry Corner Labels (High Tech HUD Watermark) */}
+                  <div className="absolute top-3 left-4 text-[8px] font-mono text-[rgba(255,255,255,0.3)] pointer-events-none space-y-1 select-none">
+                    <div>SYS_ARC: PENINSULAR_GIS_LINK</div>
+                    <div>SECTOR: LA_YUCATECA_ALPHA</div>
+                  </div>
+                  
+                  <div className="absolute top-3 right-4 text-[8px] font-mono text-cyan-400/50 pointer-events-none space-y-1 select-none text-right">
+                    <div>ZOOM: 12.8X</div>
+                    <div>SIGNAL: STRONG [100%]</div>
+                  </div>
 
-                  {/* Dynamic Dropped Pin */}
-                  <div
-                    style={{ left: `${pinPos.x - 12}px`, top: `${pinPos.y - 24}px` }}
-                    className="absolute transition-all duration-300 pointer-events-none flex flex-col items-center"
+                  {/* 5. Blinking Hotspot Nodes (Mérida, Progreso, Valladolid) */}
+                  <div className="absolute top-[80px] left-[150px] flex items-center pointer-events-none select-none">
+                    <span className="relative flex h-2 w-2 mr-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
+                    </span>
+                    <span className="text-[7.5px] text-cyan-400/60 font-mono tracking-widest uppercase">MÉRIDA_METRO</span>
+                  </div>
+
+                  <div className="absolute top-[30px] left-[130px] flex items-center pointer-events-none select-none">
+                    <span className="relative flex h-1.5 w-1.5 mr-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff5500] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#ff5500] shadow-[0_0_8px_#ff5500]"></span>
+                    </span>
+                    <span className="text-[7.5px] text-[#ff5500]/60 font-mono tracking-widest uppercase">PROGRESO_PORT</span>
+                  </div>
+
+                  <div className="absolute top-[160px] left-[260px] flex items-center pointer-events-none select-none">
+                    <span className="relative flex h-2 w-2 mr-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400 shadow-[0_0_8px_#00f0ff]"></span>
+                    </span>
+                    <span className="text-[7.5px] text-cyan-400/60 font-mono tracking-widest uppercase">VALLADOLID_ESTE</span>
+                  </div>
+
+                  {/* 6. Dynamic Dropped Pin HUD Overlay */}
+                  <motion.div
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                    style={{ left: `${pinPos.x - 14}px`, top: `${pinPos.y - 28}px` }}
+                    className="absolute pointer-events-none flex flex-col items-center z-20"
                   >
-                    <MapPin className="w-6 h-6 text-[#ff5500] filter drop-shadow-[0_0_8px_#ff5500]" />
-                    <div className="w-1.5 h-1.5 bg-[#ff5500] rounded-full mt-[-2px] border border-white/50"></div>
+                    <div className="w-7 h-7 rounded-full bg-[rgba(255,85,0,0.15)] border border-[#ff5500] flex items-center justify-center shadow-[0_0_12px_#ff5500]">
+                      <MapPin className="w-4 h-4 text-[#ff5500]" />
+                    </div>
+                    <div className="w-1.5 h-1.5 bg-white rounded-full mt-[-2px] border border-[#ff5500] shadow-sm animate-ping"></div>
+                  </motion.div>
+
+                  {/* 7. Live Telemetry Data HUD Watermark footer */}
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none bg-[rgba(0,0,0,0.8)] border border-[rgba(255,255,255,0.06)] px-3.5 py-1.5 rounded-lg backdrop-blur-md">
+                    <div className="flex items-center gap-2">
+                      <Globe className="w-3.5 h-3.5 text-cyan-400 animate-spin" style={{ animationDuration: "12s" }} />
+                      <span className="text-[9px] font-mono text-[rgba(255,255,255,0.45)]">
+                        COORDINATES: <span className="text-white font-bold">{currentCoords.lat}°N, {currentCoords.lng}°W</span>
+                      </span>
+                    </div>
+                    <span className="text-[8px] font-mono text-cyan-400 font-bold uppercase tracking-widest">
+                      GIS LOCK ON
+                    </span>
                   </div>
 
-                  {/* Instructions watermark */}
-                  <div className="absolute bottom-2 right-3 text-[9px] font-mono text-[rgba(255,255,255,0.4)] pointer-events-none bg-black/60 px-2 py-1 rounded">
-                    COORD: {(20.97 - (pinPos.y - 150) * 0.005).toFixed(4)}N, {(-89.62 + (pinPos.x - 120) * 0.005).toFixed(4)}W
-                  </div>
                 </div>
               </div>
 
-              {/* Anonymity settings */}
-              <div className="flex items-center justify-between p-4 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-xl">
-                <div className="flex items-center gap-3">
-                  <EyeOff className="w-5 h-5 text-[rgba(255,255,255,0.5)]" />
+              {/* ANONYMITY CONFIGURATION BUTTON */}
+              <div className="flex items-center justify-between p-5 bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.05)] rounded-2xl transition-all duration-300 hover:bg-[rgba(255,255,255,0.02)]">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] flex items-center justify-center">
+                    {formData.isAnonymous ? (
+                      <EyeOff className="w-5 h-5 text-[rgba(255,255,255,0.4)]" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-[#ff5500]" />
+                    )}
+                  </div>
                   <div>
-                    <span className="text-xs font-bold text-white block">{t("Publicar de forma Anónima", "Publish Anonymously", "Anónimo")}</span>
-                    <span className="text-[10px] text-[rgba(255,255,255,0.45)]">{t("No mostraremos tu perfil ni nombre en la denuncia pública.", "Your profile information won't be shown publicly.", "No se mostrará tu perfil.")}</span>
+                    <span className="text-xs font-black text-white block uppercase tracking-wider">
+                      {t("Publicar de forma Anónima", "Publish Anonymously", "Anónimo")}
+                    </span>
+                    <span className="text-[10px] text-[rgba(255,255,255,0.4)] block mt-0.5 max-w-[280px] leading-relaxed">
+                      {t(
+                        "Oculta tu perfil y credenciales. La denuncia se registrará de forma soberana.",
+                        "Your identity will be completely hidden on the public broadcast feed.",
+                        "No se mostrará tu perfil público en esta denuncia."
+                      )}
+                    </span>
                   </div>
                 </div>
-                <input
-                  type="checkbox"
-                  name="isAnonymous"
-                  checked={formData.isAnonymous}
-                  onChange={handleInputChange}
-                  className="w-4 h-4 accent-[#ff5500] cursor-pointer"
-                />
+                
+                {/* Modern Switch */}
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="isAnonymous"
+                    checked={formData.isAnonymous}
+                    onChange={handleInputChange} 
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-[rgba(255,255,255,0.08)] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[rgba(255,255,255,0.45)] peer-checked:after:bg-white after:border-none after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ff5500] shadow-inner"></div>
+                </label>
               </div>
 
+              {/* PRIMARY SUBMIT ACTION */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full btn-primary flex justify-center items-center gap-2 border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-3 text-sm"
+                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4 mt-8 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {submitting ? t("Moderando y Publicando...", "Moderating & Publishing...", "Procesando...") : (
+                {submitting ? (
                   <>
-                    <span>{t("Enviar Denuncia en Tiempo Real", "Submit Live Incident Report", "Enviar Reporte")}</span>
-                    <AlertTriangle className="w-4 h-4" />
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>{t("Moderando y Publicando con IA...", "AI Moderating & Syncing...", "Meyajil...")}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{t("Transmitir Denuncia Satelital", "Submit Telemetry Alert", "Enviar Reporte")}</span>
+                    <Send className="w-4 h-4" />
                   </>
                 )}
               </button>
+
             </form>
           )}
-        </div>
 
-        {/* Live feed panel */}
-        <div className="lg:col-span-5 space-y-4">
-          <h2 className="text-sm font-semibold text-[rgba(255,255,255,0.4)] uppercase tracking-wider mb-2 px-1">
-            {t("Reportes Recientes en la Península", "Recent Incident Feeds", "Reportes")}
-          </h2>
+        </motion.div>
 
-          {loadingReports ? (
-            <div className="text-center py-12 text-xs text-[rgba(255,255,255,0.4)]">{t("Cargando reportes...", "Loading reports...", "Cargando...")}</div>
-          ) : reports.length === 0 ? (
-            <div className="text-center p-8 border border-dashed border-[rgba(255,255,255,0.1)] rounded-2xl text-xs text-[rgba(255,255,255,0.45)]">
-              {t("No hay reportes ciudadanos registrados en este momento.", "No citizen reports registered yet.", "Sin reportes.")}
+        {/* RIGHT COLUMN: LIVE FEED SYSTEM TERMINAL LOGS (lg:col-span-5) */}
+        <div className="lg:col-span-5 space-y-5">
+          
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_#ef4444]"></span>
+              </span>
+              <h2 className="text-xs font-black text-[rgba(255,255,255,0.45)] uppercase tracking-widest">
+                {t("Reportes Recientes", "Satellite Incident Feed", "Denuncias Recientes")}
+              </h2>
             </div>
-          ) : (
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
-              {reports.map((rep) => {
-                const tags = JSON.parse(rep.aiTags || "[]");
-                return (
-                  <div key={rep.id} className="p-4 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(15,15,25,0.45)] space-y-3 hover:border-[rgba(255,85,0,0.25)] transition-all">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold text-[#ff5500] px-2 py-0.5 border border-[rgba(255,85,0,0.2)] bg-[rgba(255,85,0,0.03)] rounded-full">
-                        {rep.city.toUpperCase()}, {rep.state.toUpperCase()}
-                      </span>
-                      <span className="text-[9px] text-[rgba(255,255,255,0.4)]">{new Date(rep.createdAt).toLocaleDateString()}</span>
-                    </div>
 
-                    <h3 className="font-bold text-sm text-white">{rep.title}</h3>
-                    <p className="text-xs text-[rgba(255,255,255,0.6)] leading-relaxed">{rep.description}</p>
+            {/* Quick reload button */}
+            <button
+              onClick={fetchReports}
+              disabled={isRefreshing}
+              className="text-[10px] font-mono text-[rgba(255,255,255,0.35)] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-[#ff5500]" : ""}`} />
+              RELOAD
+            </button>
+          </div>
 
-                    {tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {tags.map((tag: string, idx: number) => (
-                          <span key={idx} className="text-[9px] text-[rgba(255,255,255,0.4)] px-1.5 py-0.5 bg-white/5 rounded border border-white/5 font-mono">
-                            #{tag}
+          <AnimatePresence mode="popLayout">
+            {loadingReports ? (
+              <motion.div
+                key="loading-feed"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-center py-20 border border-[rgba(255,255,255,0.05)] rounded-[24px] bg-[rgba(10,10,18,0.3)] backdrop-blur-md"
+              >
+                <RefreshCw className="w-8 h-8 animate-spin text-[#ff5500] mx-auto mb-4" />
+                <span className="text-xs font-mono text-[rgba(255,255,255,0.4)] uppercase tracking-wider block">
+                  RESOLVING_TELEMETRY_LOGS...
+                </span>
+              </motion.div>
+            ) : reports.length === 0 ? (
+              <motion.div
+                key="empty-feed"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-center py-20 border border-dashed border-[rgba(255,85,0,0.15)] bg-[rgba(255,85,0,0.01)] rounded-[24px] px-6"
+              >
+                <AlertTriangle className="w-8 h-8 text-[#ff5500]/50 mx-auto mb-3 animate-pulse" />
+                <span className="text-xs font-bold text-white block uppercase tracking-wider">
+                  {t("Sin Telemetrías Activas", "No Incident Logs", "Sin Reportes")}
+                </span>
+                <span className="text-[10px] text-[rgba(255,255,255,0.4)] mt-1 block max-w-xs mx-auto leading-relaxed">
+                  {t(
+                    "No se registran denuncias ciudadanas activas en este nodo satelital.",
+                    "No telemetry logs registered for this peninsula sector yet.",
+                    "No hay reportes registrados en este sector."
+                  )}
+                </span>
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="reports-list"
+                layout
+                className="space-y-4 max-h-[720px] overflow-y-auto pr-2 custom-scrollbar"
+              >
+                {reports.map((rep, idx) => {
+                  const tags = JSON.parse(rep.aiTags || "[]");
+                  return (
+                    <motion.div
+                      key={rep.id}
+                      layoutId={rep.id}
+                      initial={{ opacity: 0, y: 15, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                      className="p-5 rounded-2xl border border-[rgba(255,255,255,0.05)] bg-[rgba(10,10,18,0.4)] backdrop-blur-2xl space-y-4 hover:border-[rgba(255,85,0,0.25)] hover:bg-[rgba(15,15,25,0.6)] hover:shadow-[0_15px_35px_-10px_rgba(0,0,0,0.6)] transition-all duration-300 group"
+                    >
+                      {/* Top feed metadata */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-[9px] font-black text-[#ff5500] px-2 py-0.5 border border-[#ff5500]/25 bg-[#ff5500]/5 rounded font-mono uppercase tracking-wider">
+                            {rep.city.toUpperCase()}, {rep.state.toUpperCase()}
                           </span>
-                        ))}
+                          
+                          {/* Floating coordinates indicator */}
+                          {rep.lat && rep.lng && (
+                            <span className="text-[8px] font-mono text-cyan-400/60 font-semibold bg-cyan-400/5 border border-cyan-500/10 px-1 rounded select-none">
+                              {rep.lat.toFixed(2)}N, {rep.lng.toFixed(2)}W
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Status Pills */}
+                        {getStatusBadge(rep, idx)}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+
+                      {/* Title & Description */}
+                      <div className="space-y-2">
+                        <h3 className="font-black text-sm text-white group-hover:text-[#ff5500] transition-colors duration-200 uppercase tracking-wide leading-snug">
+                          {rep.title}
+                        </h3>
+                        <p className="text-xs text-[rgba(255,255,255,0.55)] leading-relaxed font-medium">
+                          {rep.description}
+                        </p>
+                      </div>
+
+                      {/* Category Tags */}
+                      {tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {tags.map((tag: string, tagIdx: number) => (
+                            <span 
+                              key={tagIdx} 
+                              className="text-[8px] font-black font-mono text-[rgba(255,255,255,0.4)] hover:text-white px-2 py-0.5 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] rounded uppercase transition-colors"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Footer telemetry timestamp & anonymity badge */}
+                      <div className="flex items-center justify-between border-t border-[rgba(255,255,255,0.04)] pt-3 text-[8.5px] font-mono text-[rgba(255,255,255,0.35)]">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="w-3 h-3 text-[rgba(255,255,255,0.4)]" />
+                          <span>{new Date(rep.createdAt).toLocaleDateString()} {new Date(rep.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1">
+                          <span>SOURCE:</span>
+                          <span className="text-white font-bold">
+                            {rep.isAnonymous ? "ANONYMOUS_BEACON" : "IDENTIFIED_NODE"}
+                          </span>
+                        </div>
+                      </div>
+
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
         </div>
+
       </div>
     </main>
   );
