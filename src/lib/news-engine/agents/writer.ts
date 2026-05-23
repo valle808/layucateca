@@ -54,12 +54,12 @@ FIELD FORMAT RULES:
 4. "content": "[Spanish HTML Content] || [English HTML Content] || [Mayan HTML Content]"
 
 LENGTH & STYLE REQUIREMENTS (CRITICAL):
-- TOTAL WORD COUNT: The combined trilingual content must be extremely rich and detailed, between 1,024 words and 10,240 words. Aim for at least 1,024 words per language version (about 3,000+ words total).
+- TOTAL WORD COUNT: The combined trilingual content must be extremely rich, investigative, and detailed. To ensure it meets the required length of between 1,024 words and 10,240 words, you MUST write at least 15 long, dense, and fully-formed paragraphs of deep journalistic coverage per language section (Spanish, English, and Mayan). Aim for a minimum of 1,500 words per language section (~4,500+ words total).
 - ORGANIC WRITING (NO AI CLICHÉS): Write with a natural, human, premium journalistic tone. 
   * ABSOLUTELY AVOID robotic words like: "delve", "tapestry", "moreover", "in summary", "testament", "beacon", "pinnacle", "notwithstanding", "rapidly evolving", "crucial role".
   * Use active verbs, natural transitions, high-impact storytelling, and deeply descriptive sentences.
   * For the Mayan translation, use authentic and grammatically correct Maaya T'aan.
-- HTML FORMATTING: Use <h2> subheadings, <p> paragraphs, and <strong> for key emphasis.
+- HTML FORMATTING: Use <h2> subheadings (at least 4 different subheadings per language section, e.g. "Introducción y Contexto", "Análisis Profundo y Datos Clave", "Implicaciones del Acontecimiento", "Perspectivas Futuras y Conclusiones"), <p> paragraphs, and <strong> for key emphasis. Do not leave the HTML content bare or short.
 - Attributions: Include proper journalistic attribution inline (e.g. "según Reuters", "according to the local government").
 - Candidates news to synthesize:
 ${candidatesText}
@@ -91,7 +91,7 @@ async function callGemini(apiKey: string, model: string, prompt: string): Promis
     ],
     generationConfig: {
       temperature: 0.4,
-      maxOutputTokens: 2000,
+      maxOutputTokens: 8192,
     },
   });
 
@@ -110,7 +110,7 @@ async function callFireworks(apiKey: string, prompt: string): Promise<string> {
       model: "accounts/fireworks/models/gpt-oss-120b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.4,
-      max_tokens: 3000
+      max_tokens: 4000
     })
   });
 

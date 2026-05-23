@@ -249,11 +249,9 @@ export default function NewsArticleClient({ post }: NewsArticleClientProps) {
               color: "var(--text-secondary)",
               fontSize: "1.05rem",
               lineHeight: 1.85,
-              whiteSpace: "pre-wrap",
             }}
-          >
-            {translateDb(post.content)}
-          </div>
+            dangerouslySetInnerHTML={{ __html: translateDb(post.content) }}
+          />
 
           <div className="divider" />
 

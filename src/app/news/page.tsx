@@ -6,7 +6,7 @@ export const metadata = {
   description: "Mantente al día con las últimas noticias de La Yucateca. || Stay up to date with the latest news.",
 };
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function NewsPage() {
   let posts: any[] = [];

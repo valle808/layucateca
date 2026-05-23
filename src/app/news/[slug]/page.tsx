@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const dynamicParams = true;
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   return [];

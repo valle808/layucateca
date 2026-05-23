@@ -6,6 +6,10 @@ import { useLanguage } from "@/components/LanguageContext";
 import Footer from "@/components/Footer";
 import WeatherWidget from "@/components/WeatherWidget";
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>?/gm, '');
+}
+
 interface Post {
   id: string;
   title: string;
@@ -439,7 +443,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                                   overflow: "hidden",
                                 }}
                               >
-                                {translateDb(heroPost.content)}
+                                {stripHtml(translateDb(heroPost.content))}
                               </p>
                             </div>
 
@@ -512,7 +516,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                                   </Link>
                                 </h3>
                                 <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", flex: 1 }}>
-                                  {translateDb(post.content)}
+                                  {stripHtml(translateDb(post.content))}
                                 </p>
                               </div>
                             </div>

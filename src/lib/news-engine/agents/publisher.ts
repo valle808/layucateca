@@ -34,6 +34,15 @@ function getPlaceholderImage(category: string): string {
   return `https://placehold.co/1200x630/${color}/png?text=${encoded}`;
 }
 
+// Generate premium AI images dynamically based on the model prompt
+function getAiGeneratedImageUrl(imagePrompt: string | undefined, category: string): string {
+  if (!imagePrompt || imagePrompt.trim() === '') {
+    return getPlaceholderImage(category);
+  }
+  const cleanPrompt = encodeURIComponent(imagePrompt.replace(/[\n\r]+/g, ' ').trim());
+  return `https://image.pollinations.ai/prompt/${cleanPrompt}?width=1200&height=630&nologo=true`;
+}
+
 export async function runPublisher(article: EditedArticle): Promise<PublishResult> {
   console.log(`[publisher] Publishing: "${article.title}"`);
   
@@ -50,7 +59,7 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
         category: article.category,
         state: article.state,
         published: true,
-        imageUrl: getPlaceholderImage(article.category),
+        imageUrl: getAiGeneratedImageUrl(article.imagePrompt, article.category),
         aiGenerated: true,
         sourceUrls: JSON.stringify(article.sourceUrls ?? []),
         metaDescription: article.metaDescription,
@@ -164,7 +173,7 @@ async function postToFacebook(
   const pageId = process.env.FACEBOOK_PAGE_ID;
   
   if (!accessToken || !pageId) {
-    console.warn('[publisher] Facebook credentials not configured');
+    console.error('[publisher] ❌ Facebook auto-posting SKIPPED: FACEBOOK_ACCESS_TOKEN or FACEBOOK_PAGE_ID environment variables are missing from .env or Vercel config.');
     return undefined;
   }
 
