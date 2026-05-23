@@ -365,7 +365,6 @@ export default function Sidebar() {
               { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "Denunciar"), icon: <Icons.Report /> },
               { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
               { href: "/marketplace", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },
-              { href: "/marketing", label: t("Marketing HQ", "Marketing HQ", "Marketing HQ"), icon: <Icons.Marketing /> },
               { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
               {
                 href: user ? "#" : "/login",
