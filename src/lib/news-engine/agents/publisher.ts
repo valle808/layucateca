@@ -58,6 +58,7 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
         tags: JSON.stringify(article.tags ?? []),
         readTimeMinutes: article.readTimeMinutes,
         qualityScore: article.qualityScore,
+        updatedAt: new Date().toISOString(),
       })
       .select()
       .single();
