@@ -38,10 +38,12 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
   console.log(`[publisher] Publishing: "${article.title}"`);
   
   try {
-    // 1. Save to database
+    const newPostId = crypto.randomUUID();
+    
     const { data: post, error: dbError } = await supabase
       .from('Post')
       .insert({
+        id: newPostId,
         title: article.title,
         slug: article.slug,
         content: article.content,
@@ -106,6 +108,7 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
       await supabase
         .from('NewsGenerationLog')
         .insert({
+          id: crypto.randomUUID(),
           category: article.category,
           postId: post.id,
           success: true,
@@ -132,6 +135,7 @@ export async function runPublisher(article: EditedArticle): Promise<PublishResul
       await supabase
         .from('NewsGenerationLog')
         .insert({
+          id: crypto.randomUUID(),
           category: article.category,
           success: false,
           errorMessage: err.message,
