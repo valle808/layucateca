@@ -187,7 +187,7 @@ function AgentCard({ agent, index }: { agent: typeof AGENTS[0]; index: number })
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.07 }}
-      className="relative group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden cursor-pointer hover:border-white/20 transition-all duration-300"
+      className="relative group rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-card)] backdrop-blur-2xl overflow-hidden cursor-pointer hover:border-[var(--border-accent)] hover:bg-[var(--bg-card-hover)] transition-all duration-500 hover:-translate-y-1 shadow-lg"
       onClick={() => setExpanded(!expanded)}
       style={{ boxShadow: `0 0 0 0 ${agent.color}00` }}
       whileHover={{ scale: 1.01, boxShadow: `0 8px 32px ${agent.color}22` }}
@@ -205,14 +205,14 @@ function AgentCard({ agent, index }: { agent: typeof AGENTS[0]; index: number })
               {agent.emoji}
             </div>
             <div>
-              <div className="font-bold text-white text-sm leading-tight">{agent.name}</div>
-              <div className="text-xs text-white/50 mt-0.5">{agent.role}</div>
+              <div className="font-bold text-[var(--text-primary)] text-sm leading-tight">{agent.name}</div>
+              <div className="text-xs text-[var(--text-secondary)] mt-0.5">{agent.role}</div>
             </div>
           </div>
           <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${
             agent.status === 'active'
               ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-              : 'bg-white/10 text-white/40 border border-white/10'
+              : 'bg-[var(--border-subtle)] text-[var(--text-secondary)] border border-[var(--border-subtle)]'
           }`}>
             <div className={`w-1.5 h-1.5 rounded-full ${agent.status === 'active' ? 'bg-emerald-400 animate-pulse' : 'bg-white/30'}`} />
             {agent.status}
@@ -220,20 +220,20 @@ function AgentCard({ agent, index }: { agent: typeof AGENTS[0]; index: number })
         </div>
 
         {/* Metric */}
-        <div className="mb-3 px-3 py-2 rounded-xl bg-white/5 border border-white/5">
+        <div className="mb-3 px-3 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
           <div className="font-black text-lg" style={{ color: agent.color }}>{agent.metric}</div>
-          <div className="text-[10px] text-white/40 uppercase tracking-wider">{agent.metricLabel}</div>
+          <div className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider">{agent.metricLabel}</div>
         </div>
 
         {/* Skills pills */}
         <div className="flex flex-wrap gap-1.5 mb-3">
           {agent.skills.slice(0, 3).map(skill => (
-            <span key={skill} className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/5 text-white/50 border border-white/10">
+            <span key={skill} className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
               {skill}
             </span>
           ))}
           {agent.skills.length > 3 && (
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/5 text-white/50 border border-white/10">
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
               +{agent.skills.length - 3} more
             </span>
           )}
@@ -249,12 +249,12 @@ function AgentCard({ agent, index }: { agent: typeof AGENTS[0]; index: number })
               transition={{ duration: 0.25 }}
               className="overflow-hidden"
             >
-              <p className="text-xs text-white/60 leading-relaxed border-t border-white/10 pt-3 mt-1">
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed border-t border-[var(--border-subtle)] pt-3 mt-1">
                 {agent.description}
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {agent.skills.map(skill => (
-                  <span key={skill} className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/5 text-white/50 border border-white/10">
+                  <span key={skill} className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
                     /{skill}
                   </span>
                 ))}
@@ -273,7 +273,7 @@ function AgentCard({ agent, index }: { agent: typeof AGENTS[0]; index: number })
           </button>
           <ChevronRight
             size={14}
-            className={`text-white/30 transition-transform duration-200 ${expanded ? 'rotate-90' : ''}`}
+            className={`text-[var(--text-primary)]/30 transition-transform duration-200 ${expanded ? 'rotate-90' : ''}`}
           />
         </div>
       </div>
@@ -287,7 +287,7 @@ function CampaignBoard() {
   const statusColors: Record<string, string> = {
     active: 'text-emerald-400',
     planning: 'text-amber-400',
-    paused: 'text-white/40',
+    paused: 'text-[var(--text-secondary)]',
   };
 
   return (
@@ -298,23 +298,23 @@ function CampaignBoard() {
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.06 }}
-          className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 transition-all group"
+          className="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-white/8 transition-all group"
         >
           <div className="text-xl shrink-0">{c.owner}</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm font-semibold text-white truncate">{c.name}</span>
+              <span className="text-sm font-semibold text-[var(--text-primary)] truncate">{c.name}</span>
               <span className={`text-[9px] font-bold uppercase tracking-widest ${statusColors[c.status]}`}>
                 ● {c.status}
               </span>
             </div>
-            <div className="flex items-center gap-3 text-[10px] text-white/40">
+            <div className="flex items-center gap-3 text-[10px] text-[var(--text-secondary)]">
               <span>{c.platform}</span>
               <span>·</span>
               <span>{c.current} / {c.target}</span>
             </div>
             {/* Progress bar */}
-            <div className="mt-2 h-1 bg-white/10 rounded-full overflow-hidden">
+            <div className="mt-2 h-1 bg-[var(--border-subtle)] rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${c.progress}%` }}
@@ -324,8 +324,8 @@ function CampaignBoard() {
             </div>
           </div>
           <div className="shrink-0 text-right">
-            <div className="text-sm font-black text-white/60">{c.progress}%</div>
-            <div className="text-[9px] text-white/30 uppercase tracking-wider">complete</div>
+            <div className="text-sm font-black text-[var(--text-secondary)]">{c.progress}%</div>
+            <div className="text-[9px] text-[var(--text-primary)]/30 uppercase tracking-wider">complete</div>
           </div>
         </motion.div>
       ))}
@@ -340,7 +340,7 @@ function ContentCalendar() {
     published: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     scheduled: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
     'in-progress': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-    draft: 'bg-white/10 text-white/40 border-white/10',
+    draft: 'bg-[var(--border-subtle)] text-[var(--text-secondary)] border-[var(--border-subtle)]',
     planned: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
     automated: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
   };
@@ -353,7 +353,7 @@ function ContentCalendar() {
         const items = CALENDAR_ITEMS.filter(i => i.day === day);
         return (
           <div key={day} className="flex flex-col gap-2">
-            <div className="text-center text-[10px] font-black uppercase tracking-widest text-white/40 pb-2 border-b border-white/10">
+            <div className="text-center text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] pb-2 border-b border-[var(--border-subtle)]">
               {day}
             </div>
             {items.map((item, i) => {
@@ -364,15 +364,15 @@ function ContentCalendar() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08 }}
-                  className="p-2 rounded-lg bg-white/5 border border-white/8 hover:bg-white/10 transition-all cursor-pointer group"
+                  className="p-2 rounded-lg bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] transition-all cursor-pointer group"
                 >
                   <div className="flex items-center gap-1 mb-1">
-                    <Icon size={9} className="text-white/50" />
-                    <span className="text-[8px] font-bold uppercase tracking-wider text-white/50 truncate">
+                    <Icon size={9} className="text-[var(--text-secondary)]" />
+                    <span className="text-[8px] font-bold uppercase tracking-wider text-[var(--text-secondary)] truncate">
                       {item.platform}
                     </span>
                   </div>
-                  <div className="text-[9px] font-semibold text-white/70 leading-tight mb-1.5 line-clamp-2">
+                  <div className="text-[9px] font-semibold text-[var(--text-primary)] opacity-80 leading-tight mb-1.5 line-clamp-2">
                     {item.topic}
                   </div>
                   <div className={`inline-flex px-1.5 py-0.5 rounded text-[7px] font-bold uppercase tracking-wider border ${statusStyles[item.status]}`}>
@@ -401,21 +401,21 @@ function KPIDashboard() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.08 }}
-            className="p-4 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 transition-all"
+            className="p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-white/8 transition-all"
           >
             <div className="flex items-center justify-between mb-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${kpi.color}20` }}>
                 <Icon size={14} style={{ color: kpi.color }} />
               </div>
-              <span className={`text-[10px] font-bold ${kpi.positive ? 'text-emerald-400' : 'text-white/40'}`}>
+              <span className={`text-[10px] font-bold ${kpi.positive ? 'text-emerald-400' : 'text-[var(--text-secondary)]'}`}>
                 {kpi.change}
               </span>
             </div>
-            <div className="font-black text-xl text-white" style={{ textShadow: `0 0 20px ${kpi.color}44` }}>
+            <div className="font-black text-xl text-[var(--text-primary)]" style={{ textShadow: `0 0 20px ${kpi.color}44` }}>
               {kpi.value}
             </div>
-            <div className="text-[10px] text-white/40 leading-tight mt-0.5">{kpi.label}</div>
-            <div className="text-[9px] text-white/25 mt-1">Target: {kpi.target}</div>
+            <div className="text-[10px] text-[var(--text-secondary)] leading-tight mt-0.5">{kpi.label}</div>
+            <div className="text-[9px] text-[var(--text-primary)]/25 mt-1">Target: {kpi.target}</div>
           </motion.div>
         );
       })}
@@ -438,12 +438,13 @@ export default function MarketingPage() {
   ] as const;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white relative overflow-x-hidden">
+    <div className="min-h-screen w-full relative overflow-x-hidden" style={{ color: 'var(--text-primary)' }}>
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-primary) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
       {/* Ambient background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-orange-500/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-indigo-500/5 blur-[100px] rounded-full" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-500/3 blur-[150px] rounded-full" />
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 150, repeat: Infinity, ease: "linear" }} className="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-orange-500/10 blur-[120px] rounded-full mix-blend-screen" />
+        <motion.div animate={{ rotate: -360 }} transition={{ duration: 180, repeat: Infinity, ease: "linear" }} className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-indigo-500/10 blur-[100px] rounded-full mix-blend-screen" />
+        <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-pink-500/5 blur-[150px] rounded-full mix-blend-screen" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -455,25 +456,25 @@ export default function MarketingPage() {
           className="mb-10"
         >
           <div className="flex items-center gap-2 mb-4">
-            <Link href="/" className="text-white/40 hover:text-white/70 text-sm transition-colors">
+            <Link href="/" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] opacity-80 text-sm transition-colors">
               La Yucateca
             </Link>
-            <ChevronRight size={14} className="text-white/20" />
-            <span className="text-white/70 text-sm">Marketing HQ</span>
+            <ChevronRight size={14} className="text-[var(--text-primary)]/20" />
+            <span className="text-[var(--text-primary)] opacity-80 text-sm">Marketing HQ</span>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                  <Target size={24} className="text-white" />
+                  <Target size={24} className="text-[var(--text-primary)]" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-black tracking-tight">Marketing HQ</h1>
-                  <p className="text-white/40 text-sm">La Yucateca · AI-Powered News Channel</p>
+                  <p className="text-[var(--text-secondary)] text-sm">La Yucateca · AI-Powered News Channel</p>
                 </div>
               </div>
-              <p className="text-white/60 text-sm max-w-xl leading-relaxed">
+              <p className="text-[var(--text-secondary)] text-sm max-w-xl leading-relaxed">
                 Your centralized marketing operations center. 7 AI specialist agents powered by{' '}
                 <span className="text-orange-400 font-semibold">{skillCount} marketing skills</span>{' '}
                 promoting the La Yucateca news channel across the entire internet.
@@ -487,9 +488,9 @@ export default function MarketingPage() {
                 { label: 'Campaigns Live', value: '4', color: '#f59e0b' },
                 { label: 'Skills Loaded', value: '40', color: '#ff5500' },
               ].map(stat => (
-                <div key={stat.label} className="text-center px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+                <div key={stat.label} className="text-center px-4 py-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
                   <div className="font-black text-xl" style={{ color: stat.color }}>{stat.value}</div>
-                  <div className="text-[10px] text-white/40 uppercase tracking-wider whitespace-nowrap">{stat.label}</div>
+                  <div className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider whitespace-nowrap">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -503,7 +504,7 @@ export default function MarketingPage() {
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <div className="text-xs font-bold uppercase tracking-widest text-white/30 mb-3">Quick Actions</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-[var(--text-primary)]/30 mb-3">Quick Actions</div>
           <div className="flex flex-wrap gap-2">
             {[
               { label: 'Generate Twitter Thread', icon: Hash, color: '#000', bg: 'bg-white text-black' },
@@ -522,7 +523,7 @@ export default function MarketingPage() {
                   transition={{ delay: 0.15 + i * 0.04 }}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all ${action.bg}`}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[11px] font-bold tracking-wide backdrop-blur-md transition-all duration-300 ${action.bg}`} style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                 >
                   <Icon size={12} />
                   {action.label}
@@ -537,7 +538,7 @@ export default function MarketingPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex gap-1 mb-8 bg-white/5 p-1 rounded-xl border border-white/10 overflow-x-auto"
+          className="flex gap-2 mb-10 bg-[var(--bg-card)] backdrop-blur-xl p-1.5 rounded-2xl border border-[var(--border-subtle)] overflow-x-auto shadow-sm w-fit"
         >
           {tabs.map(tab => {
             const Icon = tab.icon;
@@ -546,10 +547,10 @@ export default function MarketingPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
+                className={`flex items-center gap-2 px-6 py-3 rounded-[12px] text-[11px] font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${
                   isActive
-                    ? 'bg-white text-black shadow-lg'
-                    : 'text-white/50 hover:text-white hover:bg-white/5'
+                    ? 'bg-[var(--accent-gold)] text-[var(--text-primary)] shadow-[0_0_20px_rgba(255,85,0,0.3)]'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)]'
                 }`}
               >
                 <Icon size={13} />
@@ -575,7 +576,7 @@ export default function MarketingPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-black">Marketing Agent Team</h2>
-                    <p className="text-white/40 text-sm mt-0.5">7 AI specialists, each powered by multiple marketing skills. Click any card to expand.</p>
+                    <p className="text-[var(--text-secondary)] text-sm mt-0.5">7 AI specialists, each powered by multiple marketing skills. Click any card to expand.</p>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -589,7 +590,7 @@ export default function MarketingPage() {
                 </div>
 
                 {/* Skills library reference */}
-                <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">
+                <div className="mt-8 p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
                   <div className="flex items-center gap-3 mb-4">
                     <Star size={16} className="text-orange-400" />
                     <h3 className="font-bold text-sm">Marketing Skills Library — 40 Skills Active</h3>
@@ -597,7 +598,7 @@ export default function MarketingPage() {
                       href="https://github.com/coreyhaines31/marketingskills"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 ml-auto text-[10px] text-white/40 hover:text-white/70 transition-colors"
+                      className="flex items-center gap-1 ml-auto text-[10px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] opacity-80 transition-colors"
                     >
                       Source <ArrowUpRight size={10} />
                     </a>
@@ -619,7 +620,7 @@ export default function MarketingPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-black">Active Campaigns</h2>
-                    <p className="text-white/40 text-sm mt-0.5">All marketing initiatives tracked by the Campaign Director agent.</p>
+                    <p className="text-[var(--text-secondary)] text-sm mt-0.5">All marketing initiatives tracked by the Campaign Director agent.</p>
                   </div>
                   <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500 text-black text-xs font-black hover:bg-orange-400 transition-all">
                     <Zap size={12} />
@@ -636,7 +637,7 @@ export default function MarketingPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-black">Content Calendar</h2>
-                    <p className="text-white/40 text-sm mt-0.5">Weekly content plan across all platforms. Managed by Content Strategist + Social Media Manager.</p>
+                    <p className="text-[var(--text-secondary)] text-sm mt-0.5">Weekly content plan across all platforms. Managed by Content Strategist + Social Media Manager.</p>
                   </div>
                   <div className="flex gap-2 text-[10px] font-bold">
                     {['published','scheduled','in-progress','draft','planned'].map(s => (
@@ -644,7 +645,7 @@ export default function MarketingPage() {
                         s === 'published' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
                         s === 'scheduled' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
                         s === 'in-progress' ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
-                        s === 'draft' ? 'bg-white/10 text-white/40 border-white/10' :
+                        s === 'draft' ? 'bg-[var(--border-subtle)] text-[var(--text-secondary)] border-[var(--border-subtle)]' :
                         'bg-purple-500/20 text-purple-400 border-purple-500/30'
                       }`}>{s}</span>
                     ))}
@@ -660,14 +661,14 @@ export default function MarketingPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-black">Performance KPIs</h2>
-                    <p className="text-white/40 text-sm mt-0.5">North star metrics tracked by the Growth Analyst agent.</p>
+                    <p className="text-[var(--text-secondary)] text-sm mt-0.5">North star metrics tracked by the Growth Analyst agent.</p>
                   </div>
-                  <div className="text-xs text-white/30 font-mono">Updated: {new Date().toLocaleDateString()}</div>
+                  <div className="text-xs text-[var(--text-primary)]/30 font-mono">Updated: {new Date().toLocaleDateString()}</div>
                 </div>
                 <KPIDashboard />
 
                 {/* Funnel visualization */}
-                <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">
+                <div className="mt-8 p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
                   <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
                     <Activity size={14} className="text-orange-400" />
                     Reader Acquisition Funnel
@@ -681,10 +682,10 @@ export default function MarketingPage() {
                   ].map((stage, i) => (
                     <div key={stage.label} className="mb-3">
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-white/60">{stage.label}</span>
-                        <span className="font-bold text-white">{stage.value.toLocaleString()}</span>
+                        <span className="text-[var(--text-secondary)]">{stage.label}</span>
+                        <span className="font-bold text-[var(--text-primary)]">{stage.value.toLocaleString()}</span>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-2 bg-[var(--border-subtle)] rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${(stage.value / stage.max) * 100}%` }}
@@ -705,7 +706,7 @@ export default function MarketingPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-black">Platform Overview</h2>
-                    <p className="text-white/40 text-sm mt-0.5">Social media presence managed by the Social Media Manager agent.</p>
+                    <p className="text-[var(--text-secondary)] text-sm mt-0.5">Social media presence managed by the Social Media Manager agent.</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -717,33 +718,33 @@ export default function MarketingPage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
-                        className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/8 transition-all"
+                        className="p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:bg-white/8 transition-all"
                       >
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${p.color}20`, border: `1px solid ${p.color}40` }}>
                             <Icon size={18} style={{ color: p.color === '#010101' ? '#fff' : p.color }} />
                           </div>
                           <div>
-                            <div className="font-bold text-sm text-white">{p.name}</div>
-                            <div className="text-[10px] text-white/40">{p.handle}</div>
+                            <div className="font-bold text-sm text-[var(--text-primary)]">{p.name}</div>
+                            <div className="text-[10px] text-[var(--text-secondary)]">{p.handle}</div>
                           </div>
                         </div>
                         <div className="grid grid-cols-3 gap-3 text-center">
                           <div>
-                            <div className="font-black text-lg text-white">{p.followers}</div>
-                            <div className="text-[9px] text-white/30 uppercase tracking-wider">Followers</div>
+                            <div className="font-black text-lg text-[var(--text-primary)]">{p.followers}</div>
+                            <div className="text-[9px] text-[var(--text-primary)]/30 uppercase tracking-wider">Followers</div>
                           </div>
                           <div>
-                            <div className={`font-black text-lg ${p.growth === '—' ? 'text-white/30' : 'text-emerald-400'}`}>{p.growth}</div>
-                            <div className="text-[9px] text-white/30 uppercase tracking-wider">Growth</div>
+                            <div className={`font-black text-lg ${p.growth === '—' ? 'text-[var(--text-primary)]/30' : 'text-emerald-400'}`}>{p.growth}</div>
+                            <div className="text-[9px] text-[var(--text-primary)]/30 uppercase tracking-wider">Growth</div>
                           </div>
                           <div>
-                            <div className="font-black text-lg text-white">{p.posts}</div>
-                            <div className="text-[9px] text-white/30 uppercase tracking-wider">Posts/mo</div>
+                            <div className="font-black text-lg text-[var(--text-primary)]">{p.posts}</div>
+                            <div className="text-[9px] text-[var(--text-primary)]/30 uppercase tracking-wider">Posts/mo</div>
                           </div>
                         </div>
-                        <div className="mt-4 pt-3 border-t border-white/5">
-                          <button className="w-full py-2 rounded-xl text-[11px] font-bold bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all">
+                        <div className="mt-4 pt-3 border-t border-[var(--border-subtle)]">
+                          <button className="w-full py-2 rounded-xl text-[11px] font-bold bg-[var(--bg-card)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all">
                             View Strategy →
                           </button>
                         </div>
@@ -758,7 +759,7 @@ export default function MarketingPage() {
                     <Globe size={16} className="text-orange-400" />
                     Internet-Wide Promotion Strategy
                   </h3>
-                  <p className="text-white/50 text-sm mb-4">La Yucateca needs to be everywhere. Here's the full distribution map.</p>
+                  <p className="text-[var(--text-secondary)] text-sm mb-4">La Yucateca needs to be everywhere. Here's the full distribution map.</p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                     {[
                       { category: 'Search', channels: ['Google News', 'Apple News', 'Bing News', 'Yahoo News'] },
@@ -766,10 +767,10 @@ export default function MarketingPage() {
                       { category: 'Aggregators', channels: ['Flipboard', 'Feedly', 'Pocket', 'AllTop', 'NewsNow'] },
                       { category: 'Community', channels: ['Reddit', 'Quora', 'Medium', 'Substack Notes', 'Discord'] },
                     ].map(cat => (
-                      <div key={cat.category} className="p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div key={cat.category} className="p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
                         <div className="text-orange-400 font-black text-[10px] uppercase tracking-widest mb-2">{cat.category}</div>
                         {cat.channels.map(ch => (
-                          <div key={ch} className="flex items-center gap-1.5 text-[11px] text-white/60 mb-1">
+                          <div key={ch} className="flex items-center gap-1.5 text-[11px] text-[var(--text-secondary)] mb-1">
                             <div className="w-1 h-1 rounded-full bg-orange-400/60" />
                             {ch}
                           </div>
@@ -789,14 +790,14 @@ export default function MarketingPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 pt-6 border-t border-white/5 flex items-center justify-between text-[10px] text-white/20"
+          className="mt-12 pt-6 border-t border-[var(--border-subtle)] flex items-center justify-between text-[10px] text-[var(--text-primary)]/20"
         >
           <span>Marketing HQ · La Yucateca · Powered by Muna AI + 40 Marketing Skills</span>
           <a
             href="https://github.com/coreyhaines31/marketingskills"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 hover:text-white/40 transition-colors"
+            className="flex items-center gap-1 hover:text-[var(--text-secondary)] transition-colors"
           >
             Skills by coreyhaines31 <ArrowUpRight size={10} />
           </a>
