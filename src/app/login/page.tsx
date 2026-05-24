@@ -43,7 +43,7 @@ export default function LoginPage() {
     }, 1200);
 
     return (
-      <main className={`min-h-screen pt-36 pb-16 flex items-center justify-center px-4 transition-colors duration-300 relative overflow-hidden bg-gradient-to-br ${
+      <main className={`min-h-screen pt-36 pb-20 flex items-center justify-center px-4 transition-colors duration-300 relative overflow-hidden bg-gradient-to-br ${
         isDark 
           ? "from-[#020205] via-[#050510] to-[#0a0518]" 
           : "from-[#f7f4ed] via-[#f2ecd9] to-[#ebdcb9]"
@@ -119,22 +119,32 @@ export default function LoginPage() {
       {/* Floating Background Ambient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(255,85,0,0.03)] blur-[120px] pointer-events-none select-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[rgba(212,168,83,0.02)] blur-[120px] pointer-events-none select-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[rgba(255,85,0,0.015)] blur-[150px] pointer-events-none select-none" />
 
-      {/* PREMIUM OBSIDIAN & GLASS CARD CONTAINER - Generous paddings (px-10 py-12 md:py-16) to provide breathing room */}
+      {/* PREMIUM OBSIDIAN & GLASS CARD CONTAINER - Generous vertical & horizontal paddings */}
       <div 
-        className={`w-full max-w-md p-10 md:py-16 md:px-12 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative z-10 overflow-hidden space-y-10 ${
+        className={`w-full max-w-md py-16 px-8 md:px-12 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative z-10 overflow-hidden space-y-10 ${
           isDark 
-            ? "border-white/10 bg-black/40 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)]" 
-            : "border-black/5 bg-white/75 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
+            ? "border-white/10 bg-black/45 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)]" 
+            : "border-black/5 bg-white/80 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
         }`}
       >
         
-        {/* 1. Animated Segmented control Toggle tabs - Spacious design */}
-        <div className={`flex p-2 rounded-full border relative overflow-hidden transition-all duration-300 ${
+        {/* 1. Official Sliding Capsule Toggle Tabs (100% immune to height collapses or overflows) */}
+        <div className={`flex p-1.5 rounded-full border relative overflow-hidden transition-all duration-300 w-full ${
           isDark 
-            ? "bg-black/40 border-white/10" 
-            : "bg-black/5 border-black/5"
+            ? "bg-black/55 border-white/10" 
+            : "bg-black/[0.04] border-black/[0.06]"
         }`}>
+          {/* Active Tab Sliding Background Pill */}
+          <div 
+            className="absolute top-1.5 bottom-1.5 rounded-full bg-gradient-to-r from-orange-500 to-red-600 shadow-[0_4px_14px_rgba(255,85,0,0.3)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
+            style={{
+              left: isLoginTab ? "6px" : "calc(50% + 3px)",
+              width: "calc(50% - 9px)"
+            }}
+          />
+
           <button
             type="button"
             onClick={() => {
@@ -142,11 +152,12 @@ export default function LoginPage() {
               setErrorMsg("");
               setSuccessMsg("");
             }}
-            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center animate-none"
-            style={{ color: isLoginTab ? (isDark ? "#ffffff" : "#1a1208") : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.45)") }}
+            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative cursor-pointer transition-colors duration-300 text-center flex items-center justify-center z-10 rounded-full outline-none focus:outline-none focus:ring-0 border-none"
+            style={{ color: isLoginTab ? "#ffffff" : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.5)") }}
           >
-            {t("SIGN IN", "SIGN IN", "SIGN IN")}
+            {t("Iniciar Sesión", "Sign In", "Okol")}
           </button>
+          
           <button
             type="button"
             onClick={() => {
@@ -154,25 +165,14 @@ export default function LoginPage() {
               setErrorMsg("");
               setSuccessMsg("");
             }}
-            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative z-10 cursor-pointer transition-colors duration-300 text-center flex items-center justify-center animate-none"
-            style={{ color: !isLoginTab ? (isDark ? "#ffffff" : "#1a1208") : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.45)") }}
+            className="flex-1 py-3 text-xs font-black uppercase tracking-widest relative cursor-pointer transition-colors duration-300 text-center flex items-center justify-center z-10 rounded-full outline-none focus:outline-none focus:ring-0 border-none"
+            style={{ color: !isLoginTab ? "#ffffff" : (isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(26, 18, 8, 0.5)") }}
           >
-            {t("REGISTER", "REGISTER", "REGISTER")}
+            {t("Registrarse", "Register", "Ts'íib")}
           </button>
-          
-          {/* Framer motion sliding active background pill */}
-          <motion.div
-            className="absolute top-1.5 bottom-1.5 bg-gradient-to-r from-orange-500 to-red-600 rounded-full shadow-[0_4px_16px_rgba(239,68,68,0.25)] z-0"
-            initial={false}
-            animate={{
-              left: isLoginTab ? "6px" : "calc(50% + 3px)",
-              right: isLoginTab ? "calc(50% + 3px)" : "6px",
-            }}
-            transition={{ type: "spring", stiffness: 350, damping: 28 }}
-          />
         </div>
 
-        {/* 2. Shield Icon with Pulsing Energy Forcefield - Spacious layouts */}
+        {/* 2. Shield Icon with Pulsing Energy Forcefield - Beautiful vertical spacing */}
         <div className="flex flex-col items-center relative space-y-6 pt-2">
           <div className="w-16 h-16 rounded-full bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.15)] flex items-center justify-center relative shadow-[0_0_20px_rgba(255,85,0,0.1)]">
             <Shield className="w-6 h-6 text-[#ff5500] animate-pulse" />
@@ -187,8 +187,8 @@ export default function LoginPage() {
           
           {/* 3. Headers */}
           <div className="text-center space-y-3">
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[var(--text-primary)] drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] uppercase">
-              {t("Community Portal", "Community Portal", "Community Portal")}
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[var(--text-primary)] drop-shadow-[0_0_15px_rgba(255,255,255,0.05)] uppercase">
+              {t("Portal de Comunidad", "Community Portal", "Múuch' kajil portal")}
             </h2>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed max-w-[300px] mx-auto font-medium opacity-80">
               {t(
@@ -227,21 +227,21 @@ export default function LoginPage() {
                   animate={{ opacity: 1, height: "auto", y: 0 }}
                   exit={{ opacity: 0, height: 0, y: -10 }}
                   transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                  className="overflow-hidden space-y-2.5"
+                  className="overflow-hidden space-y-3"
                 >
                   {/* Outside label placement (With elegant bottom margin and letter spacing) */}
-                  <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
-                    {t("Nombre de Entidad", "Entity Name / Call Sign", "Nombre")}
+                  <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1 opacity-90">
+                    {t("Nombre de Entidad", "Entity Name / Call Sign", "K'aba'al")}
                   </label>
                   
-                  {/* Premium Spacious Crystal Input Structure (Generous padding - p-3.5) */}
-                  <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                  {/* Premium Spacious Crystal Input Structure (Generous vertical padding & dynamic height) */}
+                  <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                     isDark 
-                      ? "bg-black/35 border-white/10" 
-                      : "bg-white/40 border-black/10 shadow-sm"
+                      ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                      : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                   }`}>
                     {/* Spacious left icon section with sleek vertical divider */}
-                    <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                    <div className={`flex items-center justify-center pr-5 mr-5 border-r transition-colors duration-300 flex-shrink-0 h-5 ${
                       isDark ? "border-white/10" : "border-black/10"
                     }`}>
                       <User className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -254,7 +254,7 @@ export default function LoginPage() {
                       placeholder={t("e.g. Sergio Valle", "e.g. Sergio Valle", "e.g. Sergio Valle")}
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
+                      className="flex-1 bg-transparent border-0 p-0 m-0 outline-none focus:ring-0 focus:outline-none text-sm text-[var(--text-primary)] font-semibold placeholder:opacity-35"
                     />
                   </div>
                 </motion.div>
@@ -262,20 +262,20 @@ export default function LoginPage() {
             </AnimatePresence>
 
             {/* IDENTITY EMAIL FIELD */}
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {/* Outside label placement */}
-              <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
-                {t("EMAIL ADDRESS", "EMAIL ADDRESS", "EMAIL ADDRESS")}
+              <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1 opacity-90">
+                {t("Correo Electrónico", "Email Address", "Si'ibil ts'íib")}
               </label>
               
-              {/* Premium Spacious Crystal Input Structure (Generous padding - p-3.5) */}
-              <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+              {/* Premium Spacious Crystal Input Structure */}
+              <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                 isDark 
-                  ? "bg-black/35 border-white/10" 
-                  : "bg-white/40 border-black/10 shadow-sm"
+                  ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                  : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
               }`}>
                 {/* Spacious left icon section with sleek vertical divider */}
-                <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                <div className={`flex items-center justify-center pr-5 mr-5 border-r transition-colors duration-300 flex-shrink-0 h-5 ${
                   isDark ? "border-white/10" : "border-black/10"
                 }`}>
                   <Mail className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -285,29 +285,29 @@ export default function LoginPage() {
                   type="email"
                   name="email"
                   required
-                  placeholder="sergio@example.com"
+                  placeholder={t("e.g. sergio@example.com", "e.g. sergio@example.com", "e.g. sergio@example.com")}
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
+                  className="flex-1 bg-transparent border-0 p-0 m-0 outline-none focus:ring-0 focus:outline-none text-sm text-[var(--text-primary)] font-semibold placeholder:opacity-35"
                 />
               </div>
             </div>
 
             {/* SOVEREIGN PASSWORD FIELD */}
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {/* Outside label placement */}
-              <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
-                {t("PASSWORD", "PASSWORD", "PASSWORD")}
+              <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1 opacity-90">
+                {t("Contraseña", "Password", "Ta'akil")}
               </label>
               
-              {/* Premium Spacious Crystal Input Structure (Generous padding - p-3.5) */}
-              <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+              {/* Premium Spacious Crystal Input Structure */}
+              <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                 isDark 
-                  ? "bg-black/35 border-white/10" 
-                  : "bg-white/40 border-black/10 shadow-sm"
+                  ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                  : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
               }`}>
                 {/* Spacious left icon section with sleek vertical divider */}
-                <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                <div className={`flex items-center justify-center pr-5 mr-5 border-r transition-colors duration-300 flex-shrink-0 h-5 ${
                   isDark ? "border-white/10" : "border-black/10"
                 }`}>
                   <Lock className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -317,17 +317,17 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   required
-                  placeholder="••••••••"
+                  placeholder={t("Escribe tu contraseña...", "Enter your password...", "Ts'íib ta'akil...")}
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
+                  className="flex-1 bg-transparent border-0 p-0 m-0 outline-none focus:ring-0 focus:outline-none text-sm text-[var(--text-primary)] font-semibold placeholder:opacity-35"
                 />
                 
                 {/* Password visibility toggle */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-200 cursor-pointer ml-1 hover:text-[#ff5500] ${
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 cursor-pointer ml-2 hover:text-[#ff5500] border-none bg-transparent outline-none focus:outline-none focus:ring-0 ${
                     isDark ? "text-white/45" : "text-black/45"
                   }`}
                 >
@@ -338,13 +338,13 @@ export default function LoginPage() {
 
           </div>
 
-          {/* 5. Primary Action Button - Pushed away cleanly with mt-10 */}
+          {/* 5. Primary Action Button - Pushed away cleanly with mt-12 */}
           <motion.button
             type="submit"
             disabled={loading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-4.5 mt-10 rounded-full shadow-[0_8px_30px_rgba(239,68,68,0.25)] hover:shadow-[0_8px_45px_rgba(239,68,68,0.35)] transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-4.5 mt-12 rounded-full shadow-[0_8px_30px_rgba(239,68,68,0.25)] hover:shadow-[0_8px_45px_rgba(239,68,68,0.35)] transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none outline-none focus:outline-none focus:ring-0"
           >
             {loading ? (
               <span>{t("Procesando...", "Processing...", "Meyajil...")}</span>
@@ -352,8 +352,8 @@ export default function LoginPage() {
               <>
                 <span>
                   {isLoginTab 
-                    ? t("SIGN IN", "SIGN IN", "SIGN IN") 
-                    : t("CREATE ACCOUNT", "CREATE ACCOUNT", "CREATE ACCOUNT")}
+                    ? t("Iniciar Sesión", "Sign In", "Okol") 
+                    : t("Crear Cuenta", "Create Account", "Ts'íib k'aba'")}
                 </span>
                 <ArrowRight className="w-4.5 h-4.5" />
               </>

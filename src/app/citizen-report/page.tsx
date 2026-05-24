@@ -310,20 +310,20 @@ export default function CitizenReportPage() {
                   {errorMsg}
                 </div>
               )}
-
+              
               {/* REPORT TITLE FIELD */}
-              <div className="space-y-2.5">
-                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1 opacity-90">
                   {t("Título de la Denuncia", "Report Title / Alert Headline", "Título")}
                 </label>
                 
-                <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                   isDark 
-                    ? "bg-black/35 border-white/10" 
-                    : "bg-white/40 border-black/10 shadow-sm"
+                    ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                    : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                 }`}>
                   {/* Spacious left icon section with sleek vertical divider */}
-                  <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                  <div className={`flex items-center justify-center pr-5 mr-5 border-r transition-colors duration-300 flex-shrink-0 h-5 ${
                     isDark ? "border-white/10" : "border-black/10"
                   }`}>
                     <FileText className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -333,27 +333,27 @@ export default function CitizenReportPage() {
                     type="text"
                     name="title"
                     required
-                    placeholder="e.g. Fuga de agua potable en Prolongación Paseo de Montejo"
+                    placeholder={t("e.g. Fuga de agua potable en Paseo de Montejo", "e.g. Clean water leak on Paseo de Montejo", "e.g. Fuga ja' k'áax Montejo")}
                     value={formData.title}
                     onChange={handleInputChange}
-                    className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
+                    className="flex-1 bg-transparent border-0 p-0 m-0 outline-none focus:ring-0 focus:outline-none text-sm text-[var(--text-primary)] font-semibold placeholder:opacity-35"
                   />
                 </div>
               </div>
 
               {/* DETAILED DESCRIPTION FIELD */}
-              <div className="space-y-2.5">
-                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1 opacity-90">
                   {t("Descripción Detallada", "Detailed Telemetry Description", "Descripción")}
                 </label>
                 
-                <div className={`flex items-start border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                <div className={`flex items-start border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                   isDark 
-                    ? "bg-black/35 border-white/10" 
-                    : "bg-white/40 border-black/10 shadow-sm"
+                    ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                    : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                 }`}>
                   {/* Spacious left icon section with sleek vertical divider */}
-                  <div className={`flex items-center justify-center pr-3 mr-3 mt-1.5 border-r transition-colors duration-300 flex-shrink-0 ${
+                  <div className={`flex items-center justify-center pr-5 mr-5 border-r transition-colors duration-300 flex-shrink-0 h-6 mt-1.5 ${
                     isDark ? "border-white/10" : "border-black/10"
                   }`}>
                     <FileText className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -362,10 +362,10 @@ export default function CitizenReportPage() {
                   <textarea
                     name="description"
                     required
-                    placeholder="Indica qué sucede, desde cuándo y los detalles visibles para los técnicos y autoridades de la comunidad..."
+                    placeholder={t("Indica qué sucede, desde cuándo y los detalles visibles...", "Describe what is happening, for how long, and visible details...", "Ts'íib ba'ax ku yúuchul ti' a kaajal...")}
                     value={formData.description}
                     onChange={handleInputChange}
-                    className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30 min-h-[100px] resize-y"
+                    className="flex-1 bg-transparent border-0 p-0 m-0 outline-none focus:ring-0 focus:outline-none text-sm text-[var(--text-primary)] font-semibold placeholder:opacity-35 min-h-[100px] resize-y"
                   />
                 </div>
               </div>
@@ -374,12 +374,12 @@ export default function CitizenReportPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 
                 {/* STATE SELECTOR */}
-                <div className={`flex items-center border rounded-2xl p-3 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 group ${
+                <div className={`flex items-center border rounded-2xl py-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 group ${
                   isDark 
-                    ? "bg-black/35 border-white/10" 
-                    : "bg-white/40 border-black/10 shadow-sm"
+                    ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                    : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                 }`}>
-                  <div className={`flex items-center justify-center pr-2 mr-2 border-r flex-shrink-0 ${
+                  <div className={`flex items-center justify-center pr-4 mr-4 border-r flex-shrink-0 h-5 ${
                     isDark ? "border-white/10" : "border-black/10"
                   }`}>
                     <Landmark className={`w-4 h-4 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -392,7 +392,7 @@ export default function CitizenReportPage() {
                       name="state" 
                       value={formData.state} 
                       onChange={handleInputChange} 
-                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold cursor-pointer p-0 appearance-none focus:ring-0"
+                      className="w-full bg-transparent border-0 p-0 focus:ring-0 focus:outline-none outline-none text-xs text-[var(--text-primary)] font-bold cursor-pointer appearance-none"
                     >
                       <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Yucatán</option>
                       <option className={`${isDark ? "bg-[#0c0c14] text-white" : "bg-white text-black"}`}>Campeche</option>
@@ -405,12 +405,12 @@ export default function CitizenReportPage() {
                 </div>
 
                 {/* CITY / MUNICIPIO INPUT */}
-                <div className={`flex items-center border rounded-2xl p-3 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 group ${
+                <div className={`flex items-center border rounded-2xl py-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 group ${
                   isDark 
-                    ? "bg-black/35 border-white/10" 
-                    : "bg-white/40 border-black/10 shadow-sm"
+                    ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                    : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                 }`}>
-                  <div className={`flex items-center justify-center pr-2 mr-2 border-r flex-shrink-0 ${
+                  <div className={`flex items-center justify-center pr-4 mr-4 border-r flex-shrink-0 h-5 ${
                     isDark ? "border-white/10" : "border-black/10"
                   }`}>
                     <Compass className={`w-4 h-4 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -425,18 +425,18 @@ export default function CitizenReportPage() {
                       required
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold p-0 focus:ring-0"
+                      className="w-full bg-transparent border-0 p-0 focus:ring-0 focus:outline-none outline-none text-xs text-[var(--text-primary)] font-bold"
                     />
                   </div>
                 </div>
 
                 {/* TOWN / COLONIA INPUT */}
-                <div className={`flex items-center border rounded-2xl p-3 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 group ${
+                <div className={`flex items-center border rounded-2xl py-3 px-5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 group ${
                   isDark 
-                    ? "bg-black/35 border-white/10" 
-                    : "bg-white/40 border-black/10 shadow-sm"
+                    ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                    : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                 }`}>
-                  <div className={`flex items-center justify-center pr-2 mr-2 border-r flex-shrink-0 ${
+                  <div className={`flex items-center justify-center pr-4 mr-4 border-r flex-shrink-0 h-5 ${
                     isDark ? "border-white/10" : "border-black/10"
                   }`}>
                     <MapPin className={`w-4 h-4 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
@@ -450,7 +450,7 @@ export default function CitizenReportPage() {
                       name="town"
                       value={formData.town}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold p-0 focus:ring-0"
+                      className="w-full bg-transparent border-0 p-0 focus:ring-0 focus:outline-none outline-none text-xs text-[var(--text-primary)] font-bold"
                     />
                   </div>
                 </div>
@@ -458,30 +458,30 @@ export default function CitizenReportPage() {
               </div>
 
               {/* PHOTO URL MOCK UPLOAD FIELD */}
-              <div className="space-y-2.5">
-                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1 opacity-90">
                   {t("URL de Imagen (Opcional)", "Photo URL / Evidence Image", "Imagen")}
                 </label>
                 
-                <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                   isDark 
-                    ? "bg-black/35 border-white/10" 
-                    : "bg-white/40 border-black/10 shadow-sm"
+                    ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
+                    : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
                 }`}>
                   {/* Spacious left icon section with sleek vertical divider */}
-                  <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                  <div className={`flex items-center justify-center pr-5 mr-5 border-r transition-colors duration-300 flex-shrink-0 h-5 ${
                     isDark ? "border-white/10" : "border-black/10"
                   }`}>
                     <Upload className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
                   </div>
-                  <div className="flex-1 relative pr-16">
+                  <div className="flex-1 relative pr-20">
                     <input
                       type="text"
                       name="photoUrl"
-                      placeholder="e.g. https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format"
+                      placeholder="e.g. https://images.unsplash.com/photo-1594913785162-e6787352fec2"
                       value={formData.photoUrl}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
+                      className="w-full bg-transparent border-0 p-0 m-0 outline-none focus:ring-0 focus:outline-none text-sm text-[var(--text-primary)] font-semibold placeholder:opacity-35"
                     />
                     {/* Demo fill button */}
                     <button
@@ -492,7 +492,7 @@ export default function CitizenReportPage() {
                           photoUrl: "https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format&fit=crop&w=1200&q=80",
                         })
                       }
-                      className="absolute right-0 top-1/2 -translate-y-1/2 bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] text-white hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase transition-all duration-200 cursor-pointer animate-none"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 bg-[rgba(255,85,0,0.1)] hover:bg-[#ff5500] text-[#ff5500] hover:text-white px-3.5 py-1.5 rounded-xl text-[9px] font-black uppercase transition-all duration-200 border-none outline-none focus:outline-none focus:ring-0 cursor-pointer animate-none"
                     >
                       Demo
                     </button>
