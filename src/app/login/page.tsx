@@ -235,7 +235,7 @@ export default function LoginPage() {
                   </label>
                   
                   {/* Premium Spacious Crystal Input Structure (Generous vertical padding & dynamic height) */}
-                  <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
+                  <div className={`flex items-center border rounded-2xl py-[18px] px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                     isDark 
                       ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
                       : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
@@ -269,7 +269,7 @@ export default function LoginPage() {
               </label>
               
               {/* Premium Spacious Crystal Input Structure */}
-              <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
+              <div className={`flex items-center border rounded-2xl py-[18px] px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                 isDark 
                   ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
                   : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
@@ -301,7 +301,7 @@ export default function LoginPage() {
               </label>
               
               {/* Premium Spacious Crystal Input Structure */}
-              <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
+              <div className={`flex items-center border rounded-2xl py-[18px] px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                 isDark 
                   ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
                   : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
@@ -331,7 +331,7 @@ export default function LoginPage() {
                     isDark ? "text-white/45" : "text-black/45"
                   }`}
                 >
-                  {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                  {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
                 </button>
               </div>
             </div>
@@ -344,7 +344,7 @@ export default function LoginPage() {
             disabled={loading}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-4.5 mt-12 rounded-full shadow-[0_8px_30px_rgba(239,68,68,0.25)] hover:shadow-[0_8px_45px_rgba(239,68,68,0.35)] transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none outline-none focus:outline-none focus:ring-0"
+            className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-[18px] mt-12 rounded-full shadow-[0_8px_30px_rgba(239,68,68,0.25)] hover:shadow-[0_8px_45px_rgba(239,68,68,0.35)] transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 border-none outline-none focus:outline-none focus:ring-0"
           >
             {loading ? (
               <span>{t("Procesando...", "Processing...", "Meyajil...")}</span>
@@ -355,7 +355,7 @@ export default function LoginPage() {
                     ? t("Iniciar Sesión", "Sign In", "Okol") 
                     : t("Crear Cuenta", "Create Account", "Ts'íib k'aba'")}
                 </span>
-                <ArrowRight className="w-4.5 h-4.5" />
+                <ArrowRight className="w-[18px] h-[18px]" />
               </>
             )}
           </motion.button>

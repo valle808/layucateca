@@ -317,7 +317,7 @@ export default function CitizenReportPage() {
                   {t("Título de la Denuncia", "Report Title / Alert Headline", "Título")}
                 </label>
                 
-                <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
+                <div className={`flex items-center border rounded-2xl py-[18px] px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                   isDark 
                     ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
                     : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
@@ -347,7 +347,7 @@ export default function CitizenReportPage() {
                   {t("Descripción Detallada", "Detailed Telemetry Description", "Descripción")}
                 </label>
                 
-                <div className={`flex items-start border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
+                <div className={`flex items-start border rounded-2xl py-[18px] px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                   isDark 
                     ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
                     : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
@@ -463,7 +463,7 @@ export default function CitizenReportPage() {
                   {t("URL de Imagen (Opcional)", "Photo URL / Evidence Image", "Imagen")}
                 </label>
                 
-                <div className={`flex items-center border rounded-2xl py-4.5 px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
+                <div className={`flex items-center border rounded-2xl py-[18px] px-6 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:border-orange-500/80 focus-within:scale-[1.01] group ${
                   isDark 
                     ? "bg-black/35 border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]" 
                     : "bg-white border-black/15 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
@@ -658,7 +658,7 @@ export default function CitizenReportPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4.5 mt-10 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_45px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 animate-none"
+                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-[18px] mt-10 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_45px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 animate-none"
               >
                 {submitting ? (
                   <>
