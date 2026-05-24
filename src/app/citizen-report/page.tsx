@@ -243,11 +243,9 @@ export default function CitizenReportPage() {
       {/* MAIN CONTENT BENTO GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
         
-        {/* LEFT COLUMN: THE GIS REPORT FORM PANEL (lg:col-span-7) */}
-        <motion.div 
-          layout
-          transition={{ type: "spring", stiffness: 300, damping: 28 }}
-          className={`lg:col-span-7 p-8 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative overflow-hidden ${
+        {/* LEFT COLUMN: THE GIS REPORT FORM PANEL (lg:col-span-7) - Spacious premium design */}
+        <div 
+          className={`lg:col-span-7 p-10 md:px-12 md:py-16 rounded-[32px] border backdrop-blur-3xl transition-all duration-300 relative overflow-hidden space-y-10 ${
             isDark 
               ? "border-[rgba(255,255,255,0.06)] bg-[rgba(10,10,18,0.7)] shadow-2xl" 
               : "border-[rgba(0,0,0,0.06)] bg-[rgba(255,255,255,0.85)] shadow-[0_30px_70px_-15px_rgba(0,0,0,0.08)]"
@@ -284,7 +282,7 @@ export default function CitizenReportPage() {
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
               
               {/* Header inside Panel */}
               <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.06)] pb-5 mb-2">
@@ -314,55 +312,61 @@ export default function CitizenReportPage() {
               )}
 
               {/* REPORT TITLE FIELD */}
-              <div className={`relative flex items-center border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
-                isDark 
-                  ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
-                  : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
-              }`}>
-                <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                  <FileText className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
-                </div>
-                <div className="flex-1 relative">
+              <div className="space-y-2.5">
+                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
+                  {t("Título de la Denuncia", "Report Title / Alert Headline", "Título")}
+                </label>
+                
+                <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                  isDark 
+                    ? "bg-black/35 border-white/10" 
+                    : "bg-white/40 border-black/10 shadow-sm"
+                }`}>
+                  {/* Spacious left icon section with sleek vertical divider */}
+                  <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                    isDark ? "border-white/10" : "border-black/10"
+                  }`}>
+                    <FileText className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
+                  </div>
+                  
                   <input
                     type="text"
                     name="title"
                     required
-                    placeholder=" "
+                    placeholder="e.g. Fuga de agua potable en Prolongación Paseo de Montejo"
                     value={formData.title}
                     onChange={handleInputChange}
-                    className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
+                    className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
                   />
-                  <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
-                    isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                  }`}>
-                    {t("Título de la Denuncia", "Report Title / Alert Headline", "Título")}
-                  </label>
                 </div>
               </div>
 
               {/* DETAILED DESCRIPTION FIELD */}
-              <div className={`relative flex items-start border rounded-2xl px-4 py-3.5 transition-all duration-300 focus-within:border-[#ff5500] focus-within:scale-[1.01] group ${
-                isDark 
-                  ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
-                  : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
-              }`}>
-                <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 mt-0.5 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                  <FileText className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
-                </div>
-                <div className="flex-1 relative">
+              <div className="space-y-2.5">
+                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
+                  {t("Descripción Detallada", "Detailed Telemetry Description", "Descripción")}
+                </label>
+                
+                <div className={`flex items-start border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                  isDark 
+                    ? "bg-black/35 border-white/10" 
+                    : "bg-white/40 border-black/10 shadow-sm"
+                }`}>
+                  {/* Spacious left icon section with sleek vertical divider */}
+                  <div className={`flex items-center justify-center pr-3 mr-3 mt-1.5 border-r transition-colors duration-300 flex-shrink-0 ${
+                    isDark ? "border-white/10" : "border-black/10"
+                  }`}>
+                    <FileText className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
+                  </div>
+                  
                   <textarea
                     name="description"
                     required
-                    placeholder=" "
+                    placeholder="Indica qué sucede, desde cuándo y los detalles visibles para los técnicos y autoridades de la comunidad..."
                     value={formData.description}
                     onChange={handleInputChange}
-                    className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none min-h-[90px] resize-y"
+                    className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30 min-h-[100px] resize-y"
                   />
-                  <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
-                    isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                  }`}>
-                    {t("Descripción Detallada", "Detailed Telemetry Description", "Descripción")}
-                  </label>
                 </div>
               </div>
 
@@ -370,13 +374,15 @@ export default function CitizenReportPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 
                 {/* STATE SELECTOR */}
-                <div className={`relative flex items-center border rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] ${
+                <div className={`flex items-center border rounded-2xl p-3 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 group ${
                   isDark 
-                    ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]" 
-                    : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)]"
+                    ? "bg-black/35 border-white/10" 
+                    : "bg-white/40 border-black/10 shadow-sm"
                 }`}>
-                  <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0">
-                    <Landmark className="w-4 h-4 text-[rgba(255,255,255,0.4)]" />
+                  <div className={`flex items-center justify-center pr-2 mr-2 border-r flex-shrink-0 ${
+                    isDark ? "border-white/10" : "border-black/10"
+                  }`}>
+                    <Landmark className={`w-4 h-4 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
                   </div>
                   <div className="flex-1">
                     <span className="block text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-wider mb-0.5">
@@ -399,97 +405,98 @@ export default function CitizenReportPage() {
                 </div>
 
                 {/* CITY / MUNICIPIO INPUT */}
-                <div className={`relative flex items-center border rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group ${
+                <div className={`flex items-center border rounded-2xl p-3 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 group ${
                   isDark 
-                    ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]" 
-                    : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)]"
+                    ? "bg-black/35 border-white/10" 
+                    : "bg-white/40 border-black/10 shadow-sm"
                 }`}>
-                  <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0 group-focus-within:border-[#ff5500]">
-                    <Compass className="w-4 h-4 text-[rgba(255,255,255,0.4)] group-focus-within:text-[#ff5500]" />
+                  <div className={`flex items-center justify-center pr-2 mr-2 border-r flex-shrink-0 ${
+                    isDark ? "border-white/10" : "border-black/10"
+                  }`}>
+                    <Compass className={`w-4 h-4 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
                   </div>
-                  <div className="flex-1 relative">
+                  <div className="flex-1">
+                    <span className="block text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-wider mb-0.5">
+                      {t("Municipio / Ciudad", "City / Municipality", "Municipio")}
+                    </span>
                     <input
                       type="text"
                       name="city"
                       required
-                      placeholder=" "
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold pt-4 pb-0 peer"
+                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold p-0 focus:ring-0"
                     />
-                    <label className={`absolute left-0 top-3 text-[9px] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider ${
-                      isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                    }`}>
-                      {t("Municipio / Ciudad", "City / Municipality", "Municipio")}
-                    </label>
                   </div>
                 </div>
 
                 {/* TOWN / COLONIA INPUT */}
-                <div className={`relative flex items-center border rounded-2xl px-4 py-2 transition-all duration-300 focus-within:border-[#ff5500] group ${
+                <div className={`flex items-center border rounded-2xl p-3 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 group ${
                   isDark 
-                    ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]" 
-                    : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)]"
+                    ? "bg-black/35 border-white/10" 
+                    : "bg-white/40 border-black/10 shadow-sm"
                 }`}>
-                  <div className="w-8 h-8 rounded-lg bg-[rgba(255,85,0,0.05)] flex items-center justify-center mr-3 flex-shrink-0">
-                    <MapPin className="w-4 h-4 text-[rgba(255,255,255,0.4)]" />
+                  <div className={`flex items-center justify-center pr-2 mr-2 border-r flex-shrink-0 ${
+                    isDark ? "border-white/10" : "border-black/10"
+                  }`}>
+                    <MapPin className={`w-4 h-4 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
                   </div>
-                  <div className="flex-1 relative">
+                  <div className="flex-1">
+                    <span className="block text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-wider mb-0.5">
+                      {t("Colonia / Localidad", "Town / Neighborhood", "Colonia")}
+                    </span>
                     <input
                       type="text"
                       name="town"
-                      placeholder=" "
                       value={formData.town}
                       onChange={handleInputChange}
-                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold pt-4 pb-0 peer"
+                      className="w-full bg-transparent border-none outline-none text-xs text-[var(--text-primary)] font-bold p-0 focus:ring-0"
                     />
-                    <label className={`absolute left-0 top-3 text-[9px] transition-all duration-300 pointer-events-none peer-placeholder-shown:text-xs peer-placeholder-shown:top-3 peer-focus:top-[0px] peer-focus:text-[9px] peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[0px] peer-[:not(:placeholder-shown)]:text-[9px] peer-[:not(:placeholder-shown)]:text-[#ff5500] font-black uppercase tracking-wider ${
-                      isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
-                    }`}>
-                      {t("Colonia / Localidad", "Town / Neighborhood", "Colonia")}
-                    </label>
                   </div>
                 </div>
 
               </div>
 
               {/* PHOTO URL MOCK UPLOAD FIELD */}
-              <div className={`relative flex items-center border rounded-2xl px-4 py-3 transition-all duration-300 focus-within:border-[#ff5500] group ${
-                isDark 
-                  ? "bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.15)]" 
-                  : "bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.06)] focus-within:shadow-[0_0_20px_rgba(255,85,0,0.08)]"
-              }`}>
-                <div className="w-10 h-10 rounded-xl bg-[rgba(255,85,0,0.06)] border border-[rgba(255,85,0,0.12)] flex items-center justify-center mr-4 transition-all duration-300 group-focus-within:bg-[rgba(255,85,0,0.12)] group-focus-within:border-[#ff5500] flex-shrink-0">
-                  <Upload className={`w-5 h-5 transition-colors duration-300 group-focus-within:text-[#ff5500] ${isDark ? "text-[rgba(255,255,255,0.4)]" : "text-[rgba(26,18,8,0.4)]"}`} />
-                </div>
-                <div className="flex-1 relative pr-16">
-                  <input
-                    type="text"
-                    name="photoUrl"
-                    placeholder=" "
-                    value={formData.photoUrl}
-                    onChange={handleInputChange}
-                    className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] pt-4 pb-1 peer font-medium placeholder:select-none"
-                  />
-                  <label className={`absolute left-0 top-3 text-xs transition-all duration-300 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-focus:top-[-6px] peer-focus:text-xs peer-focus:text-[#ff5500] peer-[:not(:placeholder-shown)]:top-[-6px] peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-[#ff5500] font-medium uppercase tracking-wider ${
-                    isDark ? "text-[rgba(255,255,255,0.45)]" : "text-[rgba(26,18,8,0.45)]"
+              <div className="space-y-2.5">
+                <label className="text-[10px] font-black text-[#ff5500] uppercase tracking-[0.25em] block px-1.5 opacity-90 mb-1">
+                  {t("URL de Imagen (Opcional)", "Photo URL / Evidence Image", "Imagen")}
+                </label>
+                
+                <div className={`flex items-center border rounded-2xl p-3.5 transition-all duration-300 focus-within:ring-2 focus-within:ring-orange-500/60 focus-within:scale-[1.01] group ${
+                  isDark 
+                    ? "bg-black/35 border-white/10" 
+                    : "bg-white/40 border-black/10 shadow-sm"
+                }`}>
+                  {/* Spacious left icon section with sleek vertical divider */}
+                  <div className={`flex items-center justify-center pr-3 mr-3 border-r transition-colors duration-300 flex-shrink-0 ${
+                    isDark ? "border-white/10" : "border-black/10"
                   }`}>
-                    {t("URL de Imagen (Opcional)", "Photo URL / Evidence Image", "Imagen")}
-                  </label>
-                  
-                  {/* Demo fill button */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        photoUrl: "https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format&fit=crop&w=1200&q=80",
-                      })
-                    }
-                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] text-white hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase transition-all duration-200 cursor-pointer"
-                  >
-                    Demo
-                  </button>
+                    <Upload className={`w-5 h-5 ${isDark ? "text-white/40" : "text-black/40"} group-focus-within:text-[#ff5500]`} />
+                  </div>
+                  <div className="flex-1 relative pr-16">
+                    <input
+                      type="text"
+                      name="photoUrl"
+                      placeholder="e.g. https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format"
+                      value={formData.photoUrl}
+                      onChange={handleInputChange}
+                      className="w-full bg-transparent border-none outline-none text-sm text-[var(--text-primary)] py-1 font-semibold placeholder:opacity-30"
+                    />
+                    {/* Demo fill button */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          photoUrl: "https://images.unsplash.com/photo-1594913785162-e6787352fec2?auto=format&fit=crop&w=1200&q=80",
+                        })
+                      }
+                      className="absolute right-0 top-1/2 -translate-y-1/2 bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] text-white hover:text-white px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase transition-all duration-200 cursor-pointer animate-none"
+                    >
+                      Demo
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -647,11 +654,11 @@ export default function CitizenReportPage() {
                 </label>
               </div>
 
-              {/* PRIMARY SUBMIT ACTION */}
+              {/* PRIMARY SUBMIT ACTION - Spacious button padding & clean margins */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4 mt-8 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_40px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 animate-none"
+                className="w-full bg-[#ff5500] hover:bg-[#e04b00] text-white py-4.5 mt-10 rounded-full shadow-[0_8px_30px_rgba(255,85,0,0.2)] hover:shadow-[0_8px_45px_rgba(255,85,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transform transition-all duration-300 font-black tracking-widest text-xs uppercase cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 animate-none"
               >
                 {submitting ? (
                   <>
@@ -660,7 +667,7 @@ export default function CitizenReportPage() {
                   </>
                 ) : (
                   <>
-                    <span>{t("Enviar Denuncia Satelital", "Submit Telemetry Alert", "Enviar Reporte")}</span>
+                    <span>{t("Transmitir Denuncia Satelital", "Submit Telemetry Alert", "Enviar Reporte")}</span>
                     <Send className="w-4 h-4" />
                   </>
                 )}
@@ -669,7 +676,7 @@ export default function CitizenReportPage() {
             </form>
           )}
 
-        </motion.div>
+        </div>
 
         {/* RIGHT COLUMN: LIVE FEED SYSTEM TERMINAL LOGS (lg:col-span-5) */}
         <div className="lg:col-span-5 space-y-5">
