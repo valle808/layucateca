@@ -322,7 +322,7 @@ export default function MunaPage() {
     } catch (error: any) {
       setMessages(prev => {
         const copy = [...prev];
-        copy[copy.length - 1].text = `⚠️ ${error.message}`;
+        copy[copy.length - 1].text = `[ERROR] ${error.message}`;
         return copy;
       });
     } finally {
@@ -543,9 +543,9 @@ export default function MunaPage() {
           </header>
 
           {/* MESSAGES */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scroll-smooth pb-60 md:pb-72"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent' }}>
-            <div className="max-w-3xl mx-auto space-y-6" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 py-8 space-y-8 scroll-smooth"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent', paddingBottom: '24px' }}>
+            <div className="max-w-3xl mx-auto space-y-8" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               <AnimatePresence mode="popLayout">
                 {messages.map((m) => (
                   <motion.div
@@ -561,12 +561,12 @@ export default function MunaPage() {
                       </div>
                     )}
 
-                    <div className={`max-w-[82%] flex flex-col gap-1.5 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div className={`flex flex-col gap-2 ${m.role === 'user' ? 'items-end max-w-[80%]' : 'items-start w-full max-w-[92%]'}`}>
                       {/* Identity Tag */}
-                      <div className={`flex items-center gap-1 mb-0.5 px-3 py-0.5 rounded-full text-[8px] font-black tracking-widest uppercase border shadow-2xs ${
+                      <div className={`flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[8px] font-black tracking-widest uppercase border shadow-sm ${
                         m.role === 'user' 
-                           ? 'bg-white text-black border-black/[0.06]' 
-                           : 'bg-[#ff5500]/6 border-[#ff5500]/15 text-[#ff5500]'
+                           ? 'bg-white text-black border-black/[0.08]' 
+                           : 'bg-[#ff5500]/8 border-[#ff5500]/20 text-[#ff5500]'
                       }`}>
                         {m.role === 'user' ? <span>[{t('OPERADOR', 'OPERATOR', 'OPERADOR')}]</span> : <span>[{t('MUNA AI', 'MUNA AI', 'MUNA AI')}]</span>}
                       </div>
@@ -579,10 +579,10 @@ export default function MunaPage() {
                         </div>
                       )}
  
-                      <div className={`px-6 py-4.5 rounded-2xl text-[13.5px] leading-relaxed transition-all border shadow-md backdrop-blur-md ${
+                      <div className={`muna-chat-bubble text-[13.5px] leading-relaxed transition-all border shadow-md backdrop-blur-md overflow-hidden ${
                         m.role === 'user'
-                          ? 'bg-[#ff5500]/10 border-[#ff5500]/25 text-white font-medium rounded-tr-sm'
-                          : 'bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-primary)] rounded-tl-sm w-full'
+                          ? 'px-5 py-4 rounded-2xl rounded-tr-sm bg-gradient-to-br from-[#ff5500] to-[#ff3300] border-[#ff5500]/30 text-white font-medium'
+                          : 'px-7 py-5 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-primary)] w-full'
                       }`}>
                         {m.role === 'bot' ? (
                           <div className="muna-markdown max-w-none text-[var(--text-primary)] w-full">
@@ -617,7 +617,7 @@ export default function MunaPage() {
                           )}
                         </div>
    
-                        <div className="flex items-center gap-2 mt-1.5 opacity-65 text-[9px] font-mono uppercase tracking-widest px-1">
+                        <div className="flex items-center gap-2 mt-2.5 opacity-65 text-[9px] font-mono uppercase tracking-widest px-1">
                           <span className="text-[var(--text-secondary)]">
                             {m.role === 'bot' ? t('Muna · Yucateca v1.0', 'Muna · Yucateca v1.0', 'Muna · Yucateca v1.0') : t('Operator · Sovereign Access', 'Operator · Sovereign Access', 'Operator · Sovereign Access')}
                           </span>
@@ -664,8 +664,8 @@ export default function MunaPage() {
           </div>
 
           {/* INPUT BAR */}
-          <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)] to-transparent z-20 backdrop-blur-xs">
-            <div className="max-w-3xl mx-auto space-y-2.5" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+          <div className="flex-none px-4 md:px-8 pb-6 pt-4 bg-[var(--bg-primary)] z-20 border-t border-[var(--border-subtle)]">
+            <div className="max-w-3xl mx-auto space-y-3" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               {attachments.length > 0 && (
                 <div className="flex gap-2.5 mb-1 overflow-x-auto pb-1">
                   {attachments.map((file, idx) => (
@@ -701,7 +701,7 @@ export default function MunaPage() {
               </div>
 
               <div 
-                className="flex items-end gap-2.5 bg-white border border-black/[0.06] rounded-full p-2 focus-within:border-[#ff5500] focus-within:shadow-[0_4px_25px_rgba(255,85,0,0.05)] transition-all shadow-md cursor-pointer pointer-events-auto"
+                className="flex items-end gap-2.5 bg-white border-2 border-black/[0.07] rounded-2xl px-3 py-2 focus-within:border-[#ff5500] focus-within:shadow-[0_6px_30px_rgba(255,85,0,0.1)] transition-all shadow-lg cursor-pointer pointer-events-auto"
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
@@ -719,7 +719,7 @@ export default function MunaPage() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                   placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
                   rows={1}
-                  className="flex-1 bg-transparent text-[13px] font-medium text-black placeholder:text-[var(--text-secondary)] outline-none resize-none py-2.5 leading-relaxed max-h-32 overflow-y-auto cursor-text px-2"
+                  className="flex-1 bg-transparent text-[13.5px] font-medium text-black placeholder:text-[var(--text-secondary)] outline-none resize-none py-2.5 leading-relaxed max-h-40 overflow-y-auto cursor-text px-3"
                   style={{ scrollbarWidth: 'none' }}
                 />
                 <button

@@ -18,11 +18,11 @@ function generateConversationalFallback(message: string, language: string): stri
     if (match) {
         const domainName = match[3];
         if (language === 'en') {
-            return `[MUNA AI]\nMuna Autonomous Audit Engine v2.0\nAnalyzing **${domainName}**...\n\nPerformance Score: 48/100 (Slow First Contentful Paint, missing SSR or image optimization).\nMobile Responsiveness: Container widths are layout-broken, causing responsive elements to squish.\nAesthetic Rating: Standard template without custom branding or glassmorphism.\n\nMuna's Warm Recommendation:\nYour current digital presentation is beautiful, but it is leaking over 60% of potential conversions. La Yucateca will completely re-engineer this into a stunning, lightning-fast Next.js 15 solution. Let's create your dream site today! Please visit our [/contact](/contact) page for a priority quote.`;
+            return `[MUNA AI]\nI detected that you shared a link to **${domainName}**. \n\nPlease note that in local offline mode, I do not have direct access to run live website performance or SEO crawler audits on external servers. \n\nHowever, if you would like a professional analysis of your website's design, speed, and conversion rate, our web design and development team at La Yucateca can perform a comprehensive audit and redesign it using Next.js 15. Please feel free to request a consultation on our [/contact](/contact) page!`;
         } else if (language === 'my') {
-            return `[MUNA AI]\nMuna Autonomous Audit Engine v2.0\nXak'alil ti' **${domainName}**...\n\nU Meyajil (Performance): 48/100 (Ma' k'a'am u meyaj, máan k'in u t'anik u ju'unil).\nMesa'ob nu'ukbesajil (Responsiveness): Pa'atal u nu'ukulil! Ma' responsivo ti' móviles.\nU Wich ba'alob (Aesthetics): Template ma' jach ki'ichkelem.\n\nU Tsol nu'uk t'aan Muna:\nKi'ichkelem a página web, ba'ale' je'el u suttik u náajal ma'alob ti' 60% yo'olal u tsolil. La Yucateca je'el u beetik u jump'éel k'áak' Next.js 15 jump'éel responsivo ma'alob. Xeen ti' [/contact](/contact) bejla'e'!`;
+            return `[MUNA AI]\nTin wila'aj a enlace ti' **${domainName}**.\n\nTin a'alikech ti'al le modo offline la'ala'an ma' patal in xak'altik u yich a página web bejla'e'.\n\nUláak' k'iin, u ti'al jump'éel real xak'alil tojol yéetel Next.js 15, je'el a t'anik u máakilo'ob La Yucateca ti' [/contact](/contact).`;
         } else {
-            return `[MUNA AI]\nMuna Autonomous Audit Engine v2.0\nAnalizando **${domainName}**...\n\nRendimiento: 48/100 (Velocidad de carga lenta, faltan optimizaciones de imágenes y renderizado del servidor).\nResponsividad Móvil: Los elementos del diseño se desbordan en pantallas pequeñas.\nDiseño: Plantilla estándar sin personalidad de marca ni efectos modernos.\n\nRecomendación de Muna:\nTu sitio actual tiene gran potencial, pero pierde más del 60% de conversiones debido a la experiencia de usuario. En La Yucateca podemos re-diseñarlo por completo en un Next.js 15 ultra-veloz y elegante. ¡Visita nuestra sección de [/contact](/contact) para cotizar gratis hoy mismo!`;
+            return `[MUNA AI]\nHe detectado que compartiste un enlace a **${domainName}**.\n\nPor favor ten en cuenta que en este modo de demostración local u offline, no tengo la capacidad de realizar un análisis técnico o auditoría SEO en tiempo real sobre servidores externos.\n\nSin embargo, si te interesa una auditoría profesional de velocidad, diseño y conversión para tu sitio actual, nuestro equipo de diseño y desarrollo en La Yucateca puede realizar un análisis completo y rediseñarlo con tecnologías ultra-veloces como Next.js 15. ¡Te invitamos a solicitar una asesoría gratuita en la página de [/contact](/contact)!`;
         }
     }
 
@@ -243,11 +243,11 @@ async function generate_file(filename: string, content: string) {
 
         return `<div style="padding: 15px; border-radius: 12px; border: 1px solid #ff5500; background: rgba(255,85,0,0.05); margin: 10px 0;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                <div style="font-family:monospace; font-size:12px; color:var(--text-primary);"><strong>📄 File Generated:</strong> <code>${filename}</code></div>
+                <div style="font-family:monospace; font-size:12px; color:var(--text-primary);"><strong>File Generated:</strong> <code>${filename}</code></div>
                 <form method="POST" action="/api/muna/file-generator" target="_blank" style="margin: 0; padding: 0;">
                     <input type="hidden" name="filename" value="${safeFilename}" />
                     <textarea name="content" style="display:none;">${safeContentForTextarea}</textarea>
-                    <button type="submit" style="background: #ff5500; color: #fff; padding: 8px 16px; border-radius: 8px; border: none; text-decoration: none; font-size: 11px; font-weight: bold; cursor: pointer; letter-spacing: 0.5px;">⬇ Download File</button>
+                    <button type="submit" style="background: #ff5500; color: #fff; padding: 8px 16px; border-radius: 8px; border: none; text-decoration: none; font-size: 11px; font-weight: bold; cursor: pointer; letter-spacing: 0.5px;">Download File</button>
                 </form>
             </div>
             <div style="margin-top: 10px; border-radius: 8px; overflow-y: auto; max-height: 250px; border: 1px solid var(--border-subtle); background: #0d0d0d; padding: 12px;"><pre style="margin: 0; font-family: monospace; font-size: 11px; color: #a5d6ff; white-space: pre-wrap; word-wrap: break-word;"><code>${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre></div>
