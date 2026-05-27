@@ -6,6 +6,102 @@ import { collection, query, where, orderBy, limit, getDocs, addDoc } from 'fireb
 
 export const dynamic = 'force-dynamic';
 
+function generateConversationalFallback(message: string, language: string): string {
+    const cleanMessage = (message || "").toLowerCase().trim();
+    const words = cleanMessage.split(/[\s,?.!¡¿]+/);
+    
+    const hasWord = (targets: string[]) => words.some(w => targets.includes(w));
+    
+    // 1. URL / Domain Match
+    const urlRegex = /(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?)/;
+    const match = cleanMessage.match(urlRegex);
+    if (match) {
+        const domainName = match[3];
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nAnalyzing **${domainName}**...\n\n⚡ **Performance Score:** 48/100 (Slow First Contentful Paint, missing SSR or image optimization).\n📱 **Mobile Responsiveness:** Container widths are layout-broken, causing responsive elements to squish.\n🎨 **Aesthetic Rating:** Standard template without custom branding or glassmorphism.\n\n💡 **Muna's Warm Recommendation:**\nYour current digital presentation is beautiful, but it is leaking over 60% of potential conversions. **La Yucateca** will completely re-engineer this into a stunning, lightning-fast Next.js 15 solution. Let's create your dream site today! Please visit our [/contact](/contact) page for a priority quote.`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nXak'alil ti' **${domainName}**...\n\n⚡ **U Meyajil (Performance):** 48/100 (Ma' k'a'am u meyaj, máan k'in u t'anik u ju'unil).\n📱 **Mesa'ob nu'ukbesajil (Responsiveness):** Pa'atal u nu'ukulil! Ma' responsivo ti' móviles.\n🎨 **U Wich ba'alob (Aesthetics):** Template ma' jach ki'ichkelem.\n\n💡 **U Tsol nu'uk t'aan Muna:**\nKi'ichkelem a página web, ba'ale' je'el u suttik u náajal ma'alob ti' 60% yo'olal u tsolil. **La Yucateca** je'el u beetik u jump'éel k'áak' Next.js 15 jump'éel responsivo ma'alob. Xeen ti' [/contact](/contact) bejla'e'!`;
+        } else {
+            return `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nAnalizando **${domainName}**...\n\n⚡ **Rendimiento:** 48/100 (Velocidad de carga lenta, faltan optimizaciones de imágenes y renderizado del servidor).\n📱 **Responsividad Móvil:** Los elementos del diseño se desbordan en pantallas pequeñas.\n🎨 **Diseño:** Plantilla estándar sin personalidad de marca ni efectos modernos.\n\n💡 **Recomendación de Muna:**\nTu sitio actual tiene gran potencial, pero pierde más del 60% de conversiones debido a la experiencia de usuario. En **La Yucateca** podemos re-diseñarlo por completo en un Next.js 15 ultra-veloz y elegante. ¡Visita nuestra sección de [/contact](/contact) para cotizar gratis hoy mismo!`;
+        }
+    }
+
+    // 2. Greetings
+    if (hasWord(['hola', 'saludos', 'buenos', 'dias', 'tardes', 'noches', 'hello', 'hi', 'hey', 'bix', 'ma\'alob', 'ki\'ichkelem'])) {
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nHello! I am Muna, the friendly AI assistant for La Yucateca. 🚀 It is an absolute pleasure to meet you! How can I assist you with your digital goals or community inquiries today?\n\nIf you have a website, send me its link and I will audit its speed and design for free!`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\n¡Sajil, wíinik! Munaen, u ya'ax na'at ti' La Yucateca. 🚀 Jach ki'ichkelem k'iin in wila'alech! Bix je'el in wáantikech bejla'e'?\n\n¿Yantech jump'éel u yo'och ti' bejla'e'? Ts'a teen u t'o'olil enlace ka'aj in xak'altik tojol gratis!`;
+        } else {
+            return `[🧠 MUNA AI]\n¡Bix a beel! 😊 Soy Muna, la inteligencia autónoma de La Yucateca. Es un auténtico placer saludarte. ¿En qué te puedo echar la mano hoy para impulsar tu presencia digital o guiarte por la plataforma?\n\nSi tienes una página web, envíame el enlace y con gusto le haré un análisis gratuito en segundos.`;
+        }
+    }
+
+    // 3. Time / Hour
+    if (hasWord(['hora', 'horas', 'tiempo', 'reloj', 'time', 'hour', 'hours', 'clock', 'china'])) {
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nThat's a wonderful question about time! 🕒 Timezones are fascinating — for instance, China is about 14 hours ahead of Mexico. While it is day here in Yucatán, they are already in the next day! \n\nSimilarly, at La Yucateca, our digital systems and automated agents run 24/7. What timezone or project can we help you coordinate today?`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\n¡Ki'ichkelem k'áatchi' yo'olal k'iin yéetel ja'abil! 🕒 Chinae' 14 horas ti' jump'éel k'iin u bino'ob to'on táan. \n\nU nu'ukbesajil techológico ti' La Yucatecae' ma' tu ts'o'okol u meyaj mix k'iin. ¿Bix je'el in wáantikech yéetel a meyaj bejla'e'?`;
+        } else {
+            return `[🧠 MUNA AI]\n¡Qué excelente pregunta sobre el tiempo! 🕒 Las zonas horarias son de lo más interesante. Por ejemplo, en China nos llevan unas 14 horas de ventaja; cuando aquí en Mérida estamos desayunando, allá ya están terminando el día.\n\nAsí como el tiempo no se detiene, en La Yucateca nuestros agentes inteligentes trabajan las 24 horas del día, los 7 días de la semana. ¿Te gustaría saber cómo coordinamos desarrollos digitales globales o necesitas ayuda con algo más?`;
+        }
+    }
+
+    // 4. Services / Design / Web
+    if (hasWord(['servicio', 'servicios', 'diseño', 'web', 'desarrollo', 'crear', 'pagina', 'paginas', 'app', 'apps', 'services', 'design', 'development', 'website', 'build', 'create'])) {
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nAbsolutely! At La Yucateca, we specialize in building premium, ultra-fast Next.js websites, native React Native mobile apps, and custom IT automation systems.\n\nAre you looking to design a new custom website or automate some business processes? Tell me a bit about your idea, or visit our [/contact](/contact) page for a priority consultation!`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\n¡Ma'alob meyaj! Tu La Yucateca k-beetik ki'ichkelem sitios web premium yéetel Next.js, apps móviles yéetel AI integrations ti'al a negocio.\n\n¿A k'áat a beet a túumben sitio web? Xeen ti' [/contact](/contact) ti'al jump'éel xak'al tojol!`;
+        } else {
+            return `[🧠 MUNA AI]\n¡Por supuesto! En La Yucateca somos especialistas en crear páginas web premium ultra-rápidas con Next.js 15, aplicaciones móviles nativas y sistemas inteligentes de automatización en la nube.\n\n¿Tienes alguna idea o proyecto en mente? Cuéntame un poco de tu negocio o solicita una cotización personalizada en nuestra sección de [/contact](/contact) hoy mismo.`;
+        }
+    }
+
+    // 5. Muna AI / Who are you
+    if (hasWord(['muna', 'quien', 'que', 'eres', 'chatbot', 'robot', 'ia', 'inteligencia', 'who', 'what', 'are', 'you', 'bot'])) {
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nI am Muna, the friendly AI assistant of La Yucateca! 🤖 I am named after the historic Mayan city of Muna in Yucatán, México.\n\nMy purpose is to guide you through our platform, answer questions, perform instant website design audits, and demonstrate the state-of-the-art AI technology we build for our clients. What can I do for you today?`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\nTeen Muna, u ya'ax na'at ti' La Yucateca! 🤖 Ch'a'an in k'aaba' ti' le nojoch kaajil Muna tin Yucatán.\n\nIn meyaje' in nu'uktikech tin portal, in wáantikech yéetel ba'alob yéetel u ki'ichkelem xak'altik sitios web. ¿Bix je'el in wáantikech bejla'e'?`;
+        } else {
+            return `[🧠 MUNA AI]\n¡Hola! Soy Muna, la inteligencia autónoma de La Yucateca. Fui nombrada en honor a la bella e histórica ciudad de Muna en el sur de Yucatán.\n\nMi objetivo es guiarte en nuestro portal de noticias, ayudarte con auditorías instantáneas de diseño web y mostrarte el nivel de tecnología inteligente que podemos desarrollar para ti. ¿En qué te puedo ayudar hoy, amigo?`;
+        }
+    }
+
+    // 6. News / Noticias
+    if (hasWord(['noticia', 'noticias', 'periodico', 'peektsil', 'yucatan', 'news', 'newspaper'])) {
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nYes! La Yucateca features K'iin News, a modern news portal covering community updates, technology, culture, and events in Yucatán, Mexico, and worldwide. Our news crew is powered by autonomous writer agents.\n\nYou can read all the articles directly in our [/news](/news) section. Is there a specific topic you are interested in?`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\n¡Claro! Tin La Yucateca yanto'on le K'iin News, tu'ux k-ts'íibtol ti'al péektsilo'ob ti' Yucatán, México yéetel múul kaajal.\n\nJe'el a xoki' ti' [/news](/news) bejla'e'. ¿K'áat a wojeltik ba'al ti' jump'éel péektsil?`;
+        } else {
+            return `[🧠 MUNA AI]\n¡Claro que sí! La Yucateca cuenta con el portal K'iin News, un espacio informativo moderno donde cubrimos noticias locales de Yucatán, nacionales e internacionales. Nuestro equipo de redacción incluye agentes inteligentes que recolectan y redactan las mejores notas.\n\nTe invito a leer los últimos artículos directamente en nuestra sección de [/news](/news). ¿Buscas alguna noticia en especial?`;
+        }
+    }
+
+    // 7. Weather / Clima
+    if (hasWord(['clima', 'tiempo', 'temperatura', 'calor', 'lluvia', 'weather', 'temp', 'rain', 'hot', 'cold'])) {
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nI can check the weather forecast for you! Yucatán is typically sunny and warm, perfect for visiting our gorgeous cenotes and beaches.\n\nIf you want a precise forecast, ask me: "What is the weather in Merida?" or any other city, and I'll fetch real-time data for you!`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\n¡Ki'ichkelem k'iin tin Yucatán! Jach choko' tin wotoch, ma'alob ti'al a bin ti' ts'onot.\n\n¿K'áat a wojeltik u k'iinil bejla'e'? K'áat teen: "clima in Merida" ka'aj in molik le pronóstico!`;
+        } else {
+            return `[🧠 MUNA AI]\n¡El clima de nuestra tierra yucateca es alegre y cálido! ☀️ Ideal para disfrutar de una marquesita o refrescarse en un cenote.\n\nSi deseas saber el clima exacto en tiempo real de cualquier ciudad, pregúntame: "¿Cómo está el clima en Mérida?" (o cualquier otra ciudad) y con gusto activaré mi sensor meteorológico para traerte los datos actuales.`;
+        }
+    }
+
+    // 8. General / Fallback
+    if (language === 'en') {
+        return `[🧠 MUNA AI]\nThat is a fascinating topic! As Muna, your friendly digital guide at La Yucateca, I'd love to help you explore it further or assist you in designing a premium Next.js 15 website for your brand.\n\nWhat are you currently working on, or how can I help you navigate the platform today?`;
+    } else if (language === 'my') {
+        return `[🧠 MUNA AI]\n¡Jach ki'ichkelem a k'áatchi'! Munaen, in k'áat in wáantikech ti' a túumben proyecto yéetel sitios web Next.js premium.\n\n¿Bix je'el in wáantikech bejla'e' tin portal?`;
+    } else {
+        return `[🧠 MUNA AI]\n¡Qué tema tan interesante! Como Muna, tu guía digital, me encantaría platicar más sobre esto contigo o ayudarte a transformar tus ideas en un sitio web Next.js 15 ultra-rápido y elegante.\n\n¿Me cuentas un poco más sobre lo que estás planeando o necesitas ayuda con alguna sección de nuestra plataforma hoy?`;
+    }
+}
+
 async function search_internet(query: string) {
     console.log(`[MUNA TOOL] Querying DuckDuckGo for: ${query}`);
     await logTelemetry({
@@ -243,11 +339,13 @@ export async function POST(req: Request) {
             }).catch(() => {});
         }
 
-        let apiKey = process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY;
-        let baseURL = process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' 
+        let apiKey = process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY;
+        let baseURL = process.env.GEMINI_API_KEY ? 'https://generativelanguage.googleapis.com/v1beta/openai'
+                    : process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' 
                     : process.env.FIREWORKS_API_KEY ? 'https://api.fireworks.ai/inference/v1' 
                     : undefined;
-        let model = process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.1-8b-instruct:free' 
+        let model = process.env.GEMINI_API_KEY ? 'gemini-1.5-flash'
+                  : process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.1-8b-instruct:free' 
                   : process.env.FIREWORKS_API_KEY ? 'accounts/fireworks/models/kimi-k2p6'
                   : 'gpt-3.5-turbo';
 
@@ -342,39 +440,7 @@ If the user shares a URL or asks you to review a website, provide a thorough but
 
         if (!apiKey) {
             console.warn('[Muna] No API key found. Engaging advanced friendly NLP response engine. Language:', language);
-            
-            const cleanMessage = (message || "").toLowerCase().trim();
-            let fallbackResponse = "";
-
-            const urlRegex = /(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?)/;
-            const match = cleanMessage.match(urlRegex);
-
-            if (match) {
-                const domainName = match[3];
-                if (language === 'en') {
-                    fallbackResponse = `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nAnalyzing **${domainName}**...\n\n⚡ **Performance Score:** 48/100 (Slow First Contentful Paint, missing SSR or image optimization).\n📱 **Mobile Responsiveness:** Container widths are layout-broken, causing responsive elements to squish.\n🎨 **Aesthetic Rating:** Standard template without custom branding or glassmorphism.\n\n💡 **Muna's Warm Recommendation:**\nYour current digital presentation is beautiful, but it is leaking over 60% of potential conversions. **La Yucateca** will completely re-engineer this into a stunning, lightning-fast Next.js 15 solution. Let's create your dream site today! Please visit our [/contact](/contact) page for a priority quote.`;
-                } else if (language === 'my') {
-                    fallbackResponse = `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nXak'alil ti' **${domainName}**...\n\n⚡ **U Meyajil (Performance):** 48/100 (Ma' k'a'am u meyaj, máan k'in u t'anik u ju'unil).\n📱 **Mesa'ob nu'ukbesajil (Responsiveness):** Pa'atal u nu'ukulil! Ma' responsivo ti' móviles.\n🎨 **U Wich ba'alob (Aesthetics):** Template ma' jach ki'ichkelem.\n\n💡 **U Tsol nu'uk t'aan Muna:**\nKi'ichkelem a página web, ba'ale' je'el u suttik u náajal ma'alob ti' 60% yo'olal u tsolil. **La Yucateca** je'el u beetik u jump'éel k'áak' Next.js 15 jump'éel responsivo ma'alob. Xeen ti' [/contact](/contact) bejla'e'!`;
-                } else {
-                    fallbackResponse = `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nAnalizando **${domainName}**...\n\n⚡ **Rendimiento:** 48/100 (Velocidad de carga lenta, faltan optimizaciones de imágenes y renderizado del servidor).\n📱 **Responsividad Móvil:** Los elementos del diseño se desbordan en pantallas pequeñas.\n🎨 **Diseño:** Plantilla estándar sin personalidad de marca ni efectos modernos.\n\n💡 **Recomendación de Muna:**\nTu sitio actual tiene gran potencial, pero pierde más del 60% de conversiones debido a la experiencia de usuario. En **La Yucateca** podemos re-diseñarlo por completo en un Next.js 15 ultra-veloz y elegante. ¡Visita nuestra sección de [/contact](/contact) para cotizar gratis hoy mismo!`;
-                }
-            } else if (cleanMessage.includes("hola") || cleanMessage.includes("saludos") || cleanMessage.includes("buenos") || cleanMessage.includes("hello") || cleanMessage.includes("hi")) {
-                if (language === 'en') {
-                    fallbackResponse = `[🧠 MUNA AI]\nHello! I am Muna, the friendly AI spokesperson for La Yucateca. 🚀 It is an absolute pleasure to meet you! How can I assist you with your digital goals today?\n\nIf you have a website, send me its link and I will audit its speed and design for free!`;
-                } else if (language === 'my') {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Sajil, wíinik! Munaen, u ya'ax na'at ti' La Yucateca. 🚀 Jach ki'ichkelem k'iin in wila'alech! Bix je'el in wáantikech bejla'e'?\n\n¿Yantech jump'éel u yo'och ti' bejla'e'? Ts'a teen u t'o'olil enlace ka'aj in beetik xak'al tojol gratis!`;
-                } else {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Hola! Soy Muna, la portavoz inteligente y amable de La Yucateca. 🚀 ¡Es un absoluto placer saludarte! ¿En qué puedo ayudarte a impulsar tu presencia digital hoy?\n\nSi tienes un sitio web actual, envíame su enlace y con gusto le haré una auditoría gratuita en segundos.`;
-                }
-            } else {
-                if (language === 'en') {
-                    fallbackResponse = `[🧠 MUNA AI]\nThat is a wonderful question! At La Yucateca, we are dedicated to crafting premium, ultra-fast Next.js websites, mobile apps, and smart IT automation systems.\n\nWould you like to build a new custom website or automate your workflows? Let's discuss! You can also secure a priority quote on our [/contact](/contact) page.`;
-                } else if (language === 'my') {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Ki'ichkelem k'áatchi'! Tu Yucateca k-re-imaginik u tecnología a ya'ax meyaj. K-beetik sitios web premium responsivo, apps móviles yéetel AI integrations.\n\nXeen ti' [/contact](/contact) ti'al a ya'ax tojol!`;
-                } else {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Qué excelente pregunta! En La Yucateca nos apasiona crear páginas web ultra-rápidas con Next.js 15, aplicaciones móviles nativas y sistemas inteligentes de automatización en la nube.\n\n¿Tienes alguna idea para un nuevo proyecto? Cuéntame más o solicita una cotización personalizada en nuestra sección de [/contact](/contact) hoy mismo.`;
-                }
-            }
+            const fallbackResponse = generateConversationalFallback(message, language);
 
             const encoder = new TextEncoder();
             const directStream = new ReadableStream({
@@ -494,38 +560,7 @@ If the user shares a URL or asks you to review a website, provide a thorough but
             });
         } catch (engineError: any) {
             console.error('[Muna Engine Failure - FALLBACK TO NLP]:', engineError.message);
-            const cleanMessage = (message || "").toLowerCase().trim();
-            let fallbackResponse = "";
-
-            const urlRegex = /(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?)/;
-            const match = cleanMessage.match(urlRegex);
-
-            if (match) {
-                const domainName = match[3];
-                if (language === 'en') {
-                    fallbackResponse = `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nAnalyzing **${domainName}**...\n\n⚡ **Performance Score:** 48/100 (Slow First Contentful Paint, missing SSR or image optimization).\n📱 **Mobile Responsiveness:** Container widths are layout-broken, causing responsive elements to squish.\n🎨 **Aesthetic Rating:** Standard template without custom branding or glassmorphism.\n\n💡 **Muna's Warm Recommendation:**\nYour current digital presentation is beautiful, but it is leaking over 60% of potential conversions. **La Yucateca** will completely re-engineer this into a stunning, lightning-fast Next.js 15 solution. Let's create your dream site today! Please visit our [/contact](/contact) page for a priority quote.`;
-                } else if (language === 'my') {
-                    fallbackResponse = `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nXak'alil ti' **${domainName}**...\n\n⚡ **U Meyajil (Performance):** 48/100 (Ma' k'a'am u meyaj, máan k'in u t'anik u ju'unil).\n📱 **Mesa'ob nu'ukbesajil (Responsiveness):** Pa'atal u nu'ukulil! Ma' responsivo ti' móviles.\n🎨 **U Wich ba'alob (Aesthetics):** Template ma' jach ki'ichkelem.\n\n💡 **U Tsol nu'uk t'aan Muna:**\nKi'ichkelem a página web, ba'ale' je'el u suttik u náajal ma'alob ti' 60% yo'olal u tsolil. **La Yucateca** je'el u beetik u jump'éel k'áak' Next.js 15 jump'éel responsivo ma'alob. Xeen ti' [/contact](/contact) bejla'e'!`;
-                } else {
-                    fallbackResponse = `[🧠 MUNA AI]\n🔮 **Muna Autonomous Audit Engine v2.0**\nAnalizando **${domainName}**...\n\n⚡ **Rendimiento:** 48/100 (Velocidad de carga lenta, faltan optimizaciones de imágenes y renderizado del servidor).\n📱 **Responsividad Móvil:** Los elementos del diseño se desbordan en pantallas pequeñas.\n🎨 **Diseño:** Plantilla estándar sin personalidad de marca ni efectos modernos.\n\n💡 **Recomendación de Muna:**\nTu sitio actual tiene gran potencial, pero pierde más del 60% de conversiones debido a la experiencia de usuario. En **La Yucateca** podemos re-diseñarlo por completo en un Next.js 15 ultra-veloz y elegante. ¡Visita nuestra sección de [/contact](/contact) para cotizar gratis hoy mismo!`;
-                }
-            } else if (cleanMessage.includes("hola") || cleanMessage.includes("saludos") || cleanMessage.includes("buenos") || cleanMessage.includes("hello") || cleanMessage.includes("hi")) {
-                if (language === 'en') {
-                    fallbackResponse = `[🧠 MUNA AI]\nHello! I am Muna, the friendly AI spokesperson for La Yucateca. 🚀 It is an absolute pleasure to meet you! How can I assist you with your digital goals today?\n\nIf you have a website, send me its link and I will audit its speed and design for free!`;
-                } else if (language === 'my') {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Sajil, wíinik! Munaen, u ya'ax na'at ti' La Yucateca. 🚀 Jach ki'ichkelem k'iin in wila'alech! Bix je'el in wáantikech bejla'e'?\n\n¿Yantech jump'éel u yo'och ti' bejla'e'? Ts'a teen u t'o'olil enlace ka'aj in beetik xak'al tojol gratis!`;
-                } else {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Hola! Soy Muna, la portavoz inteligente y amable de La Yucateca. 🚀 ¡Es un absoluto placer saludarte! ¿En qué puedo ayudarte a impulsar tu presencia digital hoy?\n\nSi tienes un sitio web actual, envíame su enlace y con gusto le haré una auditoría gratuita en segundos.`;
-                }
-            } else {
-                if (language === 'en') {
-                    fallbackResponse = `[🧠 MUNA AI]\nThat is a wonderful question! At La Yucateca, we are dedicated to crafting premium, ultra-fast Next.js websites, mobile apps, and smart IT automation systems.\n\nWould you like to build a new custom website or automate your workflows? Let's discuss! You can also secure a priority quote on our [/contact](/contact) page.`;
-                } else if (language === 'my') {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Ki'ichkelem k'áatchi'! Tu Yucateca k-re-imaginik u tecnología a ya'ax meyaj. K-beetik sitios web premium responsivo, apps móviles yéetel AI integrations.\n\nXeen ti' [/contact](/contact) ti'al a ya'ax tojol!`;
-                } else {
-                    fallbackResponse = `[🧠 MUNA AI]\n¡Qué excelente pregunta! En La Yucateca nos apasiona crear páginas web ultra-rápidas con Next.js 15, aplicaciones móviles nativas y sistemas inteligentes de automatización en la nube.\n\n¿Tienes alguna idea para un nuevo proyecto? Cuéntame más o solicita una cotización personalizada en nuestra sección de [/contact](/contact) hoy mismo.`;
-                }
-            }
+            const fallbackResponse = generateConversationalFallback(message, language);
 
             const encoder = new TextEncoder();
             const directStream = new ReadableStream({
