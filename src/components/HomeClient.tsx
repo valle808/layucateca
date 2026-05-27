@@ -29,15 +29,31 @@ interface HomeClientProps {
   featuredPortfolio: PortfolioItem[];
 }
 
-const TICKER_ITEMS = [
-  "🔴 EN VIVO: Últimas noticias de Yucatán",
-  "📰 Diseño web profesional a medida — desde $499",
-  "🤖 Muna AI disponible 24/7 para asistencia inteligente",
-  "🌐 Nuevo portal ciudadano — reporta tu colonia",
-  "💼 Marketplace de servicios digitales ahora activo",
+const TICKER_ITEMS_ES = [
+  "EN VIVO: Ultimas noticias de Yucatan",
+  "Diseno web profesional a medida -- desde $499",
+  "Muna AI disponible 24/7 para asistencia inteligente",
+  "Nuevo portal ciudadano -- reporta tu colonia",
+  "Marketplace de servicios digitales ahora activo",
+];
+const TICKER_ITEMS_EN = [
+  "LIVE: Latest news from Yucatan",
+  "Professional custom web design -- from $499",
+  "Muna AI available 24/7 for smart assistance",
+  "New citizen portal -- report your neighborhood",
+  "Digital services marketplace now active",
+];
+const TICKER_ITEMS_MY = [
+  "KUXTAL: Tuminben peektsil Yucatan",
+  "Diseno web a medida -- ti' $499",
+  "Muna AI 24/7 ti' waantaj",
+  "Tuminben portal -- ts'iib a kaajal",
+  "Marketplace nu'ukulo'ob digitales kuxtal",
 ];
 
-function BreakingTicker() {
+function BreakingTicker({ lang }: { lang: string }) {
+  const items = lang === "en" ? TICKER_ITEMS_EN : lang === "my" ? TICKER_ITEMS_MY : TICKER_ITEMS_ES;
+  const liveLabel = lang === "en" ? "LIVE" : lang === "my" ? "KUXTAL" : "EN VIVO";
   return (
     <div style={{
       background: "#c0392b",
@@ -61,7 +77,7 @@ function BreakingTicker() {
         whiteSpace: "nowrap",
         flexShrink: 0,
       }}>
-        EN VIVO
+        {liveLabel}
       </span>
       <div style={{ overflow: "hidden", flex: 1 }}>
         <div style={{
@@ -69,7 +85,7 @@ function BreakingTicker() {
           animation: "tickerScroll 28s linear infinite",
           whiteSpace: "nowrap",
         }}>
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+          {[...items, ...items].map((item, i) => (
             <span key={i} style={{ padding: "0 48px", fontSize: "0.82rem", fontWeight: 500 }}>{item}</span>
           ))}
         </div>
@@ -87,7 +103,7 @@ function BreakingTicker() {
 }
 
 export default function HomeClient({ recentPosts }: HomeClientProps) {
-  const { t, translateDb } = useLanguage();
+  const { t, translateDb, language } = useLanguage();
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -95,33 +111,30 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
   const secondaryPosts = recentPosts.slice(1, 4);
 
   const categories = [
-    { label: t("Política", "Politics", "Política"), icon: "🏛️", href: "/news" },
-    { label: t("Economía", "Economy", "Economía"), icon: "📊", href: "/news" },
-    { label: t("Cultura", "Culture", "Cultura"), icon: "🎭", href: "/news" },
-    { label: t("Tecnología", "Technology", "Tecnología"), icon: "💻", href: "/news" },
-    { label: t("Deportes", "Sports", "Deportes"), icon: "⚽", href: "/news" },
-    { label: t("Opinión", "Opinion", "Opinión"), icon: "✍️", href: "/opinion-room" },
+    { label: t("Politica", "Politics", "Politica"), href: "/news" },
+    { label: t("Economia", "Economy", "Economia"), href: "/news" },
+    { label: t("Cultura", "Culture", "Cultura"), href: "/news" },
+    { label: t("Tecnologia", "Technology", "Tecnologia"), href: "/news" },
+    { label: t("Deportes", "Sports", "Deportes"), href: "/news" },
+    { label: t("Opinion", "Opinion", "Opinion"), href: "/opinion-room" },
   ];
 
   const services = [
     {
-      icon: "🌐",
-      title: t("Diseño Web", "Web Design", "Diseño Web"),
-      desc: t("Sitios premium a medida desde $499. Rápidos, elegantes y optimizados.", "Premium bespoke websites from $499. Fast, elegant, and optimized.", ""),
+      title: t("Diseno Web", "Web Design", "Diseno Web"),
+      desc: t("Sitios premium a medida desde $499. Rapidos, elegantes y optimizados.", "Premium bespoke websites from $499. Fast, elegant, and optimized.", "Sitios premium ti' $499. Jach seeb, jach ki'ichpam."),
       href: "/soluciones-digitales",
       color: "var(--accent-gold)",
     },
     {
-      icon: "🤖",
       title: "Muna AI",
-      desc: t("Asistente inteligente para tu negocio. Disponible 24/7 en español e inglés.", "Intelligent assistant for your business. Available 24/7.", ""),
+      desc: t("Asistente inteligente para tu negocio. Disponible 24/7 en espanol e ingles.", "Intelligent assistant for your business. Available 24/7.", "Waantaj na'at ti' a negocio. 24/7 kuxtal."),
       href: "/muna",
       color: "var(--accent-gold)",
     },
     {
-      icon: "🖥️",
-      title: t("Soluciones Digitales", "Digital Solutions", "Soluciones Digitales"),
-      desc: t("Desarrollo de software a medida, arquitectura cloud, ciberseguridad y automatización.", "Custom software development, cloud architecture, cybersecurity, and automation.", ""),
+      title: t("Soluciones Digitales", "Digital Solutions", "Nu'ukulo'ob Digitales"),
+      desc: t("Desarrollo de software a medida, arquitectura cloud, ciberseguridad y automatizacion.", "Custom software development, cloud architecture, cybersecurity, and automation.", "Meentik software, cloud, ciberseguridad yetel automatizacion."),
       href: "/soluciones-digitales",
       color: "var(--accent-gold)",
     },
@@ -135,7 +148,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
   return (
     <>
       <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <BreakingTicker />
+        <BreakingTicker lang={language} />
 
         {/* ── HERO ── */}
         <section style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 24px 0", width: "100%" }}>
@@ -246,7 +259,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                     alignItems: "center",
                     gap: "5px",
                   }} className="cat-chip">
-                    <span>{cat.icon}</span> {cat.label}
+                    {cat.label}
                   </Link>
                 ))}
               </div>
@@ -315,7 +328,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                 letterSpacing: "0.05em",
                 opacity: 0.5,
               }}>
-                PUBLICIDAD
+                {t("PUBLICIDAD", "ADVERTISEMENT", "PUBLICIDAD")}
               </div>
             </div>
           </div>
@@ -340,7 +353,6 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                   borderRadius: "14px",
                   padding: "28px 24px",
                 }}>
-                  <div style={{ fontSize: "2rem", marginBottom: "12px" }}>{svc.icon}</div>
                   <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>{svc.title}</h3>
                   <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "16px" }}>{svc.desc}</p>
                   <span style={{ color: svc.color, fontSize: "0.82rem", fontWeight: 700 }}>
