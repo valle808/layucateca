@@ -26,7 +26,29 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 2. Greetings
+    // 2. Explicit Image Generation Request (Always works!)
+    const isImageReq = ['draw', 'picture', 'dibujo', 'generate', 'create', 'image', 'imagen', 'dibuja', 'crea', 'haz', 'pintar', 'paint'].some(w => cleanMessage.includes(w));
+    if (isImageReq) {
+        const promptRaw = message.replace(/(draw|generate|create|image|picture|of|dibuja|crea|un|una|de|imagen|paint|pintar|haz)/gi, '').trim() || 'beautiful landscape';
+        const seed = Math.floor(Math.random() * 1000000);
+        const proxyUrl = `/api/muna/image-proxy?prompt=${encodeURIComponent(promptRaw)}&seed=${seed}`;
+        
+        if (language === 'en') {
+            return `[🧠 MUNA AI]\nI have successfully generated a custom image for you based on your description: **"${promptRaw}"** 🎨\n\n<div style="margin: 15px 0; border-radius: 20px; overflow: hidden; border: 1px solid #ff5500; background: rgba(0,0,0,0.3); box-shadow: 0 10px 40px rgba(255,85,0,0.15);">
+                <img src="${proxyUrl}" style="width: 100%; height: auto; display: block;" alt="Muna AI Image Synthesis" loading="lazy" />
+            </div>\n\nIs there anything else you would like me to draw or design today?`;
+        } else if (language === 'my') {
+            return `[🧠 MUNA AI]\nTin beetik jump'éel áanal ti'al a prompt: **"${promptRaw}"** 🎨\n\n<div style="margin: 15px 0; border-radius: 20px; overflow: hidden; border: 1px solid #ff5500; background: rgba(0,0,0,0.3); box-shadow: 0 10px 40px rgba(255,85,0,0.15);">
+                <img src="${proxyUrl}" style="width: 100%; height: auto; display: block;" alt="Muna AI Image Synthesis" loading="lazy" />
+            </div>\n\n¿K'áat a beet uláak' ba'al bejla'e'?`;
+        } else {
+            return `[🧠 MUNA AI]\nHe generado una imagen personalizada en base a tu descripción: **"${promptRaw}"** 🎨\n\n<div style="margin: 15px 0; border-radius: 20px; overflow: hidden; border: 1px solid #ff5500; background: rgba(0,0,0,0.3); box-shadow: 0 10px 40px rgba(255,85,0,0.15);">
+                <img src="${proxyUrl}" style="width: 100%; height: auto; display: block;" alt="Muna AI Image Synthesis" loading="lazy" />
+            </div>\n\n¿Hay algo más que te gustaría que dibuje o diseñe hoy, amigo?`;
+        }
+    }
+
+    // 3. Greetings
     if (hasWord(['hola', 'saludos', 'buenos', 'dias', 'tardes', 'noches', 'hello', 'hi', 'hey', 'bix', 'ma\'alob', 'ki\'ichkelem'])) {
         if (language === 'en') {
             return `[🧠 MUNA AI]\nHello! I am Muna, the friendly AI assistant for La Yucateca. 🚀 It is an absolute pleasure to meet you! How can I assist you with your digital goals or community inquiries today?\n\nIf you have a website, send me its link and I will audit its speed and design for free!`;
@@ -37,7 +59,7 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 3. Time / Hour
+    // 4. Time / Hour
     if (hasWord(['hora', 'horas', 'tiempo', 'reloj', 'time', 'hour', 'hours', 'clock', 'china'])) {
         if (language === 'en') {
             return `[🧠 MUNA AI]\nThat's a wonderful question about time! 🕒 Timezones are fascinating — for instance, China is about 14 hours ahead of Mexico. While it is day here in Yucatán, they are already in the next day! \n\nSimilarly, at La Yucateca, our digital systems and automated agents run 24/7. What timezone or project can we help you coordinate today?`;
@@ -48,7 +70,7 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 4. Services / Design / Web
+    // 5. Services / Design / Web
     if (hasWord(['servicio', 'servicios', 'diseño', 'web', 'desarrollo', 'crear', 'pagina', 'paginas', 'app', 'apps', 'services', 'design', 'development', 'website', 'build', 'create'])) {
         if (language === 'en') {
             return `[🧠 MUNA AI]\nAbsolutely! At La Yucateca, we specialize in building premium, ultra-fast Next.js websites, native React Native mobile apps, and custom IT automation systems.\n\nAre you looking to design a new custom website or automate some business processes? Tell me a bit about your idea, or visit our [/contact](/contact) page for a priority consultation!`;
@@ -59,8 +81,8 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 5. Muna AI / Who are you
-    if (hasWord(['muna', 'quien', 'que', 'eres', 'chatbot', 'robot', 'ia', 'inteligencia', 'who', 'what', 'are', 'you', 'bot'])) {
+    // 6. Muna AI / Who are you (Fixed keyword triggers!)
+    if (hasWord(['muna']) || (hasWord(['quien', 'who']) && (hasWord(['eres', 'are']) || hasWord(['you']) || hasWord(['quién'])))) {
         if (language === 'en') {
             return `[🧠 MUNA AI]\nI am Muna, the friendly AI assistant of La Yucateca! 🤖 I am named after the historic Mayan city of Muna in Yucatán, México.\n\nMy purpose is to guide you through our platform, answer questions, perform instant website design audits, and demonstrate the state-of-the-art AI technology we build for our clients. What can I do for you today?`;
         } else if (language === 'my') {
@@ -70,7 +92,7 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 6. News / Noticias
+    // 7. News / Noticias
     if (hasWord(['noticia', 'noticias', 'periodico', 'peektsil', 'yucatan', 'news', 'newspaper'])) {
         if (language === 'en') {
             return `[🧠 MUNA AI]\nYes! La Yucateca features K'iin News, a modern news portal covering community updates, technology, culture, and events in Yucatán, Mexico, and worldwide. Our news crew is powered by autonomous writer agents.\n\nYou can read all the articles directly in our [/news](/news) section. Is there a specific topic you are interested in?`;
@@ -81,7 +103,7 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 7. Weather / Clima
+    // 8. Weather / Clima
     if (hasWord(['clima', 'tiempo', 'temperatura', 'calor', 'lluvia', 'weather', 'temp', 'rain', 'hot', 'cold'])) {
         if (language === 'en') {
             return `[🧠 MUNA AI]\nI can check the weather forecast for you! Yucatán is typically sunny and warm, perfect for visiting our gorgeous cenotes and beaches.\n\nIf you want a precise forecast, ask me: "What is the weather in Merida?" or any other city, and I'll fetch real-time data for you!`;
@@ -92,7 +114,7 @@ function generateConversationalFallback(message: string, language: string): stri
         }
     }
 
-    // 8. General / Fallback
+    // 9. General / Fallback
     if (language === 'en') {
         return `[🧠 MUNA AI]\nThat is a fascinating topic! As Muna, your friendly digital guide at La Yucateca, I'd love to help you explore it further or assist you in designing a premium Next.js 15 website for your brand.\n\nWhat are you currently working on, or how can I help you navigate the platform today?`;
     } else if (language === 'my') {
@@ -339,17 +361,20 @@ export async function POST(req: Request) {
             }).catch(() => {});
         }
 
-        let apiKey = process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY || 'ollama-local-key';
+        let apiKeyRaw = process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY || 'ollama-local-key';
+        let apiKey = apiKeyRaw ? apiKeyRaw.trim() : '';
+
         let baseURL = process.env.GEMINI_API_KEY ? 'https://generativelanguage.googleapis.com/v1beta/openai'
                     : process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' 
                     : process.env.FIREWORKS_API_KEY ? 'https://api.fireworks.ai/inference/v1' 
                     : process.env.OPENAI_API_KEY ? undefined
-                    : (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434') + '/v1';
+                    : (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').trim() + '/v1';
+
         let model = process.env.GEMINI_API_KEY ? 'gemini-1.5-flash'
                   : process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.1-8b-instruct:free' 
                   : process.env.FIREWORKS_API_KEY ? 'accounts/fireworks/models/kimi-k2p6'
                   : process.env.OPENAI_API_KEY ? 'gpt-3.5-turbo'
-                  : (process.env.OLLAMA_MODEL || 'llama3');
+                  : (process.env.OLLAMA_MODEL || 'llama3').trim();
 
         const currentLangLabel = language === 'en' ? 'English' : language === 'my' ? 'Mayan' : 'Spanish';
 
