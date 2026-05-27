@@ -94,17 +94,17 @@ export default function Footer() {
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
               <li>
                 <Link href="/" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Inicio", "Home")}
+                  {t("Inicio", "Home", "Yáax")}
                 </Link>
               </li>
               <li>
                 <Link href="/news" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Noticias", "News")}
+                  {t("Noticias", "News", "Péektsil")}
                 </Link>
               </li>
               <li>
                 <Link href="/soluciones-digitales" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Soluciones Digitales", "Digital Solutions")}
+                  {t("Soluciones Digitales", "Digital Solutions", "Nu'ukulo'ob Digitales")}
                 </Link>
               </li>
             </ul>
@@ -113,22 +113,22 @@ export default function Footer() {
           {/* Legal */}
           <div>
             <h4 style={{ color: "#ffffff", fontWeight: 600, marginBottom: "16px", fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Legal
+              {t("Legal", "Legal", "Legal")}
             </h4>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
               <li>
                 <Link href="/privacy" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Privacidad", "Privacy")}
+                  {t("Privacidad", "Privacy", "Privacidad")}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Términos", "Terms")}
+                  {t("Términos", "Terms", "Términos")}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Contacto", "Contact")}
+                  {t("Contacto", "Contact", "Ts'íib")}
                 </Link>
               </li>
             </ul>
@@ -147,7 +147,7 @@ export default function Footer() {
           }}
         >
           <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem", letterSpacing: "0.05em" }}>
-            © {new Date().getFullYear()} La Yucateca. {t("Todos los derechos reservados.", "All rights reserved.")}
+            © {new Date().getFullYear()} La Yucateca. {t("Todos los derechos reservados.", "All rights reserved.", "Tuláakal u derechos reserved.")}
           </p>
           <div style={{ color: "var(--text-secondary)", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "8px" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
@@ -155,7 +155,7 @@ export default function Footer() {
               <line x1="2" y1="12" x2="22" y2="12"></line>
               <line x1="12" y1="2" x2="12" y2="22"></line>
             </svg>
-            <span>Powered by OMEGA Node</span>
+            <span>{t("Impulsado por OMEGA Node", "Powered by OMEGA Node", "Omega Node")}</span>
           </div>
         </div>
       </div>

@@ -3,12 +3,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/components/LanguageContext";
-
 import { usePathname } from "next/navigation";
 
 interface Message {
   sender: "user" | "muna";
   text: string;
+  timestamp?: string;
 }
 
 export default function MunaChatbot() {
@@ -29,7 +29,8 @@ export default function MunaChatbot() {
       "Hello! I am Muna, the Autonomous AI of La Yucateca. I am here to guide you through our news portal and premium web design catalog. How can I help you today?",
       "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob yéetel diseño web premium. ¿Bix je'el in wáantikech bejla'e'?"
     );
-    setMessages([{ sender: "muna", text: welcomeText }]);
+    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    setMessages([{ sender: "muna", text: welcomeText, timestamp: time }]);
   }, [language]);
 
   // Scroll to bottom on new messages
@@ -40,7 +41,9 @@ export default function MunaChatbot() {
   const speakText = (text: string) => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      // Remove Muna metadata if present
+      const cleanText = text.replace(/^\[🧠 MUNA AI\]\s*/i, "");
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = language === "my" ? "es-MX" : language === "es" ? "es-MX" : "en-US";
       window.speechSynthesis.speak(utterance);
     }
@@ -49,8 +52,9 @@ export default function MunaChatbot() {
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
 
+    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     // Add user message
-    const userMsg = { sender: "user" as const, text };
+    const userMsg = { sender: "user" as const, text, timestamp: time };
     setMessages((prev) => [...prev, userMsg]);
     setInputVal("");
     setIsTyping(true);
@@ -74,8 +78,9 @@ export default function MunaChatbot() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
       
+      const munaTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       // Initialize empty AI message
-      setMessages((prev) => [...prev, { sender: "muna", text: "" }]);
+      setMessages((prev) => [...prev, { sender: "muna", text: "", timestamp: munaTime }]);
 
       let done = false;
       while (!done) {
@@ -93,8 +98,19 @@ export default function MunaChatbot() {
     } catch (error) {
       console.error("Muna Engine Error:", error);
       setIsTyping(false);
-      setMessages((prev) => [...prev, { sender: "muna", text: "[ERROR] Neural link severed. Please check system configuration." }]);
+      const errTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      setMessages((prev) => [...prev, { sender: "muna", text: "[ERROR] Neural link severed. Please check system configuration.", timestamp: errTime }]);
     }
+  };
+
+  const clearChat = () => {
+    const welcomeText = t(
+      "¡Hola! Soy Muna, la Inteligencia Autónoma de La Yucateca. Estoy aquí para guiarte por nuestro portal de noticias y catálogo de diseños web premium. ¿En qué puedo ayudarte hoy?",
+      "Hello! I am Muna, the Autonomous AI of La Yucateca. I am here to guide you through our news portal and premium web design catalog. How can I help you today?",
+      "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob yéetel diseño web premium. ¿Bix je'el in wáantikech bejla'e'?"
+    );
+    const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    setMessages([{ sender: "muna", text: welcomeText, timestamp: time }]);
   };
 
   return (
@@ -109,32 +125,31 @@ export default function MunaChatbot() {
           width: "60px",
           height: "60px",
           borderRadius: "50%",
-          background: "rgba(5, 5, 5, 0.6)",
+          background: "rgba(5, 5, 5, 0.7)",
           backdropFilter: "blur(20px)",
-          border: "1px solid var(--border-subtle)",
+          border: "1px solid var(--border-accent)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
+          boxShadow: "0 8px 32px rgba(255, 85, 0, 0.2)",
           zIndex: 9999,
-          transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s",
           color: "#ffffff",
+          animation: "float 4s ease-in-out infinite",
+          transition: "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.1)";
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+          e.currentTarget.style.transform = "scale(1.1) rotate(5deg)";
+          e.currentTarget.style.background = "rgba(255, 85, 0, 0.1)";
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = "scale(1)";
-          e.currentTarget.style.background = "rgba(5, 5, 5, 0.6)";
+          e.currentTarget.style.background = "rgba(5, 5, 5, 0.7)";
         }}
         title="Muna AI Assistant"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
-          <rect x="4" y="6" width="16" height="12" rx="0"></rect>
-          <line x1="8" y1="12" x2="16" y2="12"></line>
-          <line x1="12" y1="2" x2="12" y2="6"></line>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
         {/* Glowing badge */}
         <span
@@ -144,9 +159,10 @@ export default function MunaChatbot() {
             right: "2px",
             width: "12px",
             height: "12px",
-            background: "#ffffff",
+            background: "var(--accent-gold)",
             borderRadius: "50%",
             border: "2px solid #050505",
+            boxShadow: "0 0 8px var(--accent-gold)",
             animation: "pulse-glow 1.5s infinite alternate",
           }}
         />
@@ -161,26 +177,27 @@ export default function MunaChatbot() {
             bottom: "105px",
             right: "20px",
             left: "20px",
-            maxWidth: "380px",
+            maxWidth: "390px",
             marginLeft: "auto",
-            height: "520px",
+            height: "540px",
             background: "var(--bg-card)",
-            backdropFilter: "blur(25px)",
+            backdropFilter: "blur(30px)",
             border: "1px solid var(--border-accent)",
             borderRadius: "24px",
             display: "flex",
             flexDirection: "column",
-            boxShadow: "0 20px 50px rgba(0, 0, 0, 0.3)",
+            boxShadow: "0 24px 60px rgba(0, 0, 0, 0.45)",
             zIndex: 9999,
             overflow: "hidden",
+            transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
           {/* Header */}
           <div
             style={{
-              padding: "20px",
-              background: "var(--bg-secondary)",
-              borderBottom: "1px solid var(--border-subtle)",
+              padding: "18px 20px",
+              background: "linear-gradient(135deg, rgba(255, 85, 0, 0.15) 0%, rgba(5, 5, 8, 0.95) 100%)",
+              borderBottom: "1px solid var(--border-accent)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -192,32 +209,78 @@ export default function MunaChatbot() {
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  background: "var(--bg-primary)",
-                  border: "1px solid var(--border-subtle)",
+                  background: "rgba(255, 85, 0, 0.1)",
+                  border: "1px solid var(--border-accent)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  color: "var(--text-primary)",
+                  fontWeight: 800,
+                  fontSize: "1.1rem",
+                  color: "var(--accent-gold)",
+                  boxShadow: "0 0 10px rgba(255, 85, 0, 0.2)",
                 }}
               >
                 M
               </div>
               <div>
-                <h4 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)" }}>Muna</h4>
+                <h4 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "6px" }}>
+                  Muna AI
+                </h4>
                 <p style={{ margin: 0, fontSize: "0.72rem", color: "var(--text-secondary)", fontWeight: 500, display: "flex", alignItems: "center", gap: "4px" }}>
-                  <span style={{ width: "6px", height: "6px", background: "var(--accent-gold)", borderRadius: "50%", display: "inline-block" }}></span>
+                  <span style={{ width: "6px", height: "6px", background: "#10b981", borderRadius: "50%", display: "inline-block", boxShadow: "0 0 6px #10b981" }}></span>
                   {t("Autónoma en línea", "Autonomous AI online", "Meyaj bejla'e'")}
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              style={{ background: "none", border: "none", color: "var(--text-secondary)", cursor: "pointer", fontSize: "1.2rem" }}
-            >
-              ✕
-            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {/* Clear chat button */}
+              <button
+                onClick={clearChat}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--text-secondary)",
+                  cursor: "pointer",
+                  fontSize: "0.95rem",
+                  opacity: 0.6,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "6px",
+                  borderRadius: "8px",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.6"; e.currentTarget.style.background = "none"; }}
+                title={t("Limpiar chat", "Clear chat", "Puch chat")}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+
+              <button
+                onClick={() => setIsOpen(false)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--text-secondary)",
+                  cursor: "pointer",
+                  fontSize: "1.1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "6px",
+                  borderRadius: "8px",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "none"; }}
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
           {/* Messages list */}
@@ -228,7 +291,7 @@ export default function MunaChatbot() {
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
-              gap: "14px",
+              gap: "16px",
             }}
           >
             {messages.map((msg, i) => (
@@ -236,7 +299,7 @@ export default function MunaChatbot() {
                 key={i}
                 style={{
                   alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
-                  maxWidth: "80%",
+                  maxWidth: "85%",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: msg.sender === "user" ? "flex-end" : "flex-start",
@@ -245,36 +308,56 @@ export default function MunaChatbot() {
                 <div
                   style={{
                     padding: "12px 16px",
-                    borderRadius: msg.sender === "user" ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
-                    background: msg.sender === "user" ? "var(--text-primary)" : "var(--bg-secondary)",
-                    color: msg.sender === "user" ? "var(--bg-primary)" : "var(--text-primary)",
+                    borderRadius: msg.sender === "user" ? "20px 20px 4px 20px" : "20px 20px 20px 4px",
+                    background: msg.sender === "user" ? "linear-gradient(135deg, var(--accent-gold) 0%, #ff3300 100%)" : "rgba(255,255,255,0.03)",
+                    color: "#ffffff",
                     fontSize: "0.875rem",
                     lineHeight: 1.5,
                     border: "1px solid var(--border-subtle)",
                     position: "relative",
+                    boxShadow: msg.sender === "user" ? "0 4px 12px rgba(255, 85, 0, 0.2)" : "none",
                   }}
                 >
-                  {msg.text}
+                  <div style={{ wordBreak: "break-word" }}>
+                    {msg.text}
+                  </div>
+
+                  {msg.timestamp && (
+                    <div
+                      style={{
+                        fontSize: "0.68rem",
+                        color: msg.sender === "user" ? "rgba(255,255,255,0.7)" : "var(--text-secondary)",
+                        textAlign: "right",
+                        marginTop: "6px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {msg.timestamp}
+                    </div>
+                  )}
 
                   {msg.sender === "muna" && (
                     <button
                       onClick={() => speakText(msg.text)}
                       style={{
                         position: "absolute",
-                        right: "-30px",
-                        bottom: "2px",
+                        right: "-28px",
+                        bottom: "6px",
                         background: "none",
                         border: "none",
                         color: "var(--text-secondary)",
                         cursor: "pointer",
-                        fontSize: "0.9rem",
-                        opacity: 0.6,
+                        fontSize: "0.95rem",
+                        opacity: 0.5,
+                        transition: "opacity 0.2s",
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.5"; }}
                       title="Read aloud"
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                       </svg>
                     </button>
                   )}
@@ -283,10 +366,21 @@ export default function MunaChatbot() {
             ))}
 
             {isTyping && (
-              <div style={{ alignSelf: "flex-start", display: "flex", gap: "4px", padding: "12px 16px", background: "var(--bg-secondary)", borderRadius: "16px", border: "1px solid var(--border-subtle)" }}>
-                <span className="dot" style={{ width: "6px", height: "6px", background: "var(--text-secondary)", borderRadius: "50%", animation: "dot-blink 1.4s infinite linear" }} />
-                <span className="dot" style={{ width: "6px", height: "6px", background: "var(--text-secondary)", borderRadius: "50%", animation: "dot-blink 1.4s infinite linear 0.2s" }} />
-                <span className="dot" style={{ width: "6px", height: "6px", background: "var(--text-secondary)", borderRadius: "50%", animation: "dot-blink 1.4s infinite linear 0.4s" }} />
+              <div
+                style={{
+                  alignSelf: "flex-start",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "12px 18px",
+                  background: "rgba(255,255,255,0.02)",
+                  borderRadius: "18px 18px 18px 2px",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                <div style={{ width: "8px", height: "8px", background: "var(--accent-gold)", borderRadius: "50%", animation: "pulse-typing 1.2s infinite ease-in-out" }} />
+                <div style={{ width: "8px", height: "8px", background: "var(--accent-gold)", borderRadius: "50%", animation: "pulse-typing 1.2s infinite ease-in-out 0.2s" }} />
+                <div style={{ width: "8px", height: "8px", background: "var(--accent-gold)", borderRadius: "50%", animation: "pulse-typing 1.2s infinite ease-in-out 0.4s" }} />
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -295,9 +389,11 @@ export default function MunaChatbot() {
           {/* Quick Action chips */}
           <div style={{ display: "flex", gap: "6px", padding: "10px 20px", overflowX: "auto", borderTop: "1px solid var(--border-subtle)" }}>
             {[
-              { label: t("Diseño Web", "Web Design", "Diseño Web"), query: "servicios" },
+              { label: t("Servicios", "Services", "Servicios"), query: "servicios" },
               { label: t("Noticias K'iin", "K'iin News", "Péektsil"), query: "noticias" },
-              { label: t("Quién es Muna?", "Who is Muna?", "Máaxen Muna?"), query: "quién es muna" },
+              { label: t("Denunciar", "Report Issue", "Denunciar"), query: "denunciar" },
+              { label: t("Mercado", "Marketplace", "Mercado"), query: "mercado" },
+              { label: t("Ayuda", "Help", "Ayuda"), query: "ayuda" },
             ].map((chip) => (
               <button
                 key={chip.query}
@@ -305,21 +401,23 @@ export default function MunaChatbot() {
                 style={{
                   padding: "6px 12px",
                   borderRadius: "14px",
-                  background: "var(--bg-secondary)",
-                  border: "1px solid var(--border-accent)",
-                  color: "var(--text-primary)",
+                  background: "rgba(255, 255, 255, 0.02)",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-secondary)",
                   fontSize: "0.75rem",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
-                  transition: "all 0.2s",
+                  transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "var(--text-primary)";
-                  e.currentTarget.style.color = "var(--bg-primary)";
+                  e.currentTarget.style.borderColor = "var(--accent-gold)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                  e.currentTarget.style.background = "rgba(255, 85, 0, 0.05)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "var(--bg-secondary)";
-                  e.currentTarget.style.color = "var(--text-primary)";
+                  e.currentTarget.style.borderColor = "var(--border-subtle)";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.02)";
                 }}
               >
                 {chip.label}
@@ -334,10 +432,10 @@ export default function MunaChatbot() {
               handleSend(inputVal);
             }}
             style={{
-              padding: "16px 20px 20px",
+              padding: "14px 20px 20px",
               display: "flex",
               gap: "10px",
-              background: "var(--bg-secondary)",
+              background: "rgba(5, 5, 8, 0.9)",
               borderTop: "1px solid var(--border-subtle)",
             }}
           >
@@ -350,12 +448,15 @@ export default function MunaChatbot() {
                 flex: 1,
                 padding: "12px 16px",
                 borderRadius: "16px",
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-accent)",
+                background: "rgba(0, 0, 0, 0.4)",
+                border: "1px solid var(--border-subtle)",
                 color: "var(--text-primary)",
                 fontSize: "0.85rem",
                 outline: "none",
+                transition: "border 0.2s",
               }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "var(--accent-gold)"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; }}
             />
             <button
               type="submit"
@@ -370,9 +471,20 @@ export default function MunaChatbot() {
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--accent-gold)";
+                e.currentTarget.style.color = "#ffffff";
+                e.currentTarget.style.borderColor = "var(--accent-gold)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "var(--text-primary)";
+                e.currentTarget.style.color = "var(--bg-primary)";
+                e.currentTarget.style.borderColor = "var(--border-subtle)";
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
               </svg>
@@ -383,22 +495,30 @@ export default function MunaChatbot() {
 
       {/* Styled animation keyframes */}
       <style jsx global>{`
-        @keyframes pulse-glow {
-          0% {
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0);
           }
-          100% {
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+          50% {
+            transform: translateY(-8px);
           }
         }
-        @keyframes dot-blink {
+        @keyframes pulse-typing {
           0%, 100% {
-            opacity: 0.2;
-            transform: scale(0.8);
+            opacity: 0.35;
+            transform: scale(0.85);
           }
           50% {
             opacity: 1;
-            transform: scale(1.2);
+            transform: scale(1.15);
+          }
+        }
+        @keyframes pulse-glow {
+          0% {
+            box-shadow: 0 0 4px var(--accent-gold);
+          }
+          100% {
+            box-shadow: 0 0 12px var(--accent-gold);
           }
         }
       `}</style>

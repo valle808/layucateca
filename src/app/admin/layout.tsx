@@ -3,16 +3,22 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import AdminGuard from "@/components/AdminGuard";
-
-const navItems = [
-  { href: "/admin", label: "Dashboard", icon: "⊞" },
-  { href: "/admin/posts", label: "Posts", icon: "📰" },
-  { href: "/admin/portfolio", label: "Portfolio", icon: "🎨" },
-  { href: "/admin/marketing", label: "Marketing HQ", icon: "🎯" },
-  { href: "/admin/settings", label: "Settings", icon: "⚙️" },
-];
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
+
+  const navItems = [
+    { href: "/admin", label: t("Dashboard", "Dashboard"), icon: "⊞" },
+    { href: "/admin/posts", label: t("Posts", "Posts"), icon: "📰" },
+    { href: "/admin/portfolio", label: t("Portafolio", "Portfolio"), icon: "🎨" },
+    { href: "/admin/agents", label: t("Agentes", "Agents", "Ajwáantajob"), icon: "🤖" },
+    { href: "/admin/tasks", label: t("Tareas", "Tasks", "Meyajil"), icon: "🔄" },
+    { href: "/admin/skills", label: t("Habilidades", "Skills", "Habilidades"), icon: "⚡" },
+    { href: "/admin/marketing", label: t("Marketing HQ", "Marketing HQ"), icon: "🎯" },
+    { href: "/admin/settings", label: t("Configuración", "Settings"), icon: "⚙️" },
+  ];
+
   return (
     <AdminGuard>
       <div style={{ display: "flex", minHeight: "100vh", background: "var(--bg-primary)" }}>

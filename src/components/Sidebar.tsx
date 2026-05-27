@@ -108,6 +108,32 @@ const Icons = {
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
       <circle cx="12" cy="7" r="4"></circle>
     </svg>
+  ),
+  AdminDashboard: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <rect x="3" y="3" width="7" height="9"></rect>
+      <rect x="14" y="3" width="7" height="5"></rect>
+      <rect x="14" y="12" width="7" height="9"></rect>
+      <rect x="3" y="16" width="7" height="5"></rect>
+    </svg>
+  ),
+  Agents: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+      <line x1="12" y1="22.08" x2="12" y2="12"></line>
+    </svg>
+  ),
+  Tasks: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <polyline points="23 4 12 15 7 10"></polyline>
+      <polyline points="17 21 12 16 7 21"></polyline>
+    </svg>
+  ),
+  Skills: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+    </svg>
   )
 };
 
@@ -119,6 +145,14 @@ export default function Sidebar() {
   const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("la_yucateca_admin_session");
+      setIsAdmin(token === "quantum_shield_valle_808_active");
+    }
+  }, [user, pathname]);
 
   useEffect(() => {
     if (pathname === "/muna") {
@@ -358,60 +392,74 @@ export default function Sidebar() {
               padding: isCollapsed && !isMobile ? "0 16px" : "0 24px",
             }}
           >
-            {[
-              { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
-              { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
-              { href: "/soluciones-digitales", label: t("Soluciones Digitales", "Digital Solutions", "Nu'ukulo'ob Digitales"), icon: <Icons.Solutions /> },
-              { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "T'aan"), icon: <Icons.Report /> },
-              { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Tsikbal"), icon: <Icons.Chat /> },
-              { href: "/marketplace", label: t("Mercado", "Marketplace", "K'íiwic"), icon: <Icons.Market /> },
-              { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
-              {
+            {(() => {
+              const items: Array<{ href: string; label: string; icon: React.ReactNode; action?: () => void }> = [
+                { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
+                { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
+                { href: "/soluciones-digitales", label: t("Soluciones Digitales", "Digital Solutions", "Nu'ukulo'ob Digitales"), icon: <Icons.Solutions /> },
+                { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "T'aan"), icon: <Icons.Report /> },
+                { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Tsikbal"), icon: <Icons.Chat /> },
+                { href: "/marketplace", label: t("Mercado", "Marketplace", "K'íiwic"), icon: <Icons.Market /> },
+                { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
+              ];
+
+              if (isAdmin) {
+                items.push(
+                  { href: "/admin", label: t("Panel Admin", "Admin Panel", "Panel Admin"), icon: <Icons.AdminDashboard /> },
+                  { href: "/admin/agents", label: t("Agentes", "Agents", "Ajwáantajob"), icon: <Icons.Agents /> },
+                  { href: "/admin/tasks", label: t("Tareas", "Tasks", "Meyajil"), icon: <Icons.Tasks /> },
+                  { href: "/admin/skills", label: t("Habilidades", "Skills", "Habilidades"), icon: <Icons.Skills /> }
+                );
+              }
+
+              items.push({
                 href: user ? "#" : "/login",
                 label: user ? `${user.name} (Salir)` : t("Ingresar", "Sign In", "Okol"),
                 icon: <Icons.User />,
                 action: user ? () => logout() : undefined,
-              },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => {
-                  setIsOpen(false);
-                  if (item.action) {
-                    item.action();
-                  }
-                }}
-                style={{
-                  padding: "12px 16px",
-                  color: "var(--text-secondary)",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  border: "1px solid transparent",
-                  borderRadius: "8px",
-                  transition: "all 0.2s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  justifyContent: isCollapsed && !isMobile ? "center" : "flex-start",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                  (e.currentTarget as HTMLElement).style.border = "1px solid var(--border-subtle)";
-                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                  (e.currentTarget as HTMLElement).style.border = "1px solid transparent";
-                  (e.currentTarget as HTMLElement).style.background = "transparent";
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center" }}>{item.icon}</span>
-                {(!isCollapsed || isMobile) && <span>{item.label}</span>}
-              </Link>
-            ))}
+              });
+
+              return items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (item.action) {
+                      item.action();
+                    }
+                  }}
+                  style={{
+                    padding: "12px 16px",
+                    color: "var(--text-secondary)",
+                    textDecoration: "none",
+                    fontWeight: 500,
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.05em",
+                    border: "1px solid transparent",
+                    borderRadius: "8px",
+                    transition: "all 0.2s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                    justifyContent: isCollapsed && !isMobile ? "center" : "flex-start",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+                    (e.currentTarget as HTMLElement).style.border = "1px solid var(--border-subtle)";
+                    (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                    (e.currentTarget as HTMLElement).style.border = "1px solid transparent";
+                    (e.currentTarget as HTMLElement).style.background = "transparent";
+                  }}
+                >
+                  <span style={{ display: "flex", alignItems: "center" }}>{item.icon}</span>
+                  {(!isCollapsed || isMobile) && <span>{item.label}</span>}
+                </Link>
+              ));
+            })()}
           </nav>
         </div>
 

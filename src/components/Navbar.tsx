@@ -285,7 +285,7 @@ export default function Navbar() {
           
           {/* Mobile Language Switches */}
           <div style={{ display: "flex", gap: "8px", padding: "12px 16px", alignItems: "center" }}>
-            <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>Lang:</span>
+            <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>{t("Idioma:", "Lang:", "T'aan:")}</span>
             <button onClick={() => { setLanguage("es"); setMenuOpen(false); }} style={{ color: language === "es" ? "var(--accent-gold)" : "var(--text-secondary)", background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>ES</button>
             <button onClick={() => { setLanguage("en"); setMenuOpen(false); }} style={{ color: language === "en" ? "var(--accent-gold)" : "var(--text-secondary)", background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>EN</button>
             <button onClick={() => { setLanguage("my"); setMenuOpen(false); }} style={{ color: language === "my" ? "var(--accent-gold)" : "var(--text-secondary)", background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>MY</button>

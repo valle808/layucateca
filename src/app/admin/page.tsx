@@ -93,6 +93,9 @@ export default async function AdminDashboard() {
           <Link href="/admin/portfolio/new" className="btn-secondary">
             + New Portfolio Item
           </Link>
+          <Link href="/admin/agents" className="btn-secondary" style={{ border: "1px solid var(--border-accent)" }}>
+            🤖 Manage AI Agents
+          </Link>
           <Link href="/news" className="btn-ghost" target="_blank">
             View News Site ↗
           </Link>
