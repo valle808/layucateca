@@ -47,8 +47,11 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
     setTimeout(() => {
       setSecurityLogs(prev => [...prev, "Performing AI-Proof Cryptographic Signature check..."]);
       
-      // 2. Credentials check
-      if (username === "valle808@hawaii.edu" && password === "Pharaoh@808") {
+      // 2. Credentials check with localStorage overrides support
+      const storedUser = localStorage.getItem("la_yucateca_admin_username") || "valle808@hawaii.edu";
+      const storedPass = localStorage.getItem("la_yucateca_admin_password") || "Pharaoh@808";
+
+      if (username === storedUser && password === storedPass) {
         setSecurityLogs(prev => [...prev, "✅ Session Verified. De-encrypting dashboard node..."]);
         setTimeout(() => {
           localStorage.setItem("la_yucateca_admin_session", "quantum_shield_valle_808_active");
