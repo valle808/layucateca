@@ -543,7 +543,7 @@ export default function MunaPage() {
           </header>
 
           {/* MESSAGES */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scroll-smooth pb-44"
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scroll-smooth pb-60 md:pb-72"
             style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent' }}>
             <div className="max-w-3xl mx-auto space-y-6" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               <AnimatePresence mode="popLayout">
@@ -579,13 +579,13 @@ export default function MunaPage() {
                         </div>
                       )}
  
-                      <div className={`px-5 py-3.5 rounded-2xl text-[13px] leading-relaxed transition-all border shadow-2xs ${
+                      <div className={`px-6 py-4.5 rounded-2xl text-[13.5px] leading-relaxed transition-all border shadow-md backdrop-blur-md ${
                         m.role === 'user'
-                          ? 'bg-white border-black/[0.05] text-[#1e1b18] font-medium rounded-tr-md'
-                          : 'bg-white border-black/[0.04] text-[#1e1b18] rounded-tl-md w-full'
+                          ? 'bg-[#ff5500]/10 border-[#ff5500]/25 text-white font-medium rounded-tr-sm'
+                          : 'bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-primary)] rounded-tl-sm w-full'
                       }`}>
                         {m.role === 'bot' ? (
-                          <div className="muna-markdown max-w-none text-[#1e1b18] w-full">
+                          <div className="muna-markdown max-w-none text-[var(--text-primary)] w-full">
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
@@ -613,7 +613,7 @@ export default function MunaPage() {
                               >{m.text}</ReactMarkdown>
                             </div>
                           ) : (
-                            <span>{m.text}</span>
+                            <span className="text-white">{m.text}</span>
                           )}
                         </div>
    
