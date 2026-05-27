@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   other: {
-    "google-adsense-account": "ca-pub-8867340586657793",
+    "google-adsense-account": "ca-pub-8867340566577933",
   },
 };
 
@@ -34,13 +34,13 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <meta name="google-adsense-account" content="ca-pub-8867340586657793" />
+        <meta name="google-adsense-account" content="ca-pub-8867340566577933" />
       </head>
       <body>
         {/* Google AdSense — loaded after page is interactive to avoid blocking render */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8867340586657793"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8867340566577933"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
