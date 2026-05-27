@@ -103,6 +103,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/portfolio" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
+                  {t("Portafolio", "Portfolio", "Meyajo'ob")}
+                </Link>
+              </li>
+              <li>
                 <Link href="/soluciones-digitales" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
                   {t("Soluciones Digitales", "Digital Solutions", "Nu'ukulo'ob Digitales")}
                 </Link>
@@ -117,18 +122,18 @@ export default function Footer() {
             </h4>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
               <li>
-                <Link href="/privacy" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
+                <Link href="/privacy-policy" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
                   {t("Privacidad", "Privacy", "Privacidad")}
                 </Link>
               </li>
               <li>
-                <Link href="/terms" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
+                <Link href="/terms-and-conditions" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
                   {t("Términos", "Terms", "Términos")}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Contacto", "Contact", "Ts'íib")}
+                  {t("Contacto", "Contact", "Tsikbal")}
                 </Link>
               </li>
             </ul>

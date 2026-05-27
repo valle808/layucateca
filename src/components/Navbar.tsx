@@ -224,7 +224,7 @@ export default function Navbar() {
               e.currentTarget.style.background = "rgba(255,255,255,0.05)";
             }}
           >
-            {theme === "dark" ? "☀️ K'in" : "🌑 Akbal"}
+            {theme === "dark" ? "K'in" : "Akbal"}
           </button>
         </div>
 
@@ -297,7 +297,7 @@ export default function Navbar() {
               onClick={() => { setTheme(theme === "dark" ? "light" : "dark"); setMenuOpen(false); }}
               style={{ background: "none", border: "1px solid var(--border-accent)", borderRadius: "20px", cursor: "pointer", color: "var(--accent-gold)", padding: "6px 14px", fontWeight: 700, fontSize: "0.8rem" }}
             >
-              {theme === "dark" ? "☀️ K'in" : "🌑 Akbal"}
+              {theme === "dark" ? "K'in" : "Akbal"}
             </button>
           </div>
         </div>
