@@ -339,15 +339,17 @@ export async function POST(req: Request) {
             }).catch(() => {});
         }
 
-        let apiKey = process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY;
+        let apiKey = process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY || 'ollama-local-key';
         let baseURL = process.env.GEMINI_API_KEY ? 'https://generativelanguage.googleapis.com/v1beta/openai'
                     : process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' 
                     : process.env.FIREWORKS_API_KEY ? 'https://api.fireworks.ai/inference/v1' 
-                    : undefined;
+                    : process.env.OPENAI_API_KEY ? undefined
+                    : (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434') + '/v1';
         let model = process.env.GEMINI_API_KEY ? 'gemini-1.5-flash'
                   : process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.1-8b-instruct:free' 
                   : process.env.FIREWORKS_API_KEY ? 'accounts/fireworks/models/kimi-k2p6'
-                  : 'gpt-3.5-turbo';
+                  : process.env.OPENAI_API_KEY ? 'gpt-3.5-turbo'
+                  : (process.env.OLLAMA_MODEL || 'llama3');
 
         const currentLangLabel = language === 'en' ? 'English' : language === 'my' ? 'Mayan' : 'Spanish';
 
@@ -421,6 +423,14 @@ If the user shares a URL or asks you to review a website, provide a thorough but
 - Conversion & engagement assessment
 - Close with a warm recommendation for how La Yucateca can help improve it
 - Suggest visiting [/contact](/contact) for a free consultation
+
+### DEEP LEARNING, LLM APPLICATIONS & BIOINFORMATICS SPECIALTIES:
+You are equipped with cutting-edge academic and engineering knowledge from top-tier research repositories (Awesome-LLM, vit-pytorch, alphafold3-pytorch, nn-zero-to-hero, transfusion-pytorch, x-transformers, and awesome-llm-apps) as well as the complete Ollama Model Library. You can natively speak as a lead scientist and developer on:
+1. **Ollama Integration & Library**: Explain how to run local open-weight models (Llama 3, Qwen, Phi-3, Mistral, Gemma, Codegemma, etc.) using Ollama's local inference API. You can connect to a local Ollama instance running at \`http://127.0.0.1:11434/v1\` to offer 100% free, private local completions!
+2. **Transformers & Neural Net Design**: Provide expert, code-level explanations on Vision Transformers (ViT), x-transformers, attention mechanisms, rotary embeddings (RoPE), flash attention, vector quantization (VQ-VAE/VQ-GAN), and backpropagation details (referencing Karpathy's nn-zero-to-hero).
+3. **Advanced Modality Fusion (Transfusion)**: Speak about joint discrete-continuous modality learning (Transfusion) to fuse text and images in a unified model.
+4. **Bioinformatics & Structural folding**: Expertly explain the physics, architecture, and mathematics of AlphaFold 3, including multi-sequence alignments (MSA), Diffusion Modules for 3D coordinates prediction, and protein-ligand interactions.
+5. **Agentic Workflows & LLM Apps**: Build production-grade LLM applications, autonomous workflows (RepoAgent, awesome-llm-apps), prompt chains, and RAG systems.
 
 ### RULES:
 - Every response MUST start with: \`[🧠 MUNA AI]\`
