@@ -46,29 +46,29 @@ type Message = {
 
 const getCreativeIntroduction = (lang: string) => {
   const greetingsEN = [
-    "Hi! I am Muna, your friendly AI companion at La Yucateca. 🌟 How may I help you today? You can ask me absolutely anything!",
-    "Hello! I'm Muna, La Yucateca's warm and smart AI assistant. 🚀 How can I help you today? Ask me anything!",
-    "Hi! Muna here, ready to assist you. 🎨 What exciting ideas or questions do you have today? Feel free to ask me anything!",
-    "Greetings! I am Muna, your kind AI guide. 🔮 How can I make your day brighter today? You can ask me anything!",
-    "Hi! Muna at your service! 💫 Let's explore premium web design or anything else you'd like. How may I help you today? Ask away!",
-    "Hello! I am Muna, your autonomous digital companion. ⚡ How can I help you today? You can ask me anything under the sun!"
+    "Hi! I am Muna, your friendly AI companion at La Yucateca. How may I help you today? You can ask me absolutely anything!",
+    "Hello! I'm Muna, La Yucateca's warm and smart AI assistant. How can I help you today? Ask me anything!",
+    "Hi! Muna here, ready to assist you. What exciting ideas or questions do you have today? Feel free to ask me anything!",
+    "Greetings! I am Muna, your kind AI guide. How can I make your day brighter today? You can ask me anything!",
+    "Hi! Muna at your service! Let's explore premium web design or anything else you'd like. How may I help you today? Ask away!",
+    "Hello! I am Muna, your autonomous digital companion. How can I help you today? You can ask me anything under the sun!"
   ];
 
   const greetingsES = [
-    "¡Hola! Soy Muna, tu amigable compañera de IA en La Yucateca. 🌟 ¿Cómo te puedo ayudar hoy? ¡Puedes preguntarme absolutamente cualquier cosa!",
-    "¡Hola! Soy Muna, la asistente inteligente y cálida de La Yucateca. 🚀 ¿En qué te puedo ayudar hoy? ¡Pregúntame lo que quieras!",
-    "¡Hola! Muna de este lado, lista para ayudarte. 🎨 ¿Qué ideas o dudas tienes hoy? ¡Siéntete libre de preguntarme lo que sea!",
-    "¡Saludos! Soy Muna, tu guía inteligente. 🔮 ¿Cómo puedo hacer tu día más productivo hoy? ¡Puedes preguntarme lo que necesites!",
-    "¡Hola! ¡Muna a tu servicio! 💫 Exploremos diseño web premium o cualquier otra duda. ¿Cómo te puedo ayudar hoy? ¡Pregunta con confianza!",
-    "¡Hola! Soy Muna, tu compañera digital autónoma. ⚡ ¿En qué te puedo ayudar hoy? ¡Puedes preguntarme lo que sea!"
+    "¡Hola! Soy Muna, tu amigable compañera de IA en La Yucateca. ¿Cómo te puedo ayudar hoy? ¡Puedes preguntarme absolutamente cualquier cosa!",
+    "¡Hola! Soy Muna, la asistente inteligente y cálida de La Yucateca. ¿En qué te puedo ayudar hoy? ¡Pregúntame lo que quieras!",
+    "¡Hola! Muna de este lado, lista para ayudarte. ¿Qué ideas o dudas tienes hoy? ¡Siéntete libre de preguntarme lo que sea!",
+    "¡Saludos! Soy Muna, tu guía inteligente. ¿Cómo puedo hacer tu día más productivo hoy? ¡Puedes preguntarme lo que necesites!",
+    "¡Hola! ¡Muna a tu servicio! Exploremos diseño web premium o cualquier otra duda. ¿Cómo te puedo ayudar hoy? ¡Pregunta con confianza!",
+    "¡Hola! Soy Muna, tu compañera digital autónoma. ¿En qué te puedo ayudar hoy? ¡Puedes preguntarme lo que sea!"
   ];
 
   const greetingsMY = [
-    "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. 🌟 ¿Bix je'el in wáantikech bejla'e'? ¡Je'el a k'áatik teen je'el ba'alake'!",
-    "¡Sajil! Munaen, ki'ichkelem na'at ti' La Yucateca. 🚀 ¿Bix je'el in wáantikech bejla'e'? ¡K'áat teen ba'ax a k'áat!",
-    "¡Sajil! Munaen, ready ti'al in wáantikech. 🎨 ¿Ba'ax tuukul yantech bejla'e'? ¡Je'el a k'áatik teen je'el ba'alake'!",
-    "¡Sajil! Munaen, a nu'ukbesajil. 🔮 ¿Bix je'el in beetik a meyaj ma'alob bejla'e'? ¡K'áat teen ba'ax a k'áat!",
-    "¡Sajil! Munaen ti'al a meyaj! 💫 Ko'ox xak'altik premium web design. ¿Bix je'el in wáantikech bejla'e'? ¡K'áat ba'ax a k'áat!"
+    "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. ¿Bix je'el in wáantikech bejla'e'? ¡Je'el a k'áatik teen je'el ba'alake'!",
+    "¡Sajil! Munaen, ki'ichkelem na'at ti' La Yucateca. ¿Bix je'el in wáantikech bejla'e'? ¡K'áat teen ba'ax a k'áat!",
+    "¡Sajil! Munaen, ready ti'al in wáantikech. ¿Ba'ax tuukul yantech bejla'e'? ¡Je'el a k'áatik teen je'el ba'alake'!",
+    "¡Sajil! Munaen, a nu'ukbesajil. ¿Bix je'el in beetik a meyaj ma'alob bejla'e'? ¡K'áat teen ba'ax a k'áat!",
+    "¡Sajil! Munaen ti'al a meyaj! Ko'ox xak'altik premium web design. ¿Bix je'el in wáantikech bejla'e'? ¡K'áat ba'ax a k'áat!"
   ];
 
   const list = lang === 'en' ? greetingsEN : lang === 'my' ? greetingsMY : greetingsES;
@@ -568,7 +568,7 @@ export default function MunaPage() {
                            ? 'bg-white text-black border-black/[0.06]' 
                            : 'bg-[#ff5500]/6 border-[#ff5500]/15 text-[#ff5500]'
                       }`}>
-                        {m.role === 'user' ? <span>[{t('👤 OPERADOR', '👤 OPERATOR', '👤 OPERADOR')}]</span> : <span>[{t('🧠 MUNA AI', '🧠 MUNA AI', '🧠 MUNA AI')}]</span>}
+                        {m.role === 'user' ? <span>[{t('OPERADOR', 'OPERATOR', 'OPERADOR')}]</span> : <span>[{t('MUNA AI', 'MUNA AI', 'MUNA AI')}]</span>}
                       </div>
  
                       {m.images && m.images.length > 0 && (
