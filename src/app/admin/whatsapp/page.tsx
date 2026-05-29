@@ -95,6 +95,8 @@ const STATUS_LABELS: Record<WaStatus, string> = {
 // ──────────────────────────────────────────────────────────────────────────────
 // Main Page
 // ──────────────────────────────────────────────────────────────────────────────
+const SERVICE_URL = process.env.NEXT_PUBLIC_WHATSAPP_SERVICE_URL || "http://localhost:4000";
+
 export default function WhatsAppAdminPage() {
   const [activeTab, setActiveTab] = useState<
     "connect" | "contacts" | "templates" | "campaigns" | "history"
@@ -122,7 +124,7 @@ export default function WhatsAppAdminPage() {
 
   // ── SSE connection ──────────────────────────────────────────────────────────
   useEffect(() => {
-    const es = new EventSource("/api/whatsapp/events");
+    const es = new EventSource(`${SERVICE_URL}/events`);
     eventSourceRef.current = es;
 
     es.addEventListener("state", (e) => {
@@ -170,11 +172,11 @@ export default function WhatsAppAdminPage() {
 
   // ── Actions ─────────────────────────────────────────────────────────────────
   const handleConnect = async () => {
-    await fetch("/api/whatsapp/connect", { method: "POST" });
+    await fetch(`${SERVICE_URL}/connect`, { method: "POST" });
   };
 
   const handleDisconnect = async () => {
-    await fetch("/api/whatsapp/disconnect", { method: "POST" });
+    await fetch(`${SERVICE_URL}/disconnect`, { method: "POST" });
     notify("Disconnected from WhatsApp");
   };
 

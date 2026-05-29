@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getWaManager } from "@/lib/whatsapp-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -58,70 +57,25 @@ export async function POST(req: NextRequest) {
   });
 
   if (sendNow) {
-    // Fire and forget — send messages in background
-    sendCampaignMessages(campaign.id, recipients, message, mediaType, mediaUrl)
-      .catch(console.error);
+    const serviceUrl = process.env.WHATSAPP_SERVICE_URL || "http://localhost:4000";
+    const webhookUrl = `${req.nextUrl.origin}/api/whatsapp/campaign-webhook`;
+    
+    // Ping microservice to start background sending
+    fetch(`${serviceUrl}/campaign`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        campaignId: campaign.id,
+        recipients,
+        message: {
+          type: mediaType ?? "text",
+          text: message,
+          mediaUrl,
+        },
+        webhookUrl,
+      })
+    }).catch(console.error);
   }
 
   return NextResponse.json(campaign, { status: 201 });
-}
-
-// Background campaign sending
-async function sendCampaignMessages(
-  campaignId: string,
-  recipients: string[],
-  message: string,
-  mediaType?: string,
-  mediaUrl?: string
-) {
-  const manager = getWaManager();
-  let sent = 0;
-  let failed = 0;
-
-  for (const jid of recipients) {
-    try {
-      const msgType = mediaType as any ?? "text";
-      let mediaData: string | undefined;
-
-      if (mediaUrl && mediaType && mediaType !== "text") {
-        // Fetch media and convert to base64
-        const res = await fetch(mediaUrl);
-        const buf = await res.arrayBuffer();
-        mediaData = Buffer.from(buf).toString("base64");
-      }
-
-      await manager.sendMessage(jid, {
-        type: mediaData ? msgType : "text",
-        text: message,
-        mediaData,
-        mimetype: mediaType === "image" ? "image/jpeg"
-          : mediaType === "video" ? "video/mp4"
-          : mediaType === "audio" ? "audio/ogg"
-          : undefined,
-      });
-
-      sent++;
-      await new Promise((r) => setTimeout(r, 1500)); // Rate limit: 1 msg/1.5s
-    } catch (_) {
-      failed++;
-    }
-
-    // Update progress every 10 messages
-    if ((sent + failed) % 10 === 0) {
-      await prisma.waCampaign.update({
-        where: { id: campaignId },
-        data: { sentCount: sent, failedCount: failed },
-      });
-    }
-  }
-
-  await prisma.waCampaign.update({
-    where: { id: campaignId },
-    data: {
-      status: failed === recipients.length ? "FAILED" : "COMPLETED",
-      sentCount: sent,
-      failedCount: failed,
-      completedAt: new Date(),
-    },
-  });
 }

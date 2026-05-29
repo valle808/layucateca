@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getWaManager } from "@/lib/whatsapp-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -33,8 +32,17 @@ export async function GET(req: NextRequest) {
 
 // POST /api/whatsapp/contacts/sync — pull from in-memory manager and upsert to DB
 export async function POST() {
-  const manager = getWaManager();
-  const state = manager.getState();
+  const serviceUrl = process.env.WHATSAPP_SERVICE_URL || "http://localhost:4000";
+  let state;
+  try {
+    const res = await fetch(`${serviceUrl}/status`);
+    state = await res.json();
+  } catch (err) {
+    return NextResponse.json(
+      { error: "Could not connect to WhatsApp microservice" },
+      { status: 500 }
+    );
+  }
 
   if (state.status !== "connected") {
     return NextResponse.json(
