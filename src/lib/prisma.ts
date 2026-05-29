@@ -7,7 +7,14 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
+
+// Ensure SSL is used for Supabase
+const pool = new Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 const adapter = new PrismaPg(pool);
 
 export const prisma =
