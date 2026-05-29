@@ -1,27 +1,37 @@
 generator client {
-  provider        = "prisma-client-js"
-  engineType      = "binary"
+  provider   = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 model Post {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  content     String
-  imageUrl    String?
-  base64Image String?
-  videoUrl    String?
-  audioUrl    String?
-  state       String   @default("Yucatán") // Yucatán, Campeche, Quintana Roo, CDMX, Jalisco, Nuevo León
-  category    String   @default("Local")   // Local, Política, Economía, Deportes, Cultura
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  comments    Comment[]
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  content         String
+  imageUrl        String?
+  base64Image     String?
+  videoUrl        String?
+  audioUrl        String?
+  state           String    @default("Yucatán")
+  category        String    @default("Local")
+  published       Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  aiGenerated     Boolean   @default(false)
+  language        String    @default("es")
+  metaDescription String?
+  sourceUrls      String    @default("[]")
+  tags            String    @default("[]")
+  facebookPostId  String?
+  readTimeMinutes Int       @default(3)
+  qualityScore    Int       @default(0)
+  adSlot          String?
+  views           Int       @default(0)
+  comments        Comment[]
 }
 
 model PortfolioItem {
@@ -40,59 +50,59 @@ model PortfolioItem {
 model User {
   id               String            @id @default(cuid())
   email            String            @unique
-  password         String?           // For secure email auth
+  password         String?
   name             String?
-  avatarUrl        String?           // profile avatar
-  role             String            @default("USER") // USER, MODERATOR, ADMIN
+  avatarUrl        String?
+  role             String            @default("USER")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  comments         Comment[]
-  reports          Report[]
   chatMessages     ChatMessage[]
-  reputation       Reputation?
+  comments         Comment[]
   marketplaceItems MarketplaceItem[]
+  reports          Report[]
+  reputation       Reputation?
 }
 
 model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  authorId  String?
-  authorName String   @default("Anonymous") // Support both guest & registered comments
-  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  postId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  content    String
+  authorId   String?
+  authorName String   @default("Anonymous")
+  postId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Report {
   id          String   @id @default(cuid())
   title       String
   description String
-  mediaUrls   String   @default("[]") // JSON stringified array of images/videos
+  mediaUrls   String   @default("[]")
   lat         Float?
   lng         Float?
   state       String   @default("Yucatán")
   city        String   @default("Mérida")
   town        String   @default("")
   isAnonymous Boolean  @default(true)
-  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
-  aiTags      String   @default("[]") // JSON array of tags from LLM
-  moderation  String   @default("UNCHECKED") // UNCHECKED, CLEAN, FLAGGED
-  fbPostId    String?  // If posted to Facebook
+  status      String   @default("PENDING")
+  aiTags      String   @default("[]")
+  moderation  String   @default("UNCHECKED")
+  fbPostId    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   authorId    String?
-  author      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author      User?    @relation(fields: [authorId], references: [id])
 }
 
 model ChatRoom {
   id          String        @id @default(cuid())
   name        String
   slug        String        @unique
-  type        String        @default("PUBLIC") // PUBLIC, REGIONAL, CUSTOM
-  state       String?       // For regional rooms
-  city        String?       // For regional rooms
+  type        String        @default("PUBLIC")
+  state       String?
+  city        String?
   isTemporary Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -105,18 +115,18 @@ model ChatMessage {
   authorId   String?
   authorName String   @default("Guest")
   roomId     String
-  room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
-  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author     User?    @relation(fields: [authorId], references: [id])
+  room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model Reputation {
   id        String   @id @default(cuid())
   userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   score     Int      @default(100)
-  badges    String   @default("[]") // JSON stringified array of strings
+  badges    String   @default("[]")
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model MarketplaceItem {
@@ -126,33 +136,58 @@ model MarketplaceItem {
   price       Float?
   location    String   @default("Mérida, Yucatán")
   imageUrl    String?
-  category    String   @default("General") // Event, Promo, ForSale
+  category    String   @default("General")
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   authorId    String?
-  author      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author      User?    @relation(fields: [authorId], references: [id])
 }
 
 model EmergencyAlert {
-  id          String   @id @default(cuid())
-  title       String
-  message     String
-  level       String   @default("INFO") // INFO, WARNING, DANGER
-  location    String   @default("Yucatán") // Regional target
-  active      Boolean  @default(true)
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
+  id        String    @id @default(cuid())
+  title     String
+  message   String
+  level     String    @default("INFO")
+  location  String    @default("Yucatán")
+  active    Boolean   @default(true)
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
 }
 
 model Inquiry {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  phone       String?
-  service     String   // web-design, custom-software, cybersecurity, cloud-architecture, innovations
-  message     String
-  budget      String?
-  status      String   @default("NEW") // NEW, IN_PROGRESS, CONVERTED, CLOSED
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  service   String
+  message   String
+  budget    String?
+  status    String   @default("NEW")
+  createdAt DateTime @default(now())
 }
+
+model NewsGenerationLog {
+  id             String   @id
+  category       String
+  postId         String?
+  success        Boolean
+  qualityScore   Int      @default(0)
+  facebookPosted Boolean  @default(false)
+  errorMessage   String?
+  durationMs     Int      @default(0)
+  createdAt      DateTime @default(now())
+}
+
+model Telemetry {
+  id        String   @id
+  type      String
+  event     String
+  details   String
+  userId    String?
+  agentId   String?
+  path      String?
+  status    String
+  createdAt DateTime @default(now())
+}
+
