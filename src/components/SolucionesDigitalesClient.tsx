@@ -644,16 +644,14 @@ export default function SolucionesDigitalesClient({ portfolioItems }: Soluciones
                         </div>
                         <div style={{ display: "flex", gap: "10px" }}>
                           {item.liveUrl && (
-                            <a
-                              href={item.liveUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <Link
+                              href={`/portfolio/live-preview/${item.slug}`}
                               className="btn-secondary"
                               style={{ flex: 1, justifyContent: "center", fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px" }}
                             >
                               <span>Demo</span>
                               <ArrowUpRight className="w-3 h-3" />
-                            </a>
+                            </Link>
                           )}
                           <Link
                             href={`/portfolio/${item.slug}`}

@@ -8,6 +8,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: "⊞" },
   { href: "/admin/posts", label: "Posts", icon: "📰" },
   { href: "/admin/portfolio", label: "Portfolio", icon: "🎨" },
+  { href: "/admin/whatsapp", label: "WhatsApp Studio", icon: "💬" },
   { href: "/admin/settings", label: "Settings", icon: "⚙️" },
 ];
 

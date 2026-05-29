@@ -129,15 +129,13 @@ export default function PortfolioClient({ items }: PortfolioClientProps) {
                       </p>
                       <div style={{ display: "flex", gap: "10px" }}>
                         {item.liveUrl && (
-                          <a
-                            href={item.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href={`/portfolio/live-preview/${item.slug}`}
                             className="btn-ghost"
                             style={{ flex: 1, justifyContent: "center", fontSize: "0.85rem", whiteSpace: "nowrap" }}
                           >
                             {t("Demo En Vivo ↗", "Live Preview ↗")}
-                          </a>
+                          </Link>
                         )}
                         <Link
                           href={`/portfolio/${item.slug}`}

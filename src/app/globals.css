@@ -80,6 +80,16 @@ h1, h2, h3, h4, h5, h6 {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-8px); }
 }
+@keyframes waLaserSweep {
+  0%, 100% { transform: translateY(0); opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  50% { transform: translateY(144px); }
+}
+@keyframes waSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
 .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
 .animate-float { animation: float 4s ease-in-out infinite; }

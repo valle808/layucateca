@@ -6,6 +6,8 @@ export const metadata = {
   description: "Desarrollo de software a medida, diseño web profesional y nuestro portafolio de proyectos de vanguardia. || Custom software development, professional web design, and our portfolio of cutting-edge projects.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function SolucionesDigitalesPage() {
   const portfolioItems = await prisma.portfolioItem.findMany({
     where: { published: true },

@@ -7,6 +7,8 @@ export const metadata = {
     "Tu fuente principal de noticias y servicios profesionales de diseño web a medida. || Your premier source for news and professional bespoke web design services.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const recentPosts = await prisma.post.findMany({
     where: { published: true },

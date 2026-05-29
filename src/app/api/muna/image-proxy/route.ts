@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+// Remove edge runtime because sqlite requires node
 export const maxDuration = 30;
 
 export async function GET(req: NextRequest) {

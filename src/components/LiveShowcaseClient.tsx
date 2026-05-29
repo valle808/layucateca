@@ -27,6 +27,85 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
   const [cartCount, setCartCount] = useState(0);
   const [cartOpen, setCartOpen] = useState(false);
 
+  // WhatsApp Automation Studio States & Logic
+  const [waInstanceStatus, setWaInstanceStatus] = useState<"connected" | "disconnected" | "connecting">("disconnected");
+  const [waComposeText, setWaComposeText] = useState("Hola {name}, ¡este es un mensaje automático de La Yucateca! 🚀");
+  const [waLogs, setWaLogs] = useState<string[]>([
+    "[System] Core engine loaded.",
+    "[Instance] Port 4880 bound successfully.",
+    "[Instance] Awaiting connection..."
+  ]);
+  const [waSending, setWaSending] = useState(false);
+  const [waSentCount, setWaSentCount] = useState(0);
+  const [waProgress, setWaProgress] = useState(0);
+  const [waPhoneMessages, setWaPhoneMessages] = useState<{ sender: "user" | "bot"; name: string; text: string; time: string }[]>([]);
+  const [activeWaContact, setActiveWaContact] = useState<string>("Juan Canto");
+  const [waUserPhone, setWaUserPhone] = useState("+52 (999) 456-7890");
+  const [waUserName, setWaUserName] = useState("Mi Cuenta");
+  const [showQrOptions, setShowQrOptions] = useState(false);
+
+  const simulateQrScan = () => {
+    if (waInstanceStatus !== "disconnected") return;
+    setWaInstanceStatus("connecting");
+    setWaLogs(prev => [...prev, "[Instance] Initializing QR handshake...", "[System] Fetching secure session credentials..."]);
+    
+    setTimeout(() => {
+      setWaInstanceStatus("connected");
+      setWaLogs(prev => [...prev, "[Instance] Secure session established!", `[Instance] Connected with ${waUserPhone} (${waUserName})`, "[System] Ready for campaign dispatch."]);
+    }, 2000);
+  };
+
+  const disconnectWa = () => {
+    setWaInstanceStatus("disconnected");
+    setWaSentCount(0);
+    setWaProgress(0);
+    setWaPhoneMessages([]);
+    setWaLogs(prev => [...prev, "[Instance] Session terminated.", "[Instance] Disconnected."]);
+  };
+
+  const startWaCampaign = () => {
+    if (waSending) return;
+    setWaSending(true);
+    setWaSentCount(0);
+    setWaProgress(0);
+    setWaPhoneMessages([]);
+    
+    const contacts = [
+      { name: "Juan Canto", phone: "+52 999 123 4567" },
+      { name: "María Pech", phone: "+52 999 765 4321" },
+      { name: "Andrés Tun", phone: "+52 999 555 4433" }
+    ];
+    
+    setWaLogs(prev => [...prev, `[Campaign] Starting for ${contacts.length} recipients...`]);
+    
+    let index = 0;
+    
+    const sendNext = () => {
+      if (index >= contacts.length) {
+        setWaSending(false);
+        setWaLogs(prev => [...prev, `[Campaign] Finished successfully. Sent: ${contacts.length}, Failed: 0`]);
+        return;
+      }
+      
+      const current = contacts[index];
+      const personalized = waComposeText.replace("{name}", current.name);
+      
+      setActiveWaContact(current.name);
+      setWaSentCount(index + 1);
+      setWaProgress(((index + 1) / contacts.length) * 100);
+      
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setWaPhoneMessages(prev => [...prev, { sender: "bot", name: current.name, text: personalized, time }]);
+      
+      setWaLogs(prev => [...prev, `[SUCCESS] Sent to ${current.name} (${current.phone})`]);
+      
+      index++;
+      setTimeout(sendNext, 2500);
+    };
+
+    sendNext();
+  };
+
   // Define width configurations for simulated devices
   const getDeviceWidth = () => {
     switch (device) {
@@ -144,7 +223,6 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
         </div>
       );
     }
-
     // 3. VERTEX DEVELOPER PORTFOLIO MOCK VIEW
     if (item.slug === "vertex-developer-portfolio-tech-blog") {
       return (
@@ -165,6 +243,343 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
       );
     }
 
+    // 4. WHATSAPP AUTOMATION STUDIO MOCK VIEW
+    if (item.slug === "whatsapp-automation-studio") {
+      return (
+        <div style={{ background: "#0b0e14", color: "#e9edef", minHeight: "100%", padding: "24px", fontFamily: "Segoe UI, -apple-system, sans-serif" }}>
+          {/* Main Desktop Dashboard Simulation */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+            
+            {/* Left Controller Panel */}
+            <div style={{ background: "#111b21", border: "1px solid #222e35", borderRadius: "16px", padding: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
+              
+              {/* Header Info */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #222e35", paddingBottom: "15px" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#00a884" }}>WhatsApp Automation</h3>
+                  <span style={{ fontSize: "0.75rem", color: "#8696a0" }}>GUI Controller v1.2.0</span>
+                </div>
+                {waInstanceStatus === "connected" ? (
+                  <button 
+                    onClick={disconnectWa}
+                    style={{ background: "rgba(244,63,94,0.1)", color: "#f43f5e", border: "1px solid rgba(244,63,94,0.2)", borderRadius: "12px", padding: "4px 10px", fontSize: "0.7rem", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
+                  >
+                    <span>🛑</span> DISCONNECT
+                  </button>
+                ) : waInstanceStatus === "connecting" ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(212,168,83,0.1)", padding: "4px 10px", borderRadius: "12px" }}>
+                    <span style={{ fontSize: "0.75rem", color: "#d4a853", fontWeight: "bold" }}>CONNECTING...</span>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(244,63,94,0.1)", padding: "4px 10px", borderRadius: "12px" }}>
+                    <span style={{ width: "8px", height: "8px", background: "#f43f5e", borderRadius: "50%", display: "inline-block", boxShadow: "0 0 8px #f43f5e" }}></span>
+                    <span style={{ fontSize: "0.75rem", color: "#f43f5e", fontWeight: "bold" }}>DISCONNECTED</span>
+                  </div>
+                )}
+              </div>
+
+              {/* DISCONNECTED QR CODE VIEW */}
+              {waInstanceStatus === "disconnected" && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "10px 0", textAlign: "center" }}>
+                  {!showQrOptions ? (
+                    <>
+                      <p style={{ fontSize: "0.85rem", color: "#8696a0", margin: 0, lineHeight: 1.5 }}>
+                        Open WhatsApp on your phone &gt; Menu/Settings &gt; Linked Devices, and point your camera to this screen.
+                      </p>
+                      
+                      {/* QR Code Container */}
+                      <div 
+                        onClick={() => setShowQrOptions(true)}
+                        style={{ 
+                          width: "160px", 
+                          height: "160px", 
+                          background: "#fff", 
+                          padding: "8px", 
+                          borderRadius: "12px", 
+                          boxShadow: "0 8px 24px rgba(0,0,0,0.3)", 
+                          cursor: "pointer", 
+                          position: "relative",
+                          overflow: "hidden",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                        title="Click QR Code to Simulate Phone Scan"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://layucateca.com/muna&color=111b21" 
+                          alt="WhatsApp Web QR Code" 
+                          style={{ width: "100%", height: "100%", display: "block" }}
+                        />
+                        {/* Laser Sweeper Line */}
+                        <div style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: "3px",
+                          background: "#00a884",
+                          boxShadow: "0 0 10px #00a884",
+                          animation: "waLaserSweep 2s infinite ease-in-out"
+                        }}></div>
+                      </div>
+
+                      <button 
+                        onClick={() => setShowQrOptions(true)}
+                        style={{ 
+                          background: "linear-gradient(135deg, #00a884, #00ca9b)", 
+                          color: "#111b21", 
+                          border: "none", 
+                          borderRadius: "8px", 
+                          padding: "12px 20px", 
+                          fontWeight: "bold", 
+                          fontSize: "0.82rem", 
+                          cursor: "pointer",
+                          boxShadow: "0 4px 15px rgba(0,168,132,0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px"
+                        }}
+                      >
+                        <span>📸</span> Link with QR Code
+                      </button>
+                    </>
+                  ) : (
+                    <div style={{ width: "100%", background: "#202c33", border: "1px solid #2a3942", borderRadius: "12px", padding: "16px", textAlign: "left", display: "flex", flexDirection: "column", gap: "12px" }}>
+                      <h4 style={{ margin: 0, fontSize: "0.9rem", color: "#00a884", fontWeight: "bold" }}>Simular Escaneo QR</h4>
+                      <p style={{ margin: 0, fontSize: "0.75rem", color: "#8696a0", lineHeight: 1.4 }}>Ingresa tu información para personalizar la demostración interactiva:</p>
+                      
+                      <div>
+                        <label style={{ display: "block", fontSize: "0.7rem", color: "#8696a0", marginBottom: "4px", textTransform: "uppercase" }}>Número de WhatsApp</label>
+                        <input 
+                          type="text" 
+                          value={waUserPhone}
+                          onChange={(e) => setWaUserPhone(e.target.value)}
+                          placeholder="+52 999 123 4567"
+                          style={{ width: "100%", background: "#111b21", border: "1px solid #2a3942", borderRadius: "6px", padding: "8px", color: "#fff", fontSize: "0.8rem", outline: "none" }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: "block", fontSize: "0.7rem", color: "#8696a0", marginBottom: "4px", textTransform: "uppercase" }}>Nombre de Remitente</label>
+                        <input 
+                          type="text" 
+                          value={waUserName}
+                          onChange={(e) => setWaUserName(e.target.value)}
+                          placeholder="Mi Cuenta"
+                          style={{ width: "100%", background: "#111b21", border: "1px solid #2a3942", borderRadius: "6px", padding: "8px", color: "#fff", fontSize: "0.8rem", outline: "none" }}
+                        />
+                      </div>
+
+                      <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
+                        <button 
+                          onClick={() => {
+                            setShowQrOptions(false);
+                            simulateQrScan();
+                          }}
+                          style={{ flex: 1, background: "linear-gradient(135deg, #00a884, #00ca9b)", color: "#111b21", border: "none", borderRadius: "6px", padding: "8px 12px", fontWeight: "bold", fontSize: "0.75rem", cursor: "pointer" }}
+                        >
+                          Conectar
+                        </button>
+                        <button 
+                          onClick={() => setShowQrOptions(false)}
+                          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid #2a3942", color: "#fff", borderRadius: "6px", padding: "8px 12px", fontSize: "0.75rem", cursor: "pointer" }}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* CONNECTING HANDSHAKE VIEW */}
+              {waInstanceStatus === "connecting" && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", padding: "60px 10px", textAlign: "center" }}>
+                  <div style={{
+                    width: "40px",
+                    height: "40px",
+                    border: "4px solid rgba(0,168,132,0.1)",
+                    borderTop: "4px solid #00a884",
+                    borderRadius: "50%",
+                    animation: "waSpin 1s infinite linear"
+                  }}></div>
+                  <div>
+                    <h4 style={{ margin: "0 0 6px", color: "#00a884", fontSize: "0.95rem", fontWeight: "bold" }}>Authenticating Session</h4>
+                    <p style={{ margin: 0, fontSize: "0.78rem", color: "#8696a0", lineHeight: 1.4 }}>Establishing end-to-end encrypted handshake with {waUserPhone}...</p>
+                  </div>
+                </div>
+              )}
+
+              {/* CONNECTED DASHBOARD CONTROLLER */}
+              {waInstanceStatus === "connected" && (
+                <>
+                  {/* Message Input Box */}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px", color: "#8696a0", marginBottom: "8px" }}>
+                      Message Template
+                    </label>
+                    <textarea 
+                      value={waComposeText} 
+                      onChange={(e) => setWaComposeText(e.target.value)}
+                      disabled={waSending}
+                      style={{ width: "100%", background: "#202c33", border: "1px solid #2a3942", borderRadius: "8px", padding: "12px", color: "#e9edef", fontSize: "0.85rem", outline: "none", resize: "none", minHeight: "100px", fontFamily: "inherit" }}
+                      placeholder="Use {name} for variable injection..."
+                    />
+                    <span style={{ fontSize: "0.7rem", color: "#8696a0", marginTop: "4px", display: "block" }}>
+                      Tip: Use <strong style={{ color: "#00a884" }}>{"{name}"}</strong> to automatically personalize each message!
+                    </span>
+                  </div>
+
+                  {/* Target Contacts */}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px", color: "#8696a0", marginBottom: "8px" }}>
+                      Recipient List (3 contacts loaded)
+                    </label>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                      {[
+                        { name: "Juan Canto", phone: "+52 999 123 4567" },
+                        { name: "María Pech", phone: "+52 999 765 4321" },
+                        { name: "Andrés Tun", phone: "+52 999 555 4433" }
+                      ].map((c) => (
+                        <div 
+                          key={c.name}
+                          style={{ 
+                            display: "flex", 
+                            justifyContent: "space-between", 
+                            alignItems: "center", 
+                            background: activeWaContact === c.name ? "rgba(0,168,132,0.15)" : "#202c33", 
+                            border: activeWaContact === c.name ? "1px solid #00a884" : "1px solid #2a3942", 
+                            borderRadius: "8px", 
+                            padding: "8px 12px", 
+                            fontSize: "0.8rem",
+                            transition: "all 0.3s"
+                          }}
+                        >
+                          <span style={{ fontWeight: 600 }}>{c.name}</span>
+                          <span style={{ color: "#8696a0" }}>{c.phone}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                    <button 
+                      onClick={startWaCampaign}
+                      disabled={waSending}
+                      style={{ 
+                        flex: 1, 
+                        background: waSending ? "rgba(0,168,132,0.3)" : "linear-gradient(135deg, #00a884, #00ca9b)", 
+                        color: "#111b21", 
+                        border: "none", 
+                        borderRadius: "8px", 
+                        padding: "14px 20px", 
+                        fontWeight: "bold", 
+                        fontSize: "0.85rem", 
+                        cursor: waSending ? "not-allowed" : "pointer", 
+                        boxShadow: waSending ? "none" : "0 4px 15px rgba(0,168,132,0.3)", 
+                        transition: "transform 0.2s" 
+                      }}
+                    >
+                      {waSending ? "🚀 Executing Campaign..." : "🚀 Start Bulk Campaign"}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Console Logs */}
+              <div>
+                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px", color: "#8696a0", marginBottom: "8px" }}>
+                  Execution Terminal
+                </label>
+                <div style={{ background: "#0c1317", border: "1px solid #202c33", borderRadius: "8px", padding: "10px", height: "100px", overflowY: "auto", fontFamily: "monospace", fontSize: "0.72rem", color: "#00e676", display: "flex", flexDirection: "column", gap: "4px" }}>
+                  {waLogs.slice(-6).map((log, index) => (
+                    <div key={index} style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {log}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Smartphone Simulator Panel */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
+              
+              {/* Campaign Stats Card */}
+              <div style={{ width: "100%", background: "#111b21", border: "1px solid #222e35", borderRadius: "16px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <span style={{ fontSize: "0.7rem", color: "#8696a0", display: "block", textTransform: "uppercase" }}>Campaign Progress</span>
+                  <strong style={{ fontSize: "1.5rem", color: "#00a884" }}>{waSentCount} / 3 Sent</strong>
+                </div>
+                <div style={{ width: "50%", background: "#202c33", height: "10px", borderRadius: "5px", overflow: "hidden", position: "relative" }}>
+                  <div style={{ width: `${waProgress}%`, background: "#00a884", height: "100%", borderRadius: "5px", transition: "width 0.5s ease" }}></div>
+                </div>
+              </div>
+
+              {/* Smartphone mockup */}
+              <div style={{ width: "280px", height: "450px", background: "#0b141a", border: "8px solid #222e35", borderRadius: "36px", overflow: "hidden", boxShadow: "0 15px 35px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column", position: "relative" }}>
+                
+                {/* Phone Header */}
+                <div style={{ background: "#202c33", padding: "12px", borderBottom: "1px solid #2a3942", display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: "30px", height: "30px", background: "#00a884", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "0.8rem", color: "#111b21" }}>
+                    {activeWaContact.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <span style={{ fontWeight: "bold", fontSize: "0.8rem", display: "block" }}>{activeWaContact}</span>
+                    <span style={{ fontSize: "0.65rem", color: "#00e676" }}>online</span>
+                  </div>
+                </div>
+
+                {/* Chat Stream (Simulated Messages) */}
+                <div style={{ flex: 1, padding: "12px", backgroundImage: "radial-gradient(#1e2c34 1px, transparent 0)", backgroundSize: "16px 16px", backgroundPosition: "0 0", display: "flex", flexDirection: "column", gap: "8px", overflowY: "auto" }}>
+                  {waPhoneMessages.length === 0 ? (
+                    <div style={{ margin: "auto", textAlign: "center", color: "#8696a0", fontSize: "0.75rem", padding: "0 20px" }}>
+                      Waiting to start bulk campaign...
+                    </div>
+                  ) : (
+                    waPhoneMessages.map((m, i) => (
+                      <div 
+                        key={i} 
+                        style={{ 
+                          alignSelf: "flex-end", 
+                          background: "#005c4b", 
+                          color: "#e9edef", 
+                          borderRadius: "8px 8px 0 8px", 
+                          padding: "8px 12px", 
+                          fontSize: "0.78rem", 
+                          maxWidth: "85%", 
+                          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
+                          position: "relative"
+                        }}
+                      >
+                        <div>{m.text}</div>
+                        <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.6)", textAlign: "right", marginTop: "4px" }}>
+                          {m.time} ✔✔
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Message Input Bottom Mock */}
+                <div style={{ background: "#202c33", padding: "8px 12px", display: "flex", gap: "8px", alignItems: "center" }}>
+                  <div style={{ flex: 1, background: "#2a3942", borderRadius: "16px", padding: "6px 12px", fontSize: "0.7rem", color: "#8696a0" }}>
+                    Escribe un mensaje...
+                  </div>
+                  <span style={{ fontSize: "1.2rem" }}>🎙️</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
     // FALLBACK STANDARD INTERACTIVE MOCK SHOWCASE
     return (
       <div style={{ background: "var(--bg-secondary)", minHeight: "100%", padding: "60px 40px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
@@ -174,8 +589,8 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
           {translateDb(item.description)}
         </p>
         <div style={{ display: "flex", gap: "10px" }}>
-          <button style={{ background: "linear-gradient(135deg, #d4a853, #b8892a)", color: "#0a0a0f", border: "none", padding: "12px 24px", borderRadius: "8px", fontWeight: "bold" }}>
-            {t("Demostración Activa", "Interactive Demo")}
+          <button style={{ background: "linear-gradient(135deg, #d4a853, #b8892a)", color: "#0a0a0f", border: "none", padding: "12px 24px", borderRadius: "8px", fontWeight: "bold", cursor: "default" }}>
+            ✓ {t("Demostración Activa", "Interactive Demo")}
           </button>
           <Link href="/contact" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border-subtle)", padding: "12px 24px", borderRadius: "8px", textDecoration: "none", color: "#fff", fontWeight: "bold" }}>
             {t("Adquirir Ahora", "Acquire Theme")}

@@ -1,10 +1,9 @@
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "binary"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model Post {
@@ -189,5 +188,69 @@ model Telemetry {
   path      String?
   status    String
   createdAt DateTime @default(now())
+}
+
+// ─── WhatsApp Campaign Manager ─────────────────────────────────────
+
+model WaContact {
+  id        String   @id @default(cuid())
+  jid       String   @unique
+  name      String?
+  phone     String?
+  notify    String?
+  isGroup   Boolean  @default(false)
+  photoUrl  String?
+  tags      String   @default("[]")
+  notes     String?
+  blocked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WaTemplate {
+  id          String       @id @default(cuid())
+  name        String
+  category    String       @default("message")
+  subject     String?
+  content     String
+  footer      String?
+  mediaUrl    String?
+  mediaType   String?
+  donationUrl String?
+  variables   String       @default("[]")
+  buttons     String       @default("[]")
+  isDefault   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  campaigns   WaCampaign[]
+}
+
+model WaCampaign {
+  id          String      @id @default(cuid())
+  name        String
+  templateId  String?
+  message     String
+  mediaUrl    String?
+  mediaType   String?
+  recipients  String      @default("[]")
+  recipientType String    @default("contacts")
+  status      String      @default("DRAFT")
+  sentCount   Int         @default(0)
+  failedCount Int         @default(0)
+  totalCount  Int         @default(0)
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime    @default(now())
+  template    WaTemplate? @relation(fields: [templateId], references: [id])
+}
+
+model WaSession {
+  id        String   @id @default(cuid())
+  phone     String?
+  name      String?
+  status    String   @default("disconnected")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 

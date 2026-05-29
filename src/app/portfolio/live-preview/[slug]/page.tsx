@@ -7,17 +7,7 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  const items = await prisma.portfolioItem.findMany({
-    where: { published: true },
-    select: { slug: true },
-  });
-  return items.map((item) => ({
-    slug: item.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
