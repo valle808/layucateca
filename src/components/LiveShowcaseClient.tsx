@@ -43,6 +43,7 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
   const [waUserPhone, setWaUserPhone] = useState("+52 (999) 456-7890");
   const [waUserName, setWaUserName] = useState("Mi Cuenta");
   const [showQrOptions, setShowQrOptions] = useState(false);
+  const [waActiveTab, setWaActiveTab] = useState("connect");
 
   const simulateQrScan = () => {
     if (waInstanceStatus !== "disconnected") return;
@@ -246,336 +247,231 @@ export default function LiveShowcaseClient({ item }: LiveShowcaseClientProps) {
     // 4. WHATSAPP AUTOMATION STUDIO MOCK VIEW
     if (item.slug === "whatsapp-automation-studio") {
       return (
-        <div style={{ background: "#0b0e14", color: "#e9edef", minHeight: "100%", padding: "24px", fontFamily: "Segoe UI, -apple-system, sans-serif" }}>
-          {/* Main Desktop Dashboard Simulation */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
-            
-            {/* Left Controller Panel */}
-            <div style={{ background: "#111b21", border: "1px solid #222e35", borderRadius: "16px", padding: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
-              
-              {/* Header Info */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #222e35", paddingBottom: "15px" }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#00a884" }}>WhatsApp Automation</h3>
-                  <span style={{ fontSize: "0.75rem", color: "#8696a0" }}>GUI Controller v1.2.0</span>
+        <div style={{ display: "flex", height: "100%", background: "#15191e", color: "#f8fafc", fontFamily: "Inter, -apple-system, sans-serif", overflow: "hidden", textAlign: "left" }}>
+          {/* Sidebar */}
+          <div style={{ width: "220px", background: "#1c2128", borderRight: "1px solid #2d333b", display: "flex", flexDirection: "column", padding: "24px 16px" }}>
+            <div style={{ fontSize: "1.1rem", fontWeight: "bold", color: "#94a3b8", marginBottom: "24px", paddingLeft: "12px" }}>Admin</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {[
+                { icon: "🏠", label: "Dashboard", active: false },
+                { icon: "💬", label: "WhatsApp Studio", active: true },
+                { icon: "👥", label: "Users", active: false },
+                { icon: "⚙️", label: "Settings", active: false },
+                { icon: "🏢", label: "Industries", active: false },
+                { icon: "📊", label: "Reports", active: false },
+                { icon: "🔗", label: "Link", active: false },
+              ].map(menu => (
+                <div key={menu.label} style={{
+                  padding: "10px 12px", borderRadius: "8px", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "10px",
+                  background: menu.active ? "rgba(37,211,102,0.15)" : "transparent",
+                  color: menu.active ? "#25d366" : "#cbd5e1",
+                  fontWeight: menu.active ? 600 : 400,
+                  cursor: "pointer"
+                }}>
+                  <span style={{ fontSize: "1rem", opacity: menu.active ? 1 : 0.7 }}>{menu.icon}</span>
+                  {menu.label}
                 </div>
-                {waInstanceStatus === "connected" ? (
-                  <button 
-                    onClick={disconnectWa}
-                    style={{ background: "rgba(244,63,94,0.1)", color: "#f43f5e", border: "1px solid rgba(244,63,94,0.2)", borderRadius: "12px", padding: "4px 10px", fontSize: "0.7rem", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
-                  >
-                    <span>🛑</span> DISCONNECT
-                  </button>
-                ) : waInstanceStatus === "connecting" ? (
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(212,168,83,0.1)", padding: "4px 10px", borderRadius: "12px" }}>
-                    <span style={{ fontSize: "0.75rem", color: "#d4a853", fontWeight: "bold" }}>CONNECTING...</span>
-                  </div>
-                ) : (
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(244,63,94,0.1)", padding: "4px 10px", borderRadius: "12px" }}>
-                    <span style={{ width: "8px", height: "8px", background: "#f43f5e", borderRadius: "50%", display: "inline-block", boxShadow: "0 0 8px #f43f5e" }}></span>
-                    <span style={{ fontSize: "0.75rem", color: "#f43f5e", fontWeight: "bold" }}>DISCONNECTED</span>
-                  </div>
-                )}
-              </div>
+              ))}
+            </div>
+          </div>
 
-              {/* DISCONNECTED QR CODE VIEW */}
-              {waInstanceStatus === "disconnected" && (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "10px 0", textAlign: "center" }}>
-                  {!showQrOptions ? (
-                    <>
-                      <p style={{ fontSize: "0.85rem", color: "#8696a0", margin: 0, lineHeight: 1.5 }}>
-                        Open WhatsApp on your phone &gt; Menu/Settings &gt; Linked Devices, and point your camera to this screen.
+          {/* Main Content */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#15191e", overflowY: "auto", position: "relative" }}>
+            
+            {/* Header */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 20px 30px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
+                <div style={{ width: "48px", height: "48px", background: "#25d366", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", color: "white", boxShadow: "0 0 20px rgba(37,211,102,0.4)" }}>
+                  <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                </div>
+                <h1 style={{ margin: 0, fontSize: "2.4rem", fontWeight: 800, letterSpacing: "-0.5px" }}>WhatsApp Campaign Studio</h1>
+              </div>
+              <div 
+                onClick={waInstanceStatus === "connected" ? disconnectWa : simulateQrScan}
+                style={{ 
+                  display: "inline-flex", alignItems: "center", gap: "8px", 
+                  background: waInstanceStatus === "connected" ? "rgba(37,211,102,0.15)" : "rgba(37,211,102,0.05)", 
+                  border: `1px solid ${waInstanceStatus === "connected" ? "#25d366" : "#25d36655"}`, 
+                  padding: "8px 20px", borderRadius: "24px", cursor: "pointer",
+                  transition: "all 0.3s",
+                }}>
+                <span style={{ 
+                  width: "10px", height: "10px", borderRadius: "50%", 
+                  background: waInstanceStatus === "connecting" ? "#f59e0b" : waInstanceStatus === "connected" ? "#25d366" : "#25d366",
+                  boxShadow: waInstanceStatus === "connected" ? "0 0 10px #25d366" : "none",
+                  animation: waInstanceStatus === "connecting" ? "pulse 1s infinite" : "none"
+                }} />
+                <span style={{ color: "#25d366", fontWeight: 600, fontSize: "0.95rem" }}>
+                  {waInstanceStatus === "connected" ? "Connected" : waInstanceStatus === "connecting" ? "Connecting..." : "Disconnected"}
+                </span>
+              </div>
+            </div>
+
+            {/* Tab Bar */}
+            <div style={{ display: "flex", borderBottom: "1px solid #2d333b", background: "#1c2128", padding: "0 20px", margin: "0 40px", borderRadius: "12px 12px 0 0" }}>
+              {[
+                { id: "connect", label: "📱 Connection" },
+                { id: "contacts", label: "👥 Phonebook" },
+                { id: "templates", label: "📄 Templates" },
+                { id: "campaigns", label: "🚀 Campaigns" },
+                { id: "history", label: "📊 History" }
+              ].map(tab => (
+                <div key={tab.id} onClick={() => setWaActiveTab(tab.id)} style={{
+                  padding: "16px 24px", fontSize: "0.95rem", fontWeight: 600, cursor: "pointer",
+                  color: waActiveTab === tab.id ? "#25d366" : "#94a3b8",
+                  borderBottom: waActiveTab === tab.id ? "2px solid #25d366" : "2px solid transparent",
+                  transition: "all 0.2s"
+                }}>
+                  {tab.label}
+                </div>
+              ))}
+            </div>
+
+            {/* Tab Content Box */}
+            <div style={{ flex: 1, background: "#1c2128", margin: "0 40px 40px", borderRadius: "0 0 12px 12px", padding: "40px", overflowY: "auto" }}>
+              
+              {waActiveTab === "connect" && (
+                <>
+                  <h2 style={{ margin: "0 0 32px", fontSize: "1.6rem", fontWeight: 700, color: "#f8fafc" }}>Connection</h2>
+                  
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "32px" }}>
+                    
+                    {/* Left Card: QR Code */}
+                    <div style={{ background: "#22272e", border: "1px solid #2d333b", borderRadius: "16px", padding: "32px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                      <h3 style={{ margin: "0 0 16px", fontSize: "1.3rem", fontWeight: 600 }}>Link Your Device</h3>
+                      <p style={{ color: "#94a3b8", textAlign: "center", fontSize: "0.95rem", lineHeight: 1.5, margin: "0 0 32px" }}>
+                        Open <strong>WhatsApp</strong> → <strong>Menu</strong> or <strong>Settings</strong> →<br/><strong>Linked Devices</strong> → <strong>Link a Device</strong>
                       </p>
                       
-                      {/* QR Code Container */}
-                      <div 
-                        onClick={() => setShowQrOptions(true)}
-                        style={{ 
-                          width: "160px", 
-                          height: "160px", 
-                          background: "#fff", 
-                          padding: "8px", 
-                          borderRadius: "12px", 
-                          boxShadow: "0 8px 24px rgba(0,0,0,0.3)", 
-                          cursor: "pointer", 
-                          position: "relative",
-                          overflow: "hidden",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center"
-                        }}
-                        title="Click QR Code to Simulate Phone Scan"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                          src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://layucateca.com/muna&color=111b21" 
-                          alt="WhatsApp Web QR Code" 
-                          style={{ width: "100%", height: "100%", display: "block" }}
-                        />
-                        {/* Laser Sweeper Line */}
-                        <div style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: "3px",
-                          background: "#00a884",
-                          boxShadow: "0 0 10px #00a884",
-                          animation: "waLaserSweep 2s infinite ease-in-out"
-                        }}></div>
-                      </div>
-
-                      <button 
-                        onClick={() => setShowQrOptions(true)}
-                        style={{ 
-                          background: "linear-gradient(135deg, #00a884, #00ca9b)", 
-                          color: "#111b21", 
-                          border: "none", 
-                          borderRadius: "8px", 
-                          padding: "12px 20px", 
-                          fontWeight: "bold", 
-                          fontSize: "0.82rem", 
-                          cursor: "pointer",
-                          boxShadow: "0 4px 15px rgba(0,168,132,0.2)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px"
-                        }}
-                      >
-                        <span>📸</span> Link with QR Code
-                      </button>
-                    </>
-                  ) : (
-                    <div style={{ width: "100%", background: "#202c33", border: "1px solid #2a3942", borderRadius: "12px", padding: "16px", textAlign: "left", display: "flex", flexDirection: "column", gap: "12px" }}>
-                      <h4 style={{ margin: 0, fontSize: "0.9rem", color: "#00a884", fontWeight: "bold" }}>Simular Escaneo QR</h4>
-                      <p style={{ margin: 0, fontSize: "0.75rem", color: "#8696a0", lineHeight: 1.4 }}>Ingresa tu información para personalizar la demostración interactiva:</p>
-                      
-                      <div>
-                        <label style={{ display: "block", fontSize: "0.7rem", color: "#8696a0", marginBottom: "4px", textTransform: "uppercase" }}>Número de WhatsApp</label>
-                        <input 
-                          type="text" 
-                          value={waUserPhone}
-                          onChange={(e) => setWaUserPhone(e.target.value)}
-                          placeholder="+52 999 123 4567"
-                          style={{ width: "100%", background: "#111b21", border: "1px solid #2a3942", borderRadius: "6px", padding: "8px", color: "#fff", fontSize: "0.8rem", outline: "none" }}
-                        />
-                      </div>
-
-                      <div>
-                        <label style={{ display: "block", fontSize: "0.7rem", color: "#8696a0", marginBottom: "4px", textTransform: "uppercase" }}>Nombre de Remitente</label>
-                        <input 
-                          type="text" 
-                          value={waUserName}
-                          onChange={(e) => setWaUserName(e.target.value)}
-                          placeholder="Mi Cuenta"
-                          style={{ width: "100%", background: "#111b21", border: "1px solid #2a3942", borderRadius: "6px", padding: "8px", color: "#fff", fontSize: "0.8rem", outline: "none" }}
-                        />
-                      </div>
-
-                      <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-                        <button 
-                          onClick={() => {
-                            setShowQrOptions(false);
-                            simulateQrScan();
-                          }}
-                          style={{ flex: 1, background: "linear-gradient(135deg, #00a884, #00ca9b)", color: "#111b21", border: "none", borderRadius: "6px", padding: "8px 12px", fontWeight: "bold", fontSize: "0.75rem", cursor: "pointer" }}
-                        >
-                          Conectar
-                        </button>
-                        <button 
-                          onClick={() => setShowQrOptions(false)}
-                          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid #2a3942", color: "#fff", borderRadius: "6px", padding: "8px 12px", fontSize: "0.75rem", cursor: "pointer" }}
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* CONNECTING HANDSHAKE VIEW */}
-              {waInstanceStatus === "connecting" && (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", padding: "60px 10px", textAlign: "center" }}>
-                  <div style={{
-                    width: "40px",
-                    height: "40px",
-                    border: "4px solid rgba(0,168,132,0.1)",
-                    borderTop: "4px solid #00a884",
-                    borderRadius: "50%",
-                    animation: "waSpin 1s infinite linear"
-                  }}></div>
-                  <div>
-                    <h4 style={{ margin: "0 0 6px", color: "#00a884", fontSize: "0.95rem", fontWeight: "bold" }}>Authenticating Session</h4>
-                    <p style={{ margin: 0, fontSize: "0.78rem", color: "#8696a0", lineHeight: 1.4 }}>Establishing end-to-end encrypted handshake with {waUserPhone}...</p>
-                  </div>
-                </div>
-              )}
-
-              {/* CONNECTED DASHBOARD CONTROLLER */}
-              {waInstanceStatus === "connected" && (
-                <>
-                  {/* Message Input Box */}
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px", color: "#8696a0", marginBottom: "8px" }}>
-                      Message Template
-                    </label>
-                    <textarea 
-                      value={waComposeText} 
-                      onChange={(e) => setWaComposeText(e.target.value)}
-                      disabled={waSending}
-                      style={{ width: "100%", background: "#202c33", border: "1px solid #2a3942", borderRadius: "8px", padding: "12px", color: "#e9edef", fontSize: "0.85rem", outline: "none", resize: "none", minHeight: "100px", fontFamily: "inherit" }}
-                      placeholder="Use {name} for variable injection..."
-                    />
-                    <span style={{ fontSize: "0.7rem", color: "#8696a0", marginTop: "4px", display: "block" }}>
-                      Tip: Use <strong style={{ color: "#00a884" }}>{"{name}"}</strong> to automatically personalize each message!
-                    </span>
-                  </div>
-
-                  {/* Target Contacts */}
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px", color: "#8696a0", marginBottom: "8px" }}>
-                      Recipient List (3 contacts loaded)
-                    </label>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                      {[
-                        { name: "Juan Canto", phone: "+52 999 123 4567" },
-                        { name: "María Pech", phone: "+52 999 765 4321" },
-                        { name: "Andrés Tun", phone: "+52 999 555 4433" }
-                      ].map((c) => (
-                        <div 
-                          key={c.name}
-                          style={{ 
-                            display: "flex", 
-                            justifyContent: "space-between", 
-                            alignItems: "center", 
-                            background: activeWaContact === c.name ? "rgba(0,168,132,0.15)" : "#202c33", 
-                            border: activeWaContact === c.name ? "1px solid #00a884" : "1px solid #2a3942", 
-                            borderRadius: "8px", 
-                            padding: "8px 12px", 
-                            fontSize: "0.8rem",
-                            transition: "all 0.3s"
-                          }}
-                        >
-                          <span style={{ fontWeight: 600 }}>{c.name}</span>
-                          <span style={{ color: "#8696a0" }}>{c.phone}</span>
+                      {waInstanceStatus === "connected" ? (
+                        <div style={{ width: "240px", height: "240px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "16px" }}>
+                          <div style={{ fontSize: "5rem", color: "#25d366", filter: "drop-shadow(0 0 20px rgba(37,211,102,0.5))" }}>✓</div>
+                          <p style={{ color: "#25d366", fontWeight: "bold", fontSize: "1.2rem", margin: 0 }}>Session Active</p>
+                          <p style={{ color: "#94a3b8", fontSize: "0.9rem" }}>Phone is linked.</p>
                         </div>
-                      ))}
+                      ) : (
+                        <>
+                          <div 
+                            onClick={simulateQrScan}
+                            style={{ 
+                              width: "240px", height: "240px", background: "#fff", padding: "16px", borderRadius: "16px", 
+                              boxShadow: "0 0 0 4px rgba(37,211,102,0.4), 0 0 30px rgba(37,211,102,0.3)",
+                              position: "relative", cursor: "pointer", overflow: "hidden"
+                            }}
+                            title="Click to simulate scanning"
+                          >
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://layucateca.com/muna&color=1c2128" alt="QR" style={{ width: "100%", height: "100%" }} />
+                            {waInstanceStatus === "connecting" && (
+                              <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(255,255,255,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <div style={{ width: "50px", height: "50px", border: "5px solid #e2e8f0", borderTopColor: "#25d366", borderRadius: "50%", animation: "spin 1s infinite linear" }} />
+                              </div>
+                            )}
+                            {waInstanceStatus === "disconnected" && (
+                              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "#25d366", boxShadow: "0 0 15px #25d366", animation: "waLaserSweep 2s infinite ease-in-out" }} />
+                            )}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "24px", color: "#94a3b8", fontSize: "0.9rem" }}>
+                            <span>⏱</span> QR expires in ~58 seconds <span style={{ width: "16px", height: "16px", border: "2px solid #94a3b8", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s infinite linear", display: "inline-block" }} />
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </div>
 
-                  {/* Action Buttons */}
-                  <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-                    <button 
-                      onClick={startWaCampaign}
-                      disabled={waSending}
-                      style={{ 
-                        flex: 1, 
-                        background: waSending ? "rgba(0,168,132,0.3)" : "linear-gradient(135deg, #00a884, #00ca9b)", 
-                        color: "#111b21", 
-                        border: "none", 
-                        borderRadius: "8px", 
-                        padding: "14px 20px", 
-                        fontWeight: "bold", 
-                        fontSize: "0.85rem", 
-                        cursor: waSending ? "not-allowed" : "pointer", 
-                        boxShadow: waSending ? "none" : "0 4px 15px rgba(0,168,132,0.3)", 
-                        transition: "transform 0.2s" 
-                      }}
-                    >
-                      {waSending ? "🚀 Executing Campaign..." : "🚀 Start Bulk Campaign"}
-                    </button>
+                    {/* Right Card: Instructions */}
+                    <div style={{ background: "#22272e", border: "1px solid #2d333b", borderRadius: "16px", padding: "32px", display: "flex", flexDirection: "column" }}>
+                      <h3 style={{ margin: "0 0 24px", fontSize: "1.3rem", fontWeight: 600 }}>Connection Instructions</h3>
+                      
+                      <div style={{ display: "flex", flexDirection: "column", gap: "16px", margin: "0 0 32px" }}>
+                        <div style={{ display: "flex", gap: "12px" }}>
+                          <div style={{ color: "#94a3b8" }}>1.</div>
+                          <div style={{ color: "#cbd5e1", fontSize: "0.95rem", lineHeight: 1.5 }}>Ensure your phone is connected to the internet.</div>
+                        </div>
+                        <div style={{ display: "flex", gap: "12px" }}>
+                          <div style={{ color: "#94a3b8" }}>2.</div>
+                          <div style={{ color: "#cbd5e1", fontSize: "0.95rem", lineHeight: 1.5 }}>Tap the &quot;Link a Device&quot; button on your phone.</div>
+                        </div>
+                        <div style={{ display: "flex", gap: "12px" }}>
+                          <div style={{ color: "#94a3b8" }}>3.</div>
+                          <div style={{ color: "#cbd5e1", fontSize: "0.95rem", lineHeight: 1.5 }}>Point your phone&apos;s camera at this screen to scan the QR code.</div>
+                        </div>
+                      </div>
+
+                      <div style={{ border: "1px solid #25d366", background: "transparent", borderRadius: "12px", padding: "20px", marginTop: "auto", boxShadow: "inset 0 0 20px rgba(37,211,102,0.05)" }}>
+                        <h4 style={{ margin: "0 0 12px", fontSize: "1.1rem", fontWeight: 600, color: "#f8fafc" }}>Privacy & Security</h4>
+                        <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.9rem", lineHeight: 1.6 }}>
+                          Your connection is secure and end-to-end encrypted. We never store your personal messages or contacts on our servers.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
 
-              {/* Console Logs */}
-              <div>
-                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px", color: "#8696a0", marginBottom: "8px" }}>
-                  Execution Terminal
-                </label>
-                <div style={{ background: "#0c1317", border: "1px solid #202c33", borderRadius: "8px", padding: "10px", height: "100px", overflowY: "auto", fontFamily: "monospace", fontSize: "0.72rem", color: "#00e676", display: "flex", flexDirection: "column", gap: "4px" }}>
-                  {waLogs.slice(-6).map((log, index) => (
-                    <div key={index} style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {log}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right Smartphone Simulator Panel */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
-              
-              {/* Campaign Stats Card */}
-              <div style={{ width: "100%", background: "#111b21", border: "1px solid #222e35", borderRadius: "16px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              {waActiveTab === "campaigns" && (
                 <div>
-                  <span style={{ fontSize: "0.7rem", color: "#8696a0", display: "block", textTransform: "uppercase" }}>Campaign Progress</span>
-                  <strong style={{ fontSize: "1.5rem", color: "#00a884" }}>{waSentCount} / 3 Sent</strong>
-                </div>
-                <div style={{ width: "50%", background: "#202c33", height: "10px", borderRadius: "5px", overflow: "hidden", position: "relative" }}>
-                  <div style={{ width: `${waProgress}%`, background: "#00a884", height: "100%", borderRadius: "5px", transition: "width 0.5s ease" }}></div>
-                </div>
-              </div>
-
-              {/* Smartphone mockup */}
-              <div style={{ width: "280px", height: "450px", background: "#0b141a", border: "8px solid #222e35", borderRadius: "36px", overflow: "hidden", boxShadow: "0 15px 35px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column", position: "relative" }}>
-                
-                {/* Phone Header */}
-                <div style={{ background: "#202c33", padding: "12px", borderBottom: "1px solid #2a3942", display: "flex", alignItems: "center", gap: "10px" }}>
-                  <div style={{ width: "30px", height: "30px", background: "#00a884", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "0.8rem", color: "#111b21" }}>
-                    {activeWaContact.slice(0, 2).toUpperCase()}
-                  </div>
-                  <div>
-                    <span style={{ fontWeight: "bold", fontSize: "0.8rem", display: "block" }}>{activeWaContact}</span>
-                    <span style={{ fontSize: "0.65rem", color: "#00e676" }}>online</span>
-                  </div>
-                </div>
-
-                {/* Chat Stream (Simulated Messages) */}
-                <div style={{ flex: 1, padding: "12px", backgroundImage: "radial-gradient(#1e2c34 1px, transparent 0)", backgroundSize: "16px 16px", backgroundPosition: "0 0", display: "flex", flexDirection: "column", gap: "8px", overflowY: "auto" }}>
-                  {waPhoneMessages.length === 0 ? (
-                    <div style={{ margin: "auto", textAlign: "center", color: "#8696a0", fontSize: "0.75rem", padding: "0 20px" }}>
-                      Waiting to start bulk campaign...
-                    </div>
-                  ) : (
-                    waPhoneMessages.map((m, i) => (
-                      <div 
-                        key={i} 
+                  <h2 style={{ margin: "0 0 24px", fontSize: "1.6rem", fontWeight: 700, color: "#f8fafc" }}>Campaign Execution</h2>
+                  <div style={{ display: "flex", gap: "24px", flexDirection: "column" }}>
+                    <div style={{ background: "#22272e", border: "1px solid #2d333b", borderRadius: "16px", padding: "24px" }}>
+                      <label style={{ display: "block", color: "#94a3b8", marginBottom: "8px", fontSize: "0.9rem" }}>Message Template</label>
+                      <textarea 
+                        value={waComposeText} 
+                        onChange={(e) => setWaComposeText(e.target.value)}
+                        disabled={waSending}
+                        style={{ width: "100%", background: "#1c2128", border: "1px solid #2d333b", borderRadius: "8px", padding: "16px", color: "#f8fafc", fontSize: "0.95rem", outline: "none", resize: "none", minHeight: "120px", fontFamily: "inherit" }}
+                      />
+                      <button 
+                        onClick={startWaCampaign}
+                        disabled={waSending || waInstanceStatus !== "connected"}
                         style={{ 
-                          alignSelf: "flex-end", 
-                          background: "#005c4b", 
-                          color: "#e9edef", 
-                          borderRadius: "8px 8px 0 8px", 
-                          padding: "8px 12px", 
-                          fontSize: "0.78rem", 
-                          maxWidth: "85%", 
-                          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
-                          position: "relative"
+                          marginTop: "20px", width: "100%", background: (waSending || waInstanceStatus !== "connected") ? "#2d333b" : "#25d366", 
+                          color: (waSending || waInstanceStatus !== "connected") ? "#94a3b8" : "#1c2128", 
+                          border: "none", borderRadius: "8px", padding: "16px", fontWeight: "bold", fontSize: "1rem", cursor: (waSending || waInstanceStatus !== "connected") ? "not-allowed" : "pointer",
+                          transition: "all 0.2s"
                         }}
                       >
-                        <div>{m.text}</div>
-                        <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.6)", textAlign: "right", marginTop: "4px" }}>
-                          {m.time} ✔✔
-                        </div>
+                        {waSending ? "🚀 Sending in progress..." : "🚀 Launch Campaign"}
+                      </button>
+                    </div>
+
+                    <div style={{ background: "#22272e", border: "1px solid #2d333b", borderRadius: "16px", padding: "24px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                        <h4 style={{ margin: 0, color: "#f8fafc" }}>Live Terminal</h4>
+                        <span style={{ color: "#25d366", fontWeight: "bold" }}>{waSentCount} / 3 Sent</span>
                       </div>
-                    ))
-                  )}
-                </div>
-
-                {/* Message Input Bottom Mock */}
-                <div style={{ background: "#202c33", padding: "8px 12px", display: "flex", gap: "8px", alignItems: "center" }}>
-                  <div style={{ flex: 1, background: "#2a3942", borderRadius: "16px", padding: "6px 12px", fontSize: "0.7rem", color: "#8696a0" }}>
-                    Escribe un mensaje...
+                      <div style={{ width: "100%", background: "#1c2128", height: "8px", borderRadius: "4px", marginBottom: "20px", overflow: "hidden" }}>
+                        <div style={{ width: `${waProgress}%`, background: "#25d366", height: "100%", transition: "width 0.3s" }} />
+                      </div>
+                      <div style={{ background: "#0c1015", borderRadius: "8px", padding: "16px", height: "150px", overflowY: "auto", fontFamily: "monospace", fontSize: "0.85rem", color: "#25d366", display: "flex", flexDirection: "column", gap: "8px" }}>
+                        {waLogs.map((log, index) => (
+                          <div key={index}>{log}</div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <span style={{ fontSize: "1.2rem" }}>🎙️</span>
                 </div>
+              )}
 
-              </div>
+              {["contacts", "templates", "history"].includes(waActiveTab) && (
+                <div style={{ textAlign: "center", padding: "80px 20px", color: "#94a3b8" }}>
+                  <div style={{ fontSize: "4rem", marginBottom: "16px" }}>🚧</div>
+                  <h3 style={{ color: "#f8fafc", fontSize: "1.4rem", margin: "0 0 12px" }}>Under Construction</h3>
+                  <p>This tab is simulated in the live preview. Connect WhatsApp or use the Campaigns tab.</p>
+                </div>
+              )}
+
             </div>
-
           </div>
+          <style dangerouslySetInnerHTML={{__html: `
+            @keyframes waLaserSweep {
+              0% { top: 0%; opacity: 0; }
+              10% { opacity: 1; }
+              90% { opacity: 1; }
+              100% { top: 100%; opacity: 0; }
+            }
+            @keyframes spin {
+              100% { transform: rotate(360deg); }
+            }
+          `}} />
         </div>
       );
     }
