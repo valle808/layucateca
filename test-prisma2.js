@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); try { new PrismaClient({}); console.log('success empty'); } catch(e) { console.error('empty error:', e.message); }; try { new PrismaClient({ datasourceUrl: 'postgresql://postgres:postgres@localhost:5432/postgres' }); console.log('success url'); } catch(e) { console.error('url error:', e.message); }
