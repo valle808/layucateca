@@ -1,11 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const adapter = new PrismaBetterSqlite3({
-  url: "file:./dev.db",
-});
-
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database with trilingual Spanish/English/Mayan content across Mexican states...");
@@ -69,6 +64,15 @@ async function main() {
         imageUrl: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80",
         liveUrl: "https://bloom-boutique-demo.vercel.app",
         price: 1950.0,
+        published: true,
+      },
+      {
+        title: "WhatsApp Automation Studio",
+        slug: "whatsapp-automation-studio",
+        description: "Automatización profesional de WhatsApp Web para mensajes rápidos y sencillos. Aplicación de escritorio con interfaz gráfica en Python. || Professional WhatsApp Web automation for seamless messaging. Desktop application with a beautiful Python GUI.",
+        imageUrl: "/whatsapp-automation.png",
+        liveUrl: "https://github.com/SohanRaidev/WhatsApp-Automation-Studio",
+        price: null,
         published: true,
       },
     ],

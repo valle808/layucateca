@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import Footer from "@/components/Footer";
-import AgentKinBackground from "@/components/AgentKinBackground";
-import InteractiveHeroTitle from "@/components/InteractiveHeroTitle";
+import { useEffect, useState } from "react";
 
 interface Post {
   id: string;
@@ -30,347 +29,477 @@ interface HomeClientProps {
   featuredPortfolio: PortfolioItem[];
 }
 
-export default function HomeClient({ recentPosts, featuredPortfolio }: HomeClientProps) {
-  const { t, translateDb, language } = useLanguage();
+const TICKER_ITEMS = [
+  "🔴 EN VIVO: Últimas noticias de Yucatán",
+  "📰 Diseño web profesional a medida — desde $499",
+  "🤖 Muna AI disponible 24/7 para asistencia inteligente",
+  "🌐 Nuevo portal ciudadano — reporta tu colonia",
+  "💼 Marketplace de servicios digitales ahora activo",
+];
+
+function BreakingTicker() {
+  return (
+    <div style={{
+      background: "#c0392b",
+      color: "#fff",
+      display: "flex",
+      alignItems: "center",
+      overflow: "hidden",
+      height: "36px",
+      position: "relative",
+      zIndex: 50,
+    }}>
+      <span style={{
+        background: "#8b0000",
+        padding: "0 18px",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        fontWeight: 800,
+        fontSize: "0.75rem",
+        letterSpacing: "0.12em",
+        whiteSpace: "nowrap",
+        flexShrink: 0,
+      }}>
+        EN VIVO
+      </span>
+      <div style={{ overflow: "hidden", flex: 1 }}>
+        <div style={{
+          display: "flex",
+          animation: "tickerScroll 28s linear infinite",
+          whiteSpace: "nowrap",
+        }}>
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} style={{ padding: "0 48px", fontSize: "0.82rem", fontWeight: 500 }}>{item}</span>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @keyframes tickerScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .cat-chip { transition: background 0.2s ease, color 0.2s ease; }
+        .cat-chip:hover { background: var(--accent-gold) !important; color: #fff !important; }
+      `}</style>
+    </div>
+  );
+}
+
+export default function HomeClient({ recentPosts }: HomeClientProps) {
+  const { t, translateDb } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  const hero = recentPosts[0];
+  const secondaryPosts = recentPosts.slice(1, 4);
+
+  const categories = [
+    { label: t("Política", "Politics", "Política"), icon: "🏛️", href: "/news" },
+    { label: t("Economía", "Economy", "Economía"), icon: "📊", href: "/news" },
+    { label: t("Cultura", "Culture", "Cultura"), icon: "🎭", href: "/news" },
+    { label: t("Tecnología", "Technology", "Tecnología"), icon: "💻", href: "/news" },
+    { label: t("Deportes", "Sports", "Deportes"), icon: "⚽", href: "/news" },
+    { label: t("Opinión", "Opinion", "Opinión"), icon: "✍️", href: "/opinion-room" },
+  ];
+
+  const services = [
+    {
+      icon: "🌐",
+      title: t("Diseño Web", "Web Design", "Diseño Web"),
+      desc: t("Sitios premium a medida desde $499. Rápidos, elegantes y optimizados.", "Premium bespoke websites from $499. Fast, elegant, and optimized.", ""),
+      href: "/soluciones-digitales",
+      color: "var(--accent-gold)",
+    },
+    {
+      icon: "🤖",
+      title: "Muna AI",
+      desc: t("Asistente inteligente para tu negocio. Disponible 24/7 en español e inglés.", "Intelligent assistant for your business. Available 24/7.", ""),
+      href: "/muna",
+      color: "var(--accent-gold)",
+    },
+    {
+      icon: "🖥️",
+      title: t("Soluciones Digitales", "Digital Solutions", "Soluciones Digitales"),
+      desc: t("Desarrollo de software a medida, arquitectura cloud, ciberseguridad y automatización.", "Custom software development, cloud architecture, cybersecurity, and automation.", ""),
+      href: "/soluciones-digitales",
+      color: "var(--accent-gold)",
+    },
+  ];
+
+  const formatDate = (d: Date | string) => {
+    const date = new Date(d);
+    return date.toLocaleDateString("es-MX", { day: "2-digit", month: "short", year: "numeric" });
+  };
 
   return (
     <>
-      <main style={{ position: "relative" }}>
-        <AgentKinBackground />
-        {/* ---- Hero (AgentKin Style) ---- */}
-        <section
-          id="hero"
-          style={{
-            minHeight: "80vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            overflow: "hidden",
-            padding: "80px 24px",
-            textAlign: "center",
-          }}
-        >
-          {/* Background decoration */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(ellipse 60% 60% at 50% 20%, rgba(255,255,255,0.03) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
+      <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <BreakingTicker />
 
-          <div style={{ maxWidth: "1000px", margin: "0 auto", width: "100%", position: "relative", zIndex: 10 }}>
-            <p
-              className="section-label animate-fadeInUp"
-              style={{ animationDelay: "0.1s", opacity: 0, animationFillMode: "forwards", justifyContent: "center" }}
-            >
-              {t("Portal de Noticias y Diseño Web", "News & Web Design Portal", "Péektsil yéetel Diseño Web")}
-            </p>
-            <InteractiveHeroTitle />
-            <p
-              style={{
-                color: "var(--text-secondary)",
-                fontSize: "1.15rem",
-                lineHeight: 1.75,
-                marginBottom: "40px",
-                maxWidth: "600px",
-                margin: "0 auto 40px",
-                animation: "fadeInUp 0.6s 0.35s ease-out forwards",
-                opacity: 0,
-              }}
-            >
-              {t(
-                "La Yucateca es tu centro de noticias y servicios premium de diseño web. Limpio, imparable y construido para crecer.",
-                "La Yucateca is your hub for news and premium web design services. Clean, unstoppable, and built to grow.",
-                "La Yucateca le u péektsil yéetel meyajo'ob ti' diseño web premium. Limpio, imparable yéetel construido para crecer."
-              )}
-            </p>
-            
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                animation: "fadeInUp 0.6s 0.5s ease-out forwards",
-                opacity: 0,
-              }}
-            >
-              <Link href="/portfolio" className="btn-primary" style={{ padding: "16px 32px", fontSize: "1.1rem", borderRadius: "30px" }}>
-                {t("Únete a la Red →", "Join the Network →", "Oko'ol ti' Red →")}
-              </Link>
-            </div>
-
-            {/* Stats (AgentKin Grid Style) */}
-            <div
-              className="dashboard-grid"
-              style={{
-                marginTop: "80px",
-                animation: "fadeInUp 0.6s 0.65s ease-out forwards",
-                opacity: 0,
-                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              }}
-            >
-              {[
-                { value: "50+", label: t("Proyectos", "Projects", "Meyajo'ob") },
-                { value: "98%", label: t("Satisfacción", "Satisfaction", "Utzil") },
-                { value: "24/7", label: t("Disponibilidad", "Uptime", "Disponibilidad") },
-              ].map((stat) => (
-                <div key={stat.label} className="dashboard-card" style={{ textAlign: "center", padding: "32px 24px" }}>
-                  <p
-                    style={{ fontSize: "2.5rem", fontWeight: 800, lineHeight: 1, color: "var(--text-primary)", marginBottom: "8px" }}
-                  >
-                    {stat.value}
+        {/* ── HERO ── */}
+        <section style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 24px 0", width: "100%" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0,1.6fr) minmax(0,1fr)",
+            gap: "24px",
+            alignItems: "start",
+          }}>
+            {/* Main Feature */}
+            {hero ? (
+              <Link href={`/news/${hero.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                <div className="card" style={{
+                  position: "relative",
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  background: hero.imageUrl
+                    ? `linear-gradient(to bottom, rgba(0,0,0,0.1) 20%, rgba(0,0,0,0.85) 100%), url(${hero.imageUrl}) center/cover no-repeat`
+                    : "var(--bg-card)",
+                  minHeight: "480px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  padding: "32px",
+                }}>
+                  <span style={{
+                    display: "inline-block",
+                    background: "#c0392b",
+                    color: "#fff",
+                    padding: "4px 12px",
+                    borderRadius: "4px",
+                    fontSize: "0.7rem",
+                    fontWeight: 800,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    marginBottom: "12px",
+                    width: "fit-content",
+                  }}>
+                    {t("Destacado", "Featured", "Destacado")}
+                  </span>
+                  <h1 style={{
+                    fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
+                    fontWeight: 900,
+                    color: hero.imageUrl ? "#ffffff" : "var(--text-primary)",
+                    lineHeight: 1.2,
+                    marginBottom: "12px",
+                    textShadow: hero.imageUrl ? "0 2px 20px rgba(0,0,0,0.7)" : "none",
+                  }}>
+                    {translateDb(hero.title)}
+                  </h1>
+                  <p style={{
+                    color: hero.imageUrl ? "rgba(255,255,255,0.9)" : "var(--text-secondary)",
+                    fontSize: "0.95rem",
+                    lineHeight: 1.6,
+                    marginBottom: "20px",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}>
+                    {translateDb(hero.content).replace(/<[^>]+>/g, "").substring(0, 160)}…
                   </p>
-                  <p
-                    style={{
-                      color: "var(--text-secondary)",
-                      fontSize: "0.75rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ---- Dashboard Sections (AgentKin Style) ---- */}
-        <section id="dashboard" style={{ padding: "40px 24px 80px", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
-            
-
-
-            {/* Platform Core / News */}
-            <div>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "24px" }}>
-                {t("Núcleo de la Plataforma", "Platform Core", "U puksi'ik'al Plataforma")}
-              </h2>
-              <div className="dashboard-grid">
-                
-                {recentPosts.slice(0, 2).map((post) => (
-                  <div key={post.id} className="dashboard-card">
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                      <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)" }}>
-                        {translateDb(post.title)}
-                      </h3>
-                      <span className="badge-outline" style={{ color: "var(--accent-gold)", border: "1px solid var(--accent-gold)" }}>INFO</span>
-                    </div>
-                    <p
-                      style={{
-                        color: "var(--text-secondary)",
-                        fontSize: "0.9rem",
-                        lineHeight: 1.6,
-                        marginBottom: "16px",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {translateDb(post.content).replace(/<[^>]+>/g, "").substring(0, 150)}...
-                    </p>
-                    <Link href={`/news/${post.slug}`} style={{ color: "#ffffff", fontSize: "0.85rem", fontWeight: 600, textDecoration: "none", borderBottom: "1px solid rgba(255, 255, 255, 0.3)", paddingBottom: "2px", display: "inline-block" }}>
-                      {t("Leer Documento →", "Read Intel →", "Xook →")}
-                    </Link>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    <span style={{ color: hero.imageUrl ? "rgba(255,255,255,0.7)" : "var(--text-secondary)", fontSize: "0.8rem" }}>
+                      {formatDate(hero.createdAt)}
+                    </span>
+                    <span style={{
+                      background: "#c0392b",
+                      color: "#fff",
+                      padding: "8px 18px",
+                      borderRadius: "6px",
+                      fontSize: "0.82rem",
+                      fontWeight: 700,
+                    }}>
+                      {t("Leer →", "Read →", "Xook →")}
+                    </span>
                   </div>
+                </div>
+              </Link>
+            ) : (
+              <div className="card" style={{
+                minHeight: "480px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--text-secondary)",
+                fontSize: "1rem",
+              }}>
+                {t("Próximamente — las noticias llegarán aquí.", "Coming soon — news will appear here.", "")}
+              </div>
+            )}
+
+            {/* Side column */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {/* Category chips */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "4px" }}>
+                {categories.map((cat) => (
+                  <Link key={cat.label} href={cat.href} style={{
+                    textDecoration: "none",
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-subtle)",
+                    color: "var(--text-secondary)",
+                    padding: "6px 14px",
+                    borderRadius: "20px",
+                    fontSize: "0.78rem",
+                    fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                  }} className="cat-chip">
+                    <span>{cat.icon}</span> {cat.label}
+                  </Link>
                 ))}
               </div>
+
+              {secondaryPosts.length > 0 ? secondaryPosts.map((post, idx) => (
+                <Link key={post.id} href={`/news/${post.slug}`} style={{ textDecoration: "none" }}>
+                  <div className="card" style={{
+                    display: "flex",
+                    gap: "14px",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    alignItems: "flex-start",
+                  }}>
+                    <div style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "8px",
+                      flexShrink: 0,
+                      background: post.imageUrl
+                        ? `url(${post.imageUrl}) center/cover`
+                        : `linear-gradient(135deg, hsl(${idx * 60 + 200},30%,var(--bg-card, 55%)), hsl(${idx * 60 + 220},30%,40%))`,
+                      border: "1px solid var(--border-subtle)",
+                    }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h3 style={{
+                        fontSize: "0.92rem",
+                        fontWeight: 700,
+                        color: "var(--text-primary)",
+                        lineHeight: 1.35,
+                        marginBottom: "6px",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}>
+                        {translateDb(post.title)}
+                      </h3>
+                      <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem" }}>
+                        {formatDate(post.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              )) : (
+                <div className="card" style={{
+                  padding: "40px 24px",
+                  textAlign: "center",
+                  color: "var(--text-secondary)",
+                  fontSize: "0.9rem",
+                }}>
+                  {t("Más noticias próximamente.", "More news coming soon.", "")}
+                </div>
+              )}
+
+              {/* AdSense slot */}
+              <div style={{
+                background: "var(--bg-card)",
+                border: "1px dashed var(--border-subtle)",
+                borderRadius: "12px",
+                height: "120px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--text-secondary)",
+                fontSize: "0.75rem",
+                letterSpacing: "0.05em",
+                opacity: 0.5,
+              }}>
+                PUBLICIDAD
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ---- Portfolio Preview ---- */}
-        <section id="portfolio-preview" style={{ padding: "80px 24px" }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "space-between",
-                marginBottom: "40px",
-                flexWrap: "wrap",
-                gap: "16px",
-              }}
-            >
-              <div>
-                <p className="section-label">{t("Nuestro Trabajo", "Our Work")}</p>
-                <h2 style={{ fontSize: "2.2rem", fontWeight: 800 }}>
-                  {t("Diseños", "Featured ")}<span style={{ color: "rgba(255,255,255,0.7)" }}>{t("Destacados", "Designs")}</span>
+        {/* ── SERVICES STRIP ── */}
+        <section style={{ maxWidth: "1280px", margin: "48px auto 0", padding: "0 24px", width: "100%" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+            <div style={{ width: "4px", height: "24px", background: "var(--accent-gold)", borderRadius: "2px" }} />
+            <h2 style={{
+              fontSize: "1.1rem", fontWeight: 800,
+              color: "var(--text-primary)",
+              letterSpacing: "0.04em", textTransform: "uppercase",
+            }}>
+              {t("Nuestros Servicios", "Our Services", "Nuestros Servicios")}
+            </h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>
+            {services.map((svc) => (
+              <Link key={svc.title} href={svc.href} style={{ textDecoration: "none" }}>
+                <div className="card" style={{
+                  borderRadius: "14px",
+                  padding: "28px 24px",
+                }}>
+                  <div style={{ fontSize: "2rem", marginBottom: "12px" }}>{svc.icon}</div>
+                  <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>{svc.title}</h3>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "16px" }}>{svc.desc}</p>
+                  <span style={{ color: svc.color, fontSize: "0.82rem", fontWeight: 700 }}>
+                    {t("Conocer más →", "Learn more →", "Conocer más →")}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ── ALL NEWS GRID ── */}
+        {recentPosts.length > 0 && (
+          <section style={{ maxWidth: "1280px", margin: "48px auto 0", padding: "0 24px", width: "100%" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ width: "4px", height: "24px", background: "var(--accent-gold)", borderRadius: "2px" }} />
+                <h2 style={{
+                  fontSize: "1.1rem", fontWeight: 800,
+                  color: "var(--text-primary)",
+                  letterSpacing: "0.04em", textTransform: "uppercase",
+                }}>
+                  {t("Últimas Noticias", "Latest News", "Últimas Noticias")}
                 </h2>
               </div>
-              <Link href="/portfolio" className="btn-ghost">
-                {t("Portafolio Completo →", "Full Portfolio →")}
+              <Link href="/news" style={{
+                color: "var(--accent-gold)",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                textDecoration: "none",
+                border: "1px solid var(--border-accent)",
+                padding: "6px 16px",
+                borderRadius: "20px",
+              }}>
+                {t("Ver todas →", "See all →", "Ver todas →")}
               </Link>
             </div>
-
-            {featuredPortfolio.length === 0 ? (
-              <div
-                className="dashboard-card"
-                style={{
-                  padding: "60px",
-                  textAlign: "center",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
-                    <rect x="3" y="3" width="18" height="18" rx="0"></rect>
-                    <line x1="3" y1="9" x2="21" y2="9"></line>
-                    <line x1="9" y1="21" x2="9" y2="9"></line>
-                  </svg>
-                </div>
-                <p>{t("Aún no hay portafolios disponibles.", "Portfolio items coming soon.")}</p>
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                  gap: "24px",
-                }}
-              >
-                {featuredPortfolio.map((item) => (
-                  <div key={item.id} className="card" style={{ overflow: "hidden" }}>
-                    <div
-                      style={{
-                        height: "200px",
-                        background: item.imageUrl
-                          ? `url(${item.imageUrl}) center/cover`
-                          : "rgba(255, 255, 255, 0.02)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "var(--text-secondary)",
-                        borderBottom: "1px solid var(--border-subtle)",
-                      }}
-                    >
-                      {!item.imageUrl && (
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
-                          <rect x="2" y="3" width="20" height="14" rx="0"></rect>
-                          <line x1="8" y1="21" x2="16" y2="21"></line>
-                          <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
-                      )}
-                    </div>
-                    <div style={{ padding: "24px" }}>
-                      <span className="badge badge-portfolio" style={{ marginBottom: "12px" }}>
-                        {t("Diseño Web", "Web Design")}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
+              {recentPosts.map((post) => (
+                <Link key={post.id} href={`/news/${post.slug}`} style={{ textDecoration: "none" }}>
+                  <div className="card" style={{
+                    borderRadius: "14px",
+                    overflow: "hidden",
+                  }}>
+                    <div style={{
+                      height: "180px",
+                      background: post.imageUrl
+                        ? `url(${post.imageUrl}) center/cover`
+                        : "var(--bg-card-hover)",
+                      position: "relative",
+                      borderBottom: "1px solid var(--border-subtle)",
+                    }}>
+                      <span style={{
+                        position: "absolute",
+                        top: "12px",
+                        left: "12px",
+                        background: "#c0392b",
+                        color: "#fff",
+                        padding: "3px 10px",
+                        borderRadius: "4px",
+                        fontSize: "0.68rem",
+                        fontWeight: 800,
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                      }}>
+                        {t("Noticias", "News", "Noticias")}
                       </span>
-                      <h3 style={{ fontWeight: 700, marginBottom: "8px" }}>{translateDb(item.title)}</h3>
-                      <p
-                        style={{
-                          color: "var(--text-secondary)",
-                          fontSize: "0.875rem",
-                          lineHeight: 1.6,
-                          marginBottom: "16px",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 3,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {translateDb(item.description)}
+                    </div>
+                    <div style={{ padding: "18px" }}>
+                      <h3 style={{
+                        fontSize: "0.97rem",
+                        fontWeight: 700,
+                        color: "var(--text-primary)",
+                        lineHeight: 1.4,
+                        marginBottom: "8px",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}>
+                        {translateDb(post.title)}
+                      </h3>
+                      <p style={{
+                        color: "var(--text-secondary)",
+                        fontSize: "0.82rem",
+                        lineHeight: 1.55,
+                        marginBottom: "14px",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}>
+                        {translateDb(post.content).replace(/<[^>]+>/g, "").substring(0, 100)}…
                       </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        {item.price && (
-                          <span className="gradient-text" style={{ fontWeight: 700 }}>
-                            ${item.price.toLocaleString()}
-                          </span>
-                        )}
-                        <div style={{ display: "flex", gap: "8px" }}>
-                          {item.liveUrl && (
-                            <a
-                              href={item.liveUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn-ghost"
-                              style={{ fontSize: "0.85rem", padding: "8px 14px" }}
-                            >
-                              {t("En Vivo ↗", "Live ↗")}
-                            </a>
-                          )}
-                          <Link
-                            href={`/portfolio/${item.slug}`}
-                            className="btn-secondary"
-                            style={{ fontSize: "0.85rem", padding: "8px 14px" }}
-                          >
-                            {t("Detalles", "Details")}
-                          </Link>
-                        </div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <span style={{ color: "var(--text-secondary)", fontSize: "0.75rem" }}>
+                          {formatDate(post.createdAt)}
+                        </span>
+                        <span style={{ color: "var(--accent-gold)", fontSize: "0.78rem", fontWeight: 700 }}>
+                          {t("Leer →", "Read →", "Leer →")}
+                        </span>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* ---- CTA Banner ---- */}
-        <section
-          id="cta-banner"
-          style={{
-            padding: "80px 24px",
-            background: "var(--bg-secondary)",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "700px",
-              margin: "0 auto",
-              textAlign: "center",
-              padding: "60px 40px",
-              borderRadius: "24px",
-              border: "1px solid var(--border-subtle)",
-              background: "rgba(5, 5, 5, 0.4)",
-              backdropFilter: "blur(30px)",
-            }}
-            className="dashboard-card"
-          >
-            <p className="section-label" style={{ justifyContent: "center" }}>
-              {t("Comienza Hoy", "Start Today")}
-            </p>
-            <h2 style={{ fontSize: "2.5rem", fontWeight: 900, margin: "16px 0" }}>
-              {t("¿Listo para Construir Tu", "Ready to Build Your")}
-              <br />
-              <span style={{ color: "rgba(255,255,255,0.7)" }}>{t("Sitio Web Ideal?", "Dream Website?")}</span>
+        {/* ── CTA BANNER ── */}
+        <section style={{ maxWidth: "1280px", margin: "64px auto 0", padding: "0 24px 80px", width: "100%" }}>
+          <div className="card" style={{
+            padding: "60px 48px",
+            textAlign: "center",
+            position: "relative",
+            overflow: "hidden",
+          }}>
+            <div style={{
+              position: "absolute", top: "-60px", right: "-60px",
+              width: "300px", height: "300px",
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(255,85,0,0.08) 0%, transparent 70%)",
+              pointerEvents: "none",
+            }} />
+            <h2 style={{
+              fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+              fontWeight: 900,
+              color: "var(--text-primary)",
+              lineHeight: 1.2,
+              marginBottom: "16px",
+            }}>
+              {t("¿Listo para tu sitio web ideal?", "Ready for your dream website?", "¿Listo para tu sitio web ideal?")}
             </h2>
-            <p
-              style={{
-                color: "var(--text-secondary)",
-                fontSize: "1rem",
-                lineHeight: 1.75,
-                marginBottom: "32px",
-              }}
-            >
+            <p style={{
+              color: "var(--text-secondary)",
+              fontSize: "1rem",
+              maxWidth: "580px",
+              margin: "0 auto 32px",
+              lineHeight: 1.7,
+            }}>
               {t(
-                "Permítenos crear una presencia web increíble y de alto rendimiento que te distinga de la competencia. Sin plantillas genéricas: diseño 100% personalizado.",
-                "Let us create a stunning, high-performance web presence that sets you apart from the competition. No generic templates — 100% custom design."
+                "Diseño 100% personalizado, rápido y elegante. Sin plantillas genéricas — tu identidad, tu visión.",
+                "100% custom design, fast and elegant. No generic templates — your identity, your vision.",
+                ""
               )}
             </p>
             <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/contact" className="btn-primary">
-                {t("Cotización Gratis →", "Get a Free Quote →")}
+                {t("Cotización Gratis →", "Free Quote →", "Cotización Gratis →")}
               </Link>
-              <Link href="/portfolio" className="btn-ghost">
-                {t("Ver Ejemplos", "See Examples")}
+              <Link href="/soluciones-digitales" className="btn-secondary">
+                {t("Ver Portafolio", "View Portfolio", "Ver Portafolio")}
               </Link>
             </div>
           </div>
         </section>
       </main>
+
       <Footer />
     </>
   );

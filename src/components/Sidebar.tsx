@@ -354,12 +354,11 @@ export default function Sidebar() {
             {[
               { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
               { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
-              { href: "/it-solutions", label: t("Soluciones IT", "IT Solutions", "Soluciones IT"), icon: <Icons.Solutions /> },
+              { href: "/soluciones-digitales", label: t("Soluciones Digitales", "Digital Solutions", "Soluciones Digitales"), icon: <Icons.Solutions /> },
               { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "Denunciar"), icon: <Icons.Report /> },
               { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
               { href: "/marketplace", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },
               { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
-              { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob"), icon: <Icons.Portfolio /> },
               {
                 href: user ? "#" : "/login",
                 label: user ? `${user.name} (Salir)` : t("Ingresar", "Sign In", "Ingresar"),

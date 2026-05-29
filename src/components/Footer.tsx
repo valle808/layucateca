@@ -103,8 +103,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/portfolio" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
-                  {t("Portafolio", "Portfolio")}
+                <Link href="/soluciones-digitales" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
+                  {t("Soluciones Digitales", "Digital Solutions")}
                 </Link>
               </li>
             </ul>

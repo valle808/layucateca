@@ -1,5 +1,6 @@
 "use client";
 
+import AdSenseAd from "@/components/AdSenseAd";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageContext";
@@ -255,6 +256,9 @@ export default function NewsArticleClient({ post }: NewsArticleClientProps) {
           </div>
 
           <div className="divider" />
+
+          {/* AdSense — one ad per article, placed after body, before comments */}
+          <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
 
           {/* Mobile Sharing shortcuts */}
           <div className="flex lg:hidden gap-3 items-center py-4 border-b border-[rgba(255,255,255,0.06)] mb-8">
