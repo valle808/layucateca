@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import Footer from "@/components/Footer";
@@ -123,6 +123,25 @@ export default function SolucionesDigitalesClient({ portfolioItems }: Soluciones
   const { t, language, translateDb } = useLanguage();
   const [activeTab, setActiveTab] = useState<"services" | "portfolio">("services");
   const [selectedService, setSelectedService] = useState<string>("web-design");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      if (tab === "services" || tab === "portfolio") {
+        setActiveTab(tab);
+      }
+    }
+  }, []);
+
+  const handleTabChange = (tab: "services" | "portfolio") => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tab);
+      window.history.pushState(null, "", url.toString());
+    }
+  };
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -208,7 +227,7 @@ export default function SolucionesDigitalesClient({ portfolioItems }: Soluciones
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15)",
           }}>
             <button
-              onClick={() => setActiveTab("services")}
+              onClick={() => handleTabChange("services")}
               style={{
                 background: activeTab === "services" ? "var(--text-primary)" : "transparent",
                 color: activeTab === "services" ? "var(--bg-primary)" : "var(--text-secondary)",
@@ -228,7 +247,7 @@ export default function SolucionesDigitalesClient({ portfolioItems }: Soluciones
               {t("Servicios y Soluciones", "Services & Solutions", "Servicios")}
             </button>
             <button
-              onClick={() => setActiveTab("portfolio")}
+              onClick={() => handleTabChange("portfolio")}
               style={{
                 background: activeTab === "portfolio" ? "var(--text-primary)" : "transparent",
                 color: activeTab === "portfolio" ? "var(--bg-primary)" : "var(--text-secondary)",

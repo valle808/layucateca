@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/components/LanguageContext";
-
 import { usePathname } from "next/navigation";
 
 interface Message {
@@ -382,26 +381,16 @@ export default function MunaChatbot() {
       )}
 
       {/* Styled animation keyframes */}
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes pulse-glow {
-          0% {
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-          }
-          100% {
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-          }
+          0% { box-shadow: 0 0 4px rgba(255, 255, 255, 0.2); }
+          100% { box-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
         }
         @keyframes dot-blink {
-          0%, 100% {
-            opacity: 0.2;
-            transform: scale(0.8);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.2);
-          }
+          0%, 100% { opacity: 0.2; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.2); }
         }
-      `}</style>
+      `}} />
     </>
   );
 }

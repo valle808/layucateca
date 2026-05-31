@@ -102,6 +102,26 @@ export default function WhatsAppAdminPage() {
     "connect" | "contacts" | "templates" | "campaigns" | "history"
   >("connect");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      const validTabs = ["connect", "contacts", "templates", "campaigns", "history"];
+      if (tab && validTabs.includes(tab)) {
+        setActiveTab(tab as any);
+      }
+    }
+  }, []);
+
+  const handleTabChange = (tab: "connect" | "contacts" | "templates" | "campaigns" | "history") => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tab);
+      window.history.pushState(null, "", url.toString());
+    }
+  };
+
   const [waState, setWaState] = useState<WaState>({
     status: "disconnected",
     qrBase64: null,
@@ -268,7 +288,7 @@ export default function WhatsAppAdminPage() {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => handleTabChange(tab.id as any)}
             style={{
               padding: "10px 18px",
               background: "none", border: "none",
