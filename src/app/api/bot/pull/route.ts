@@ -205,45 +205,17 @@ const IMAGE_POOLS: Record<string, string> = {
 const pickImage = (cat: string) => IMAGE_POOLS[cat] || IMAGE_POOLS.Titulares;
 
 // ─── VISION: Pollinations.ai & LoremFlickr — 100% free, no API key ───────────
+// ─── VISION: Direct Image URLs (No base64 to save DB space and speed up) ───────────
 async function generateImage(topic: string, category: string): Promise<string> {
   const seed = Math.floor(Math.random() * 999999);
   
-  // Try Pollinations first
+  // Create Pollinations URL
   const prompt = encodeURIComponent(
-    `Professional photojournalism photograph: ${sanitizeTitle(topic).slice(0, 120)}, ${category}, Mexico, Yucatan. Realistic, candid, news agency style, 4k`
+    `Professional photojournalism photograph: ${sanitizeTitle(topic).slice(0, 100)}, ${category}, Mexico, Yucatan. Realistic, candid, news agency style, 4k`
   );
   const pollinationsUrl = `https://image.pollinations.ai/prompt/${prompt}?width=1024&height=640&seed=${seed}&nologo=true&enhance=true`;
-  try {
-    const res = await fetch(pollinationsUrl, { signal: AbortSignal.timeout(8000), headers: { "User-Agent": "Mozilla/5.0" } });
-    if (res.ok) {
-      const buf = await res.arrayBuffer();
-      if (buf.byteLength > 10000) {
-        console.log(`[VISION] ✅ Pollinations.ai: ${buf.byteLength} bytes`);
-        return Buffer.from(buf).toString("base64");
-      }
-    }
-  } catch (e) { console.warn("[VISION] Pollinations failed, trying fallback..."); }
   
-  // Fallback to LoremFlickr for a unique category-based image
-  try {
-    // translate category to english for better flickr results
-    const catMap: Record<string, string> = {
-      Titulares: "news", Internacional: "world", Local: "city", 
-      Política: "politics", Economía: "economy", Deportes: "sports", Cultura: "culture"
-    };
-    const query = catMap[category] || "news";
-    const flickrUrl = `https://loremflickr.com/1024/640/${query}?lock=${seed}`;
-    const res = await fetch(flickrUrl, { signal: AbortSignal.timeout(8000) });
-    if (res.ok) {
-      const buf = await res.arrayBuffer();
-      if (buf.byteLength > 1000) {
-        console.log(`[VISION] ✅ LoremFlickr Fallback: ${buf.byteLength} bytes`);
-        return Buffer.from(buf).toString("base64");
-      }
-    }
-  } catch (e) { console.warn("[VISION] LoremFlickr failed:", e); }
-
-  return ""; // Falls back to Unsplash CDN if both fail
+  return pollinationsUrl;
 }
 
 // ─── Provider factory: Groq (primary) → OpenRouter (fallback) ────────────────
@@ -456,12 +428,12 @@ function buildFacebookPost(article: any, articleUrl: string): string {
 }
 
 // ─── AGENT 4: PUBLISHER ───────────────────────────────────────────────────────
-async function publisherAgent(article: any, base64Image: string) {
+async function publisherAgent(article: any, generatedImageUrl: string) {
   const suffix = Math.floor(Math.random() * 9999);
   const slug = `${article.slug || "noticia"}-${suffix}`;
   const siteUrl = "https://layucateca.com";
   const articleUrl = `${siteUrl}/news/${slug}`;
-  const imageUrl = base64Image ? `${siteUrl}/api/images/${slug}` : pickImage(article.category || "Titulares");
+  const imageUrl = generatedImageUrl || pickImage(article.category || "Titulares");
 
   const rawTitle = (article.title || "").split("||")[0].trim();
   const cleanTitle = sanitizeTitle(rawTitle);
@@ -481,7 +453,7 @@ async function publisherAgent(article: any, base64Image: string) {
     savedPost = await prisma.post.create({
       data: {
         title: displayTitle, slug, content: combinedContent,
-        imageUrl, base64Image, videoUrl: null,
+        imageUrl, base64Image: null, videoUrl: null,
         state: article.state || "Yucatán",
         category: article.category || "Titulares",
         published: true, aiGenerated: true,
@@ -493,7 +465,7 @@ async function publisherAgent(article: any, base64Image: string) {
     console.log(`[PUBLISHER] ✅ Saved: ${slug} [${article.category}]`);
   } catch (dbErr: any) {
     console.warn(`[PUBLISHER] DB error: ${dbErr.message}`);
-    savedPost = { title: displayTitle, slug, content: combinedContent, imageUrl, base64Image, state: article.state, category: article.category, id: `temp-${Date.now()}`, createdAt: new Date().toISOString() };
+    savedPost = { title: displayTitle, slug, content: combinedContent, imageUrl, base64Image: null, state: article.state, category: article.category, id: `temp-${Date.now()}`, createdAt: new Date().toISOString() };
   }
 
   // Facebook publishing
@@ -561,8 +533,8 @@ async function runCategoryPipeline(
     const { pass, issues } = factCheckAgent(scoutData, article);
     if (!pass) throw new Error(`Fact-check veto: ${issues.join("; ")}`);
 
-    const base64Image = await generateImage(scoutData.topic, category);
-    const { post, facebookPublished } = await publisherAgent(article, base64Image);
+    const generatedImageUrl = await generateImage(scoutData.topic, category);
+    const { post, facebookPublished } = await publisherAgent(article, generatedImageUrl);
 
     console.log(`[PIPELINE] ✅ [${category}]${facebookPublished ? " + FB ✓" : ""}`);
     return { category, success: true, slug: post?.slug, facebookPublished };

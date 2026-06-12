@@ -58,18 +58,23 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
   ];
 
   // Base categories — will be extended dynamically from DB
-  const BASE_CATEGORIES = [
-    { key: "Todos", label: t("Todos", "All", "Tuláakal") },
-    { key: "Titulares", label: t("Titulares", "Headlines", "Péektsil Bejla'e'") },
-    { key: "Internacional", label: t("Internacional", "International", "Náachil Luum") },
-    { key: "Local", label: t("Local", "Local", "Kajil") },
-    { key: "Política", label: t("Política", "Politics", "Jala'achil") },
-    { key: "Economía", label: t("Economía", "Economy", "Ta'ak'inil") },
-    { key: "Deportes", label: t("Deportes", "Sports", "Báaxalil") },
-    { key: "Cultura", label: t("Cultura", "Culture", "Miatsil") },
-  ];
+  const [categories, setCategories] = useState<string[]>(STATIC_CATEGORY_KEYS);
 
-  const [categories, setCategories] = useState(BASE_CATEGORIES);
+  // Helper for translating known category keys
+  const getCategoryLabel = (key: string) => {
+    const map: Record<string, string[]> = {
+      "Todos": ["Todos", "All", "Tuláakal"],
+      "Titulares": ["Titulares", "Headlines", "Péektsil Bejla'e'"],
+      "Internacional": ["Internacional", "International", "Náachil Luum"],
+      "Local": ["Local", "Local", "Kajil"],
+      "Política": ["Política", "Politics", "Jala'achil"],
+      "Economía": ["Economía", "Economy", "Ta'ak'inil"],
+      "Deportes": ["Deportes", "Sports", "Báaxalil"],
+      "Cultura": ["Cultura", "Culture", "Miatsil"],
+    };
+    if (map[key]) return t(map[key][0], map[key][1], map[key][2] || map[key][0]);
+    return key;
+  };
 
   // Agent Swarm Teams — v3.0 Parallel Pipeline
   const agentTeams = [
@@ -154,13 +159,10 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
           const newCats = data
             .map((p: Post) => p.category)
             .filter((cat: string) => cat && !seenCats.has(cat));
-          if (newCats.length > 0) {
-            const uniqueNew = [...new Set(newCats)] as string[];
-            setCategories(prev => [
-              ...prev,
-              ...uniqueNew.map((cat: string) => ({ key: cat, label: cat })),
-            ]);
-          }
+            if (newCats.length > 0) {
+              const uniqueNew = [...new Set(newCats)] as string[];
+              setCategories(prev => [...prev, ...uniqueNew]);
+            }
         }
       })
       .catch(err => console.warn("Initial posts fetch error:", err));
@@ -194,16 +196,14 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                   const newCats = allPosts
                     .map((p: Post) => p.category)
                     .filter((cat: string) => cat && !seenCats.has(cat));
-                  if (newCats.length > 0) {
-                    const uniqueNew = [...new Set(newCats)] as string[];
-                    setCategories(prev => {
-                      const existingKeys = new Set(prev.map(c => c.key));
-                      const toAdd = uniqueNew.filter((c: string) => !existingKeys.has(c));
-                      return toAdd.length > 0
-                        ? [...prev, ...toAdd.map((cat: string) => ({ key: cat, label: cat }))]
-                        : prev;
-                    });
-                  }
+                    if (newCats.length > 0) {
+                      const uniqueNew = [...new Set(newCats)] as string[];
+                      setCategories(prev => {
+                        const existingKeys = new Set(prev);
+                        const toAdd = uniqueNew.filter((c: string) => !existingKeys.has(c));
+                        return toAdd.length > 0 ? [...prev, ...toAdd] : prev;
+                      });
+                    }
                 }
               })
               .catch(() => {});
@@ -318,7 +318,9 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                 {t("NOTICIAS K'IIN", "K'IIN NEWS", "K'IIN PÉEKTSIL")}
               </div>
               <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", margin: 0 }}>
-                {new Date().toLocaleDateString(language === "es" ? "es-MX" : language === "my" ? "es-MX" : "en-US", {
+                {language === "my" 
+                  ? "K'iin, " + new Date().toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" }).replace("de", "ti'")
+                  : new Date().toLocaleDateString(language === "es" ? "es-MX" : "en-US", {
                   weekday: "long",
                   year: "numeric",
                   month: "long",
@@ -398,29 +400,29 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             {/* Category pills */}
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "32px" }}>
-              {categories.map((cat) => (
+              {categories.map((catKey) => (
                 <button
-                  key={cat.key}
-                  onClick={() => setSelectedCategory(cat.key)}
+                  key={catKey}
+                  onClick={() => setSelectedCategory(catKey)}
                   style={{
                     padding: "8px 16px",
                     borderRadius: "20px",
                     border: "none",
-                    background: selectedCategory === cat.key ? "linear-gradient(135deg, #d4a853, #b8892a)" : "var(--bg-secondary)",
-                    color: selectedCategory === cat.key ? "#0a0a0f" : "var(--text-primary)",
+                    background: selectedCategory === catKey ? "linear-gradient(135deg, #d4a853, #b8892a)" : "var(--bg-secondary)",
+                    color: selectedCategory === catKey ? "#0a0a0f" : "var(--text-primary)",
                     fontWeight: 700,
                     fontSize: "0.8rem",
                     cursor: "pointer",
                     transition: "transform 0.15s, background 0.2s",
                   }}
                   onMouseEnter={(e) => {
-                    if (selectedCategory !== cat.key) e.currentTarget.style.background = "var(--bg-card-hover)";
+                    if (selectedCategory !== catKey) e.currentTarget.style.background = "var(--bg-card-hover)";
                   }}
                   onMouseLeave={(e) => {
-                    if (selectedCategory !== cat.key) e.currentTarget.style.background = "var(--bg-secondary)";
+                    if (selectedCategory !== catKey) e.currentTarget.style.background = "var(--bg-secondary)";
                   }}
                 >
-                  {cat.label}
+                  {getCategoryLabel(catKey)}
                 </button>
               ))}
             </div>
@@ -641,7 +643,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                           La Yucateca News
                         </h3>
                         <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem", margin: 0 }}>
-                          Noticias de Yucatán y México
+                          {t("Noticias de Yucatán y México", "News from Yucatan and Mexico", "Péektsil ti' Yucatán yéetel México")}
                         </p>
                       </div>
                     </div>
