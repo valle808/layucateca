@@ -21,7 +21,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    const apiKey = process.env.FIREWORKS_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       // Mock summary fallback if API key is not configured
       return NextResponse.json({
@@ -31,11 +31,11 @@ export async function GET(req: Request) {
 
     const openai = new OpenAI({
       apiKey,
-      baseURL: "https://api.fireworks.ai/inference/v1",
+      baseURL: "https://api.groq.com/openai/v1",
     });
 
     const response = await openai.chat.completions.create({
-      model: "accounts/fireworks/models/kimi-k2p6",
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",

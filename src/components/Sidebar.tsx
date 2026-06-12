@@ -144,7 +144,7 @@ export default function Sidebar() {
   const sidebarStyle: React.CSSProperties = isMobile
     ? {
         position: "fixed",
-        top: 0,
+        top: "var(--banner-height, 0px)",
         left: 0,
         bottom: 0,
         width: "280px",
@@ -162,7 +162,7 @@ export default function Sidebar() {
       }
     : {
         position: "fixed",
-        top: 0,
+        top: "var(--banner-height, 0px)",
         left: 0,
         bottom: 0,
         width: isCollapsed ? "var(--sidebar-collapsed-width)" : "var(--sidebar-width)",
@@ -201,7 +201,7 @@ export default function Sidebar() {
         <div
           style={{
             position: "fixed",
-            top: 0,
+            top: "var(--banner-height, 0px)",
             left: 0,
             right: 0,
             height: "64px",

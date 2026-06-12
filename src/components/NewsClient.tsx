@@ -6,6 +6,12 @@ import { useLanguage } from "@/components/LanguageContext";
 import Footer from "@/components/Footer";
 import WeatherWidget from "@/components/WeatherWidget";
 
+// Static category keys — outside component to be a stable reference in useEffect
+const STATIC_CATEGORY_KEYS = [
+  "Todos", "Titulares", "Internacional", "Local",
+  "Política", "Economía", "Deportes", "Cultura",
+];
+
 interface Post {
   id: string;
   title: string;
@@ -51,8 +57,8 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
     { key: "Nuevo León", label: "Nuevo León" },
   ];
 
-  // Categories list
-  const categories = [
+  // Base categories — will be extended dynamically from DB
+  const BASE_CATEGORIES = [
     { key: "Todos", label: t("Todos", "All", "Tuláakal") },
     { key: "Titulares", label: t("Titulares", "Headlines", "Péektsil Bejla'e'") },
     { key: "Internacional", label: t("Internacional", "International", "Náachil Luum") },
@@ -63,13 +69,15 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
     { key: "Cultura", label: t("Cultura", "Culture", "Miatsil") },
   ];
 
-  // Agent Swarm Teams — v2.0 Pipeline
+  const [categories, setCategories] = useState(BASE_CATEGORIES);
+
+  // Agent Swarm Teams — v3.0 Parallel Pipeline
   const agentTeams = [
-    { icon: "🕵️‍♂️", name: "Scout Agent", role: "Ingesta de datos, tendencias y hechos verificados en tiempo real" },
-    { icon: "✍️", name: "Writer Agent", role: "Redacción trilingüe ES · EN · Maya — estándar NYT/Reuters" },
-    { icon: "🎨", name: "Vision Agent", role: "Selección de imagen contextual de alta resolución 16:9" },
-    { icon: "⚖️", name: "Fact-Check Agent", role: "Auditoría editorial — veto absoluto sobre publicación" },
-    { icon: "📢", name: "Publisher Agent", role: "Distribución CMS + Facebook Graph API cada 60 segundos" },
+    { icon: "🕵️‍♂️", name: "Scout Agent", role: "Investigación en tiempo real: Google News RSS + hechos verificados para TODAS las categorías" },
+    { icon: "✍️", name: "Writer Agent", role: "Redacción pirámide invertida ES · EN · Maya — estándar Reuters/NYT con firma de periodista" },
+    { icon: "🎨", name: "Vision Agent", role: "Generación de imagen fotoperiodística AI (Flux) por artículo con prompt contextual" },
+    { icon: "⚖️", name: "Fact-Check Agent", role: "Control de calidad editorial: 5 Ws, párrafo de apertura, atribución de fuente" },
+    { icon: "📢", name: "Publisher Agent", role: "Publicación simultánea en CMS + Facebook con artículo completo cada 60 segundos" },
   ];
   const [pipelineLog, setPipelineLog] = React.useState<string[]>([]);
 
@@ -134,43 +142,97 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
     return () => clearInterval(agentInterval);
   }, [agentTeams.length]);
 
-  // Fetch posts on mount to ensure synchronization
+  // Fetch posts & discover dynamic categories on mount
   useEffect(() => {
     fetch("/api/posts")
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data)) setPosts(data);
+        if (Array.isArray(data)) {
+          setPosts(data);
+          // Discover any new categories from existing posts
+          const seenCats = new Set(STATIC_CATEGORY_KEYS);
+          const newCats = data
+            .map((p: Post) => p.category)
+            .filter((cat: string) => cat && !seenCats.has(cat));
+          if (newCats.length > 0) {
+            const uniqueNew = [...new Set(newCats)] as string[];
+            setCategories(prev => [
+              ...prev,
+              ...uniqueNew.map((cat: string) => ({ key: cat, label: cat })),
+            ]);
+          }
+        }
       })
       .catch(err => console.warn("Initial posts fetch error:", err));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Automated 1-minute AJAX news swarm trigger
+  // Automated 1-minute AJAX news swarm trigger — runs ALL categories per cycle
   useEffect(() => {
-    const interval = setInterval(() => {
+    const runCycle = () => {
       fetch("/api/bot/pull", { method: "POST" })
         .then(res => res.json())
         .then(data => {
-          if (data.pipeline) setPipelineLog(data.pipeline);
-          if (data.success && data.posts && data.posts.length > 0) {
-            setPosts(prev => {
-              const existingSlugs = new Set(prev.map(p => p.slug));
-              const newUniquePosts = data.posts.filter((p: Post) => !existingSlugs.has(p.slug));
-              return [...newUniquePosts, ...prev];
-            });
-            setFbLikes(prev => prev + Math.floor(Math.random() * 25) + 10);
-            setFbShares(prev => prev + Math.floor(Math.random() * 8) + 2);
+          if (data.results) {
+            // Multi-article response: tally results, then re-fetch all posts
+            let fbCount = 0;
+            const succeededCats: string[] = [];
+
+            for (const result of data.results as Array<{ success: boolean; category: string; facebookPublished?: boolean; slug?: string }>) {
+              if (result.success) succeededCats.push(result.category);
+              if (result.facebookPublished) fbCount++;
+            }
+
+            // Re-fetch all posts to get the newly created ones
+            fetch("/api/posts")
+              .then(r => r.json())
+              .then(allPosts => {
+                if (Array.isArray(allPosts)) {
+                  setPosts(allPosts);
+                  // Also discover new categories
+                  const seenCats = new Set(STATIC_CATEGORY_KEYS);
+                  const newCats = allPosts
+                    .map((p: Post) => p.category)
+                    .filter((cat: string) => cat && !seenCats.has(cat));
+                  if (newCats.length > 0) {
+                    const uniqueNew = [...new Set(newCats)] as string[];
+                    setCategories(prev => {
+                      const existingKeys = new Set(prev.map(c => c.key));
+                      const toAdd = uniqueNew.filter((c: string) => !existingKeys.has(c));
+                      return toAdd.length > 0
+                        ? [...prev, ...toAdd.map((cat: string) => ({ key: cat, label: cat }))]
+                        : prev;
+                    });
+                  }
+                }
+              })
+              .catch(() => {});
+
+            setFbLikes(prev => prev + Math.floor(Math.random() * 25) * fbCount + 10);
+            setFbShares(prev => prev + Math.floor(Math.random() * 8) * fbCount + 2);
             setFbComments(prev => prev + Math.floor(Math.random() * 5) + 1);
             setFbLastSyncTime("Publicado hace unos segundos en Facebook");
-            const cat = data.category || "";
-            const fb = data.facebookPublished ? " · Publicado en Facebook ✓" : "";
-            setSwarmToast(`⚡ Ciclo completado — ${cat}${fb}`);
-            setTimeout(() => setSwarmToast(""), 8000);
+            const fb = fbCount > 0 ? ` · ${fbCount} publs. en Facebook ✓` : "";
+            setSwarmToast(`⚡ ${succeededCats.length} artículos publicados${fb}`);
+            setTimeout(() => setSwarmToast(""), 10000);
+          } else if (data.success && data.posts) {
+            // Legacy single-article response
+            setPosts(prev => {
+              const existingSlugs = new Set(prev.map(p => p.slug));
+              const newUniquePosts = (data.posts as Post[]).filter(p => !existingSlugs.has(p.slug));
+              return [...newUniquePosts, ...prev];
+            });
           }
         })
         .catch(err => console.warn("Auto bot sync error:", err));
-    }, 60000);
+    };
 
+    // Trigger immediately on mount (so articles appear right away)
+    runCycle();
+    // Then every 60 seconds
+    const interval = setInterval(runCycle, 60_000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredPosts = posts.filter((post) => {
@@ -585,7 +647,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                     </div>
 
                     <p style={{ fontSize: "0.83rem", color: "var(--text-secondary)", lineHeight: 1.55, marginBottom: "16px" }}>
-                      📰 Síguenos en Facebook para mantenerte al día con las últimas noticias de Yucatán, el sureste de México y el mundo.
+                      {t("📰 Síguenos en Facebook para mantenerte al día con las últimas noticias de Yucatán, el sureste de México y el mundo.", "📰 Follow us on Facebook to stay up to date with the latest news from Yucatan, southeastern Mexico, and the world.", "📰 Ts'áaik k k'aaba' tu Facebook tia'al a k'a'al ichil le túumben k'iino'oba' ti' Yucatan, México yéetel yóok'ol kaab.")}
                     </p>
 
                     <a
@@ -612,7 +674,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
                       onMouseLeave={(e) => e.currentTarget.style.background = "#1877f2"}
                     >
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                      Seguir en Facebook ↗
+                      {t("Seguir en Facebook ↗", "Follow on Facebook ↗", "Ts'áaik tu Facebook ↗")}
                     </a>
                   </div>
                 </div>

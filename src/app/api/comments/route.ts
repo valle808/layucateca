@@ -6,17 +6,17 @@ export const dynamic = "force-dynamic";
 
 // Automated AI Moderation for Comments
 async function moderateComment(content: string): Promise<boolean> {
-  const apiKey = process.env.FIREWORKS_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) return true; // Default to clean if API key not present
 
   const openai = new OpenAI({
     apiKey,
-    baseURL: "https://api.fireworks.ai/inference/v1",
+    baseURL: "https://api.groq.com/openai/v1",
   });
 
   try {
     const response = await openai.chat.completions.create({
-      model: "accounts/fireworks/models/kimi-k2p6",
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",

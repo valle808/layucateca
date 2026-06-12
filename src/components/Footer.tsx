@@ -107,6 +107,11 @@ export default function Footer() {
                   {t("Soluciones Digitales", "Digital Solutions")}
                 </Link>
               </li>
+              <li>
+                <Link href="/about" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
+                  {t("Acerca de", "About Us", "Tu yóolal")}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -129,6 +134,11 @@ export default function Footer() {
               <li>
                 <Link href="/contact" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
                   {t("Contacto", "Contact")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/impressum" style={{ color: "var(--text-secondary)", textDecoration: "none", fontSize: "0.85rem" }}>
+                  {t("Aviso Legal / Impressum", "Impressum")}
                 </Link>
               </li>
             </ul>

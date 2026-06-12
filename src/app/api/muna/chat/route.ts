@@ -202,12 +202,12 @@ export async function POST(req: Request) {
             }).catch(() => {});
         }
 
-        let apiKey = process.env.OPENROUTER_API_KEY || process.env.FIREWORKS_API_KEY || process.env.OPENAI_API_KEY;
+        let apiKey = process.env.OPENROUTER_API_KEY || process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
         let baseURL = process.env.OPENROUTER_API_KEY ? 'https://openrouter.ai/api/v1' 
-                    : process.env.FIREWORKS_API_KEY ? 'https://api.fireworks.ai/inference/v1' 
+                    : process.env.GROQ_API_KEY ? 'https://api.groq.com/openai/v1' 
                     : undefined;
         let model = process.env.OPENROUTER_API_KEY ? 'meta-llama/llama-3.1-8b-instruct:free' 
-                  : process.env.FIREWORKS_API_KEY ? 'accounts/fireworks/models/kimi-k2p6'
+                  : process.env.GROQ_API_KEY ? 'llama-3.3-70b-versatile'
                   : 'gpt-3.5-turbo';
 
         const currentLangLabel = language === 'en' ? 'English' : language === 'my' ? 'Mayan' : 'Spanish';

@@ -23,7 +23,7 @@ export default function Navbar() {
       id="main-nav"
       style={{
         position: "fixed",
-        top: 0,
+        top: "var(--banner-height, 0px)",
         left: 0,
         right: 0,
         zIndex: 50,

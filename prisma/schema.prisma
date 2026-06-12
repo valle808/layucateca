@@ -254,3 +254,47 @@ model WaSession {
   updatedAt DateTime @updatedAt
 }
 
+// ─── Industry Categories ──────────────────────────────────────────
+
+model Industry {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String   @default("")
+  icon        String   @default("briefcase")
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Admin Links/Shortcuts ────────────────────────────────────────
+
+model AdminLink {
+  id        String   @id @default(cuid())
+  title     String
+  url       String
+  category  String   @default("general")
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Reports/Analytics ────────────────────────────────────────────
+
+model ReportSnapshot {
+  id             String   @id @default(cuid())
+  type           String
+  totalUsers     Int      @default(0)
+  activeUsers    Int      @default(0)
+  totalPosts     Int      @default(0)
+  publishedPosts Int      @default(0)
+  totalReports   Int      @default(0)
+  totalComments  Int      @default(0)
+  cpuUsage       Float    @default(0)
+  memoryUsage    Float    @default(0)
+  uptime         Int      @default(0)
+  timestamp      DateTime @default(now())
+}
+
