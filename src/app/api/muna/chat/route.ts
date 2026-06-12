@@ -441,7 +441,7 @@ The human you are talking to is identified as \`[👤 OPERADOR]\`.`;
 
     } catch (error: any) {
         console.error('[Muna Engine Failure]:', error.message);
-        const fallbackText = language === 'en' ? "[🧠 MUNA AI]\nI apologize, but my AI engine is currently under heavy load. Please try again in a few moments or contact us directly!" : language === 'my' ? "[🧠 MUNA AI]\nSajil, u k'áak'il in meyaj jach choko bejla'e'. Ko'ox ts'aak jump'éel súutuk." : "[🧠 MUNA AI]\nUna disculpa, mi motor de IA se encuentra saturado en este momento. ¡Por favor intenta de nuevo en unos segundos o contáctanos directamente!";
+        const fallbackText = "[🧠 MUNA AI]\nUna disculpa, mi motor de IA se encuentra saturado en este momento. / I apologize, but my AI engine is currently under heavy load. ¡Por favor intenta de nuevo en unos segundos!";
         
         const encoder = new TextEncoder();
         const fallbackStream = new ReadableStream({
