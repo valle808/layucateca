@@ -441,6 +441,15 @@ The human you are talking to is identified as \`[👤 OPERADOR]\`.`;
 
     } catch (error: any) {
         console.error('[Muna Engine Failure]:', error.message);
-        return NextResponse.json({ success: false, error: 'Engine Restart Required.' }, { status: 500 });
+        const fallbackText = language === 'en' ? "[🧠 MUNA AI]\nI apologize, but my AI engine is currently under heavy load. Please try again in a few moments or contact us directly!" : language === 'my' ? "[🧠 MUNA AI]\nSajil, u k'áak'il in meyaj jach choko bejla'e'. Ko'ox ts'aak jump'éel súutuk." : "[🧠 MUNA AI]\nUna disculpa, mi motor de IA se encuentra saturado en este momento. ¡Por favor intenta de nuevo en unos segundos o contáctanos directamente!";
+        
+        const encoder = new TextEncoder();
+        const fallbackStream = new ReadableStream({
+            start(controller) {
+                controller.enqueue(encoder.encode(fallbackText));
+                controller.close();
+            }
+        });
+        return new Response(fallbackStream, { headers: { 'Content-Type': 'text/event-stream' } });
     }
 }
