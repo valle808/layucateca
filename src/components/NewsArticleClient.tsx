@@ -166,7 +166,7 @@ export default function NewsArticleClient({ post }: NewsArticleClientProps) {
         </a>
       </div>
 
-      <main style={{ paddingTop: "100px" }}>
+      <main>
         <article style={{ padding: "60px 24px 80px", maxWidth: "780px", margin: "0 auto" }}>
           <Link
             href="/news"

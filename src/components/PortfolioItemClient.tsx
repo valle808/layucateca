@@ -23,7 +23,7 @@ export default function PortfolioItemClient({ item }: PortfolioItemClientProps) 
 
   return (
     <>
-      <main style={{ paddingTop: "100px" }}>
+      <main>
         <article style={{ padding: "60px 24px 80px", maxWidth: "900px", margin: "0 auto" }}>
           <Link
             href="/soluciones-digitales"

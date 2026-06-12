@@ -251,7 +251,7 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
 
   return (
     <>
-      <main style={{ paddingTop: "100px", minHeight: "100vh" }}>
+      <main>
         {/* Swarm Notification Toast */}
         {swarmToast && (
           <div

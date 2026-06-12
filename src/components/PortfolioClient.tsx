@@ -23,7 +23,7 @@ export default function PortfolioClient({ items }: PortfolioClientProps) {
 
   return (
     <>
-      <main style={{ paddingTop: "100px" }}>
+      <main>
         <section style={{ padding: "60px 24px 80px" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             <div style={{ marginBottom: "56px", textAlign: "center" }}>
