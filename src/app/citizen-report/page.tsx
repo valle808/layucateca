@@ -118,19 +118,25 @@ export default function CitizenReportPage() {
   };
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-4 md:px-8 max-w-6xl mx-auto">
+    <main className="min-h-screen pt-24 pb-16 px-4 md:px-8" style={{ maxWidth: 1200, margin: "0 auto" }}>
       {/* Header */}
-      <div className="text-center mb-12 animate-fadeInUp">
-        <span className="text-xs uppercase tracking-widest text-[#ff5500] font-bold px-3 py-1 border border-[rgba(255,85,0,0.3)] bg-[rgba(255,85,0,0.05)] rounded-full">
+      <div className="text-center mb-10 animate-fadeInUp">
+        <span style={{
+          fontSize: "0.7rem", fontWeight: 800, letterSpacing: "0.12em",
+          textTransform: "uppercase", color: "#ff5500",
+          padding: "5px 14px", border: "1.5px solid rgba(255,85,0,0.28)",
+          background: "rgba(255,85,0,0.07)", borderRadius: 99,
+          display: "inline-block", marginBottom: 16,
+        }}>
           {t("CANAL DE DENUNCIA CIUDADANA", "CITIZEN REPORTING CHANNEL", "CANAL DE DENUNCIA")}
         </span>
-        <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight">
+        <h1 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 900, letterSpacing: "-0.03em", margin: "0 0 14px" }}>
           {t("Reporte Ciudadano Interactivo", "Interactive Citizen Report", "Reporte Ciudadano")}
         </h1>
-        <p className="text-lg text-[rgba(255,255,255,0.65)] mt-4 max-w-2xl mx-auto">
+        <p style={{ fontSize: "1rem", color: "var(--text-secondary)", maxWidth: 540, margin: "0 auto", lineHeight: 1.65 }}>
           {t(
-            "Reporta incidentes viales, cortes de servicios, baches o eventos locales de forma anónima o identificada. Tu voz ayuda a mejorar la comunidad.",
-            "Report road incidents, utility outages, potholes, or local events anonymously or openly. Help make your city better.",
+            "Reporta incidentes viales, cortes de servicios, baches o eventos locales de forma anónima o identificada.",
+            "Report road incidents, utility outages, potholes, or local events anonymously or openly.",
             "Reporta incidentes de tu comunidad de forma segura."
           )}
         </p>
@@ -138,7 +144,11 @@ export default function CitizenReportPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Form panel */}
-        <div className="lg:col-span-7 p-6 md:p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(15,15,25,0.45)] backdrop-blur-md">
+        <div className="lg:col-span-7" style={{
+          background: "var(--bg-card)", border: "1px solid var(--border-subtle)",
+          borderRadius: 18, padding: "32px",
+          boxShadow: "var(--shadow-card)",
+        }}>
           {success ? (
             <div className="text-center py-10 animate-fadeInUp">
               <CheckCircle className="w-16 h-16 text-[#ff5500] mx-auto mb-4" />
@@ -158,10 +168,15 @@ export default function CitizenReportPage() {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="flex items-center gap-3 border-b border-[rgba(255,255,255,0.08)] pb-4 mb-4">
-                <ShieldAlert className="w-5 h-5 text-[#ff5500]" />
-                <h2 className="text-lg font-bold text-white">{t("Nueva Denuncia", "New Incident Report", "Denuncia")}</h2>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div style={{ display: "flex", alignItems: "center", gap: 12, paddingBottom: 16, borderBottom: "1px solid var(--border-subtle)", marginBottom: 4 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(255,85,0,0.1)", border: "1.5px solid rgba(255,85,0,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <ShieldAlert style={{ width: 18, height: 18, color: "#ff5500" }} />
+                </div>
+                <div>
+                  <h2 style={{ fontWeight: 800, fontSize: "1.05rem", letterSpacing: "-0.02em" }}>{t("Nueva Denuncia", "New Incident Report", "Denuncia")}</h2>
+                  <p style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 2 }}>{t("Procesado en tiempo real por IA", "AI-processed in real time", "Procesado en tiempo real")}</p>
+                </div>
               </div>
 
               {errorMsg && <div className="p-3 text-xs bg-[rgba(255,0,0,0.1)] border border-red-500/30 text-red-400 rounded-lg">{errorMsg}</div>}
@@ -322,12 +337,20 @@ export default function CitizenReportPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full btn-primary flex justify-center items-center gap-2 border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-3 text-sm"
+                style={{
+                  width: "100%", padding: "13px 24px",
+                  background: submitting ? "rgba(255,85,0,0.6)" : "#ff5500",
+                  color: "#fff", fontWeight: 700, fontSize: "0.92rem",
+                  border: "none", borderRadius: 11, cursor: submitting ? "not-allowed" : "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 4px 18px rgba(255,85,0,0.3)",
+                  transition: "all 0.18s ease",
+                }}
               >
-                {submitting ? t("Moderando y Publicando...", "Moderating & Publishing...", "Procesando...") : (
+                {submitting ? t("Moderando y Publicando...", "Processing...", "Procesando...") : (
                   <>
-                    <span>{t("Enviar Denuncia en Tiempo Real", "Submit Live Incident Report", "Enviar Reporte")}</span>
-                    <AlertTriangle className="w-4 h-4" />
+                    <AlertTriangle style={{ width: 16, height: 16 }} />
+                    <span>{t("Enviar Denuncia en Tiempo Real", "Submit Live Report", "Enviar Reporte")}</span>
                   </>
                 )}
               </button>
@@ -336,37 +359,74 @@ export default function CitizenReportPage() {
         </div>
 
         {/* Live feed panel */}
-        <div className="lg:col-span-5 space-y-4">
-          <h2 className="text-sm font-semibold text-[rgba(255,255,255,0.4)] uppercase tracking-wider mb-2 px-1">
-            {t("Reportes Recientes en la Península", "Recent Incident Feeds", "Reportes")}
-          </h2>
+        <div className="lg:col-span-5">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <h2 style={{ fontSize: "0.75rem", fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-secondary)" }}>
+              {t("Reportes Recientes", "Recent Reports", "Reportes")}
+            </h2>
+            <span style={{ fontSize: "0.7rem", color: "#ff5500", fontWeight: 700, display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#ff5500", display: "inline-block", animation: "pulse 2s infinite" }} />
+              EN VIVO
+            </span>
+          </div>
 
           {loadingReports ? (
-            <div className="text-center py-12 text-xs text-[rgba(255,255,255,0.4)]">{t("Cargando reportes...", "Loading reports...", "Cargando...")}</div>
+            <div style={{ textAlign: "center", padding: "48px 0", color: "var(--text-secondary)", fontSize: "0.85rem" }}>
+              {t("Cargando reportes...", "Loading reports...", "Cargando...")}
+            </div>
           ) : reports.length === 0 ? (
-            <div className="text-center p-8 border border-dashed border-[rgba(255,255,255,0.1)] rounded-2xl text-xs text-[rgba(255,255,255,0.45)]">
-              {t("No hay reportes ciudadanos registrados en este momento.", "No citizen reports registered yet.", "Sin reportes.")}
+            <div style={{
+              textAlign: "center", padding: "40px 24px",
+              border: "1.5px dashed var(--border-subtle)", borderRadius: 16,
+              color: "var(--text-secondary)", fontSize: "0.85rem",
+            }}>
+              <FileText style={{ width: 32, height: 32, margin: "0 auto 12px", opacity: 0.4 }} />
+              {t("No hay reportes ciudadanos registrados.", "No citizen reports yet.", "Sin reportes.")}
             </div>
           ) : (
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, maxHeight: 620, overflowY: "auto", paddingRight: 4 }}>
               {reports.map((rep) => {
                 const tags = JSON.parse(rep.aiTags || "[]");
                 return (
-                  <div key={rep.id} className="p-4 rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(15,15,25,0.45)] space-y-3 hover:border-[rgba(255,85,0,0.25)] transition-all">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold text-[#ff5500] px-2 py-0.5 border border-[rgba(255,85,0,0.2)] bg-[rgba(255,85,0,0.03)] rounded-full">
-                        {rep.city.toUpperCase()}, {rep.state.toUpperCase()}
+                  <div key={rep.id} style={{
+                    padding: "16px", borderRadius: 14,
+                    background: "var(--bg-card)", border: "1px solid var(--border-subtle)",
+                    boxShadow: "var(--shadow-card)",
+                    transition: "border-color 0.18s ease, box-shadow 0.18s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,85,0,0.28)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
+                  }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                      <span style={{
+                        fontSize: "0.65rem", fontWeight: 800, color: "#ff5500",
+                        padding: "3px 10px", border: "1px solid rgba(255,85,0,0.22)",
+                        background: "rgba(255,85,0,0.07)", borderRadius: 99,
+                        letterSpacing: "0.07em", textTransform: "uppercase",
+                      }}>
+                        {rep.city}, {rep.state}
                       </span>
-                      <span className="text-[9px] text-[rgba(255,255,255,0.4)]">{new Date(rep.createdAt).toLocaleDateString()}</span>
+                      <span style={{ fontSize: "0.72rem", color: "var(--text-secondary)" }}>
+                        {new Date(rep.createdAt).toLocaleDateString("es-MX", { month: "short", day: "numeric" })}
+                      </span>
                     </div>
-
-                    <h3 className="font-bold text-sm text-white">{rep.title}</h3>
-                    <p className="text-xs text-[rgba(255,255,255,0.6)] leading-relaxed">{rep.description}</p>
-
+                    <h3 style={{ fontWeight: 700, fontSize: "0.875rem", lineHeight: 1.35, marginBottom: 6 }}>{rep.title}</h3>
+                    <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>{rep.description}</p>
                     {tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-1">
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 10 }}>
                         {tags.map((tag: string, idx: number) => (
-                          <span key={idx} className="text-[9px] text-[rgba(255,255,255,0.4)] px-1.5 py-0.5 bg-white/5 rounded border border-white/5 font-mono">
+                          <span key={idx} style={{
+                            fontSize: "0.68rem", color: "var(--text-secondary)",
+                            padding: "2px 8px", background: "rgba(255,255,255,0.05)",
+                            border: "1px solid var(--border-subtle)", borderRadius: 5,
+                            fontFamily: "monospace",
+                          }}>
                             #{tag}
                           </span>
                         ))}

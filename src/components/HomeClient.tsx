@@ -40,28 +40,28 @@ const TICKER_ITEMS = [
 function BreakingTicker({ posts, translateDb }: { posts: Post[], translateDb: (str: string) => string }) {
   return (
     <div style={{
-      background: "#c0392b",
+      background: "#111",
       color: "#fff",
       display: "flex",
       alignItems: "center",
       overflow: "hidden",
-      height: "36px",
+      height: "38px",
       position: "relative",
       zIndex: 50,
     }}>
       <span style={{
-        background: "#8b0000",
+        background: "#ff5500",
         padding: "0 18px",
         height: "100%",
         display: "flex",
         alignItems: "center",
-        fontWeight: 800,
-        fontSize: "0.75rem",
-        letterSpacing: "0.12em",
+        fontWeight: 900,
+        fontSize: "0.72rem",
+        letterSpacing: "0.14em",
         whiteSpace: "nowrap",
         flexShrink: 0,
       }}>
-        EN VIVO
+        ● EN VIVO
       </span>
       <div style={{ overflow: "hidden", flex: 1 }}>
         <div style={{
@@ -174,16 +174,17 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                 }}>
                   <span style={{
                     display: "inline-block",
-                    background: "#c0392b",
+                    background: "#ff5500",
                     color: "#fff",
-                    padding: "4px 12px",
-                    borderRadius: "4px",
-                    fontSize: "0.7rem",
-                    fontWeight: 800,
-                    letterSpacing: "0.1em",
+                    padding: "4px 14px",
+                    borderRadius: "6px",
+                    fontSize: "0.68rem",
+                    fontWeight: 900,
+                    letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    marginBottom: "12px",
+                    marginBottom: "14px",
                     width: "fit-content",
+                    boxShadow: "0 2px 10px rgba(255,85,0,0.4)",
                   }}>
                     {t("Destacado", "Featured", "Destacado")}
                   </span>
@@ -214,12 +215,13 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                       {formatDate(hero.createdAt)}
                     </span>
                     <span style={{
-                      background: "#c0392b",
+                      background: "#ff5500",
                       color: "#fff",
-                      padding: "8px 18px",
-                      borderRadius: "6px",
+                      padding: "8px 20px",
+                      borderRadius: "8px",
                       fontSize: "0.82rem",
                       fontWeight: 700,
+                      boxShadow: "0 2px 12px rgba(255,85,0,0.3)",
                     }}>
                       {t("Leer →", "Read →", "Xook →")}
                     </span>
@@ -335,26 +337,41 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
         {/* ── SERVICES STRIP ── */}
         <section style={{ maxWidth: "1280px", margin: "48px auto 0", padding: "0 24px", width: "100%" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-            <div style={{ width: "4px", height: "24px", background: "var(--accent-gold)", borderRadius: "2px" }} />
+            <div style={{ width: "3px", height: "22px", background: "#ff5500", borderRadius: "2px" }} />
             <h2 style={{
-              fontSize: "1.1rem", fontWeight: 800,
+              fontSize: "0.8rem", fontWeight: 800,
               color: "var(--text-primary)",
-              letterSpacing: "0.04em", textTransform: "uppercase",
+              letterSpacing: "0.1em", textTransform: "uppercase",
             }}>
               {t("Nuestros Servicios", "Our Services", "Nuestros Servicios")}
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "18px" }}>
             {services.map((svc) => (
               <Link key={svc.title} href={svc.href} style={{ textDecoration: "none" }}>
                 <div className="card" style={{
-                  borderRadius: "14px",
+                  borderRadius: "16px",
                   padding: "28px 24px",
-                }}>
-                  <div style={{ fontSize: "2rem", marginBottom: "12px" }}>{svc.icon}</div>
-                  <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>{svc.title}</h3>
-                  <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", lineHeight: 1.6, marginBottom: "16px" }}>{svc.desc}</p>
-                  <span style={{ color: svc.color, fontSize: "0.82rem", fontWeight: 700 }}>
+                  transition: "transform 0.18s ease, box-shadow 0.18s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
+                }}
+                >
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12,
+                    background: "rgba(255,85,0,0.1)", border: "1.5px solid rgba(255,85,0,0.18)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "1.4rem", marginBottom: "16px",
+                  }}>{svc.icon}</div>
+                  <h3 style={{ fontSize: "1rem", fontWeight: 800, letterSpacing: "-0.01em", color: "var(--text-primary)", marginBottom: "8px" }}>{svc.title}</h3>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", lineHeight: 1.65, marginBottom: "18px" }}>{svc.desc}</p>
+                  <span style={{ color: "#ff5500", fontSize: "0.82rem", fontWeight: 700 }}>
                     {t("Conocer más →", "Learn more →", "Conocer más →")}
                   </span>
                 </div>
@@ -368,23 +385,24 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
           <section style={{ maxWidth: "1280px", margin: "48px auto 0", padding: "0 24px", width: "100%" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div style={{ width: "4px", height: "24px", background: "var(--accent-gold)", borderRadius: "2px" }} />
+                <div style={{ width: "3px", height: "22px", background: "#ff5500", borderRadius: "2px" }} />
                 <h2 style={{
-                  fontSize: "1.1rem", fontWeight: 800,
+                  fontSize: "0.8rem", fontWeight: 800,
                   color: "var(--text-primary)",
-                  letterSpacing: "0.04em", textTransform: "uppercase",
+                  letterSpacing: "0.1em", textTransform: "uppercase",
                 }}>
                   {t("Últimas Noticias", "Latest News", "Últimas Noticias")}
                 </h2>
               </div>
               <Link href="/news" style={{
-                color: "var(--accent-gold)",
-                fontSize: "0.82rem",
+                color: "#ff5500",
+                fontSize: "0.8rem",
                 fontWeight: 700,
                 textDecoration: "none",
-                border: "1px solid var(--border-accent)",
+                border: "1.5px solid rgba(255,85,0,0.3)",
                 padding: "6px 16px",
                 borderRadius: "20px",
+                transition: "all 0.18s ease",
               }}>
                 {t("Ver todas →", "See all →", "Ver todas →")}
               </Link>
@@ -408,13 +426,13 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                         position: "absolute",
                         top: "12px",
                         left: "12px",
-                        background: "#c0392b",
+                        background: "#ff5500",
                         color: "#fff",
                         padding: "3px 10px",
-                        borderRadius: "4px",
-                        fontSize: "0.68rem",
-                        fontWeight: 800,
-                        letterSpacing: "0.08em",
+                        borderRadius: "5px",
+                        fontSize: "0.66rem",
+                        fontWeight: 900,
+                        letterSpacing: "0.1em",
                         textTransform: "uppercase",
                       }}>
                         {t("Noticias", "News", "Noticias")}
@@ -450,7 +468,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                         <span style={{ color: "var(--text-secondary)", fontSize: "0.75rem" }}>
                           {formatDate(post.createdAt)}
                         </span>
-                        <span style={{ color: "var(--accent-gold)", fontSize: "0.78rem", fontWeight: 700 }}>
+                        <span style={{ color: "#ff5500", fontSize: "0.78rem", fontWeight: 700 }}>
                           {t("Leer →", "Read →", "Leer →")}
                         </span>
                       </div>
@@ -465,21 +483,31 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
         {/* ── CTA BANNER ── */}
         <section style={{ maxWidth: "1280px", margin: "64px auto 0", padding: "0 24px 80px", width: "100%" }}>
           <div className="card" style={{
-            padding: "60px 48px",
+            padding: "72px 48px",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
+            background: "linear-gradient(135deg, rgba(255,85,0,0.05) 0%, transparent 60%)",
+            border: "1px solid rgba(255,85,0,0.12)",
           }}>
             <div style={{
-              position: "absolute", top: "-60px", right: "-60px",
+              position: "absolute", top: "-80px", right: "-80px",
+              width: "400px", height: "400px",
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(255,85,0,0.1) 0%, transparent 65%)",
+              pointerEvents: "none",
+            }} />
+            <div style={{
+              position: "absolute", bottom: "-80px", left: "-80px",
               width: "300px", height: "300px",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(255,85,0,0.08) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(255,85,0,0.06) 0%, transparent 65%)",
               pointerEvents: "none",
             }} />
             <h2 style={{
               fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
               fontWeight: 900,
+              letterSpacing: "-0.03em",
               color: "var(--text-primary)",
               lineHeight: 1.2,
               marginBottom: "16px",
@@ -489,8 +517,8 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
             <p style={{
               color: "var(--text-secondary)",
               fontSize: "1rem",
-              maxWidth: "580px",
-              margin: "0 auto 32px",
+              maxWidth: "560px",
+              margin: "0 auto 36px",
               lineHeight: 1.7,
             }}>
               {t(
@@ -499,11 +527,25 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
                 ""
               )}
             </p>
-            <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/contact" className="btn-primary">
+            <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/contact" style={{
+                background: "#ff5500", color: "#fff",
+                padding: "13px 32px", borderRadius: 10,
+                fontWeight: 700, fontSize: "0.92rem",
+                textDecoration: "none",
+                boxShadow: "0 4px 18px rgba(255,85,0,0.35)",
+                transition: "opacity 0.18s ease",
+              }}>
                 {t("Cotización Gratis →", "Free Quote →", "Cotización Gratis →")}
               </Link>
-              <Link href="/soluciones-digitales" className="btn-secondary">
+              <Link href="/soluciones-digitales" style={{
+                background: "transparent", color: "var(--text-primary)",
+                padding: "13px 32px", borderRadius: 10,
+                fontWeight: 700, fontSize: "0.92rem",
+                textDecoration: "none",
+                border: "1.5px solid var(--border-subtle)",
+                transition: "border-color 0.18s ease",
+              }}>
                 {t("Ver Portafolio", "View Portfolio", "Ver Portafolio")}
               </Link>
             </div>
