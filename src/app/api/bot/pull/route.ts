@@ -234,7 +234,7 @@ function makeClient(): { client: OpenAI; provider: string; model: string } {
         },
       }),
       provider: "OpenRouter",
-      model: "google/gemini-2.5-flash:free", // Insanely fast, generous rate limits
+      model: process.env.AI_MODEL || "google/gemini-2.5-flash", // Insanely fast, generous rate limits
     };
   }
   const groqKey = process.env.GROQ_API_KEY;
