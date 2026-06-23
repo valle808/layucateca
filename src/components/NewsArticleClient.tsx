@@ -167,7 +167,7 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
         </a>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row gap-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row lg:justify-center gap-8">
         <article className="flex-1 w-full max-w-3xl mx-auto lg:mx-0">
           <Link
             href="/news"
