@@ -365,7 +365,6 @@ export default function Sidebar() {
               { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
               { href: "/marketplace", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },
               { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
-              { href: "/classroom", label: "Aula Virtual (Proyecto)", icon: <Icons.Classroom /> },
               {
                 href: user ? "#" : "/login",
                 label: user ? `${user.name} (Salir)` : t("Ingresar", "Sign In", "Ingresar"),
