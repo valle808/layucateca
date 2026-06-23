@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
-import { ShoppingBag, Tag, MapPin, Calendar, Plus, X, Sparkles, Filter, CheckCircle, Image as ImageIcon, Upload, Bot, Loader2 } from "lucide-react";
+import { ShoppingBag, Tag, MapPin, Calendar, Plus, X, Sparkles, Filter, CheckCircle, Image as ImageIcon, Upload, Bot, Loader2, Store } from "lucide-react";
 
 interface MarketplaceItem {
   id: string;
@@ -17,7 +17,7 @@ interface MarketplaceItem {
 }
 
 export default function MercaditoPage() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { user } = useAuth();
 
   const [items, setItems] = useState<MarketplaceItem[]>([]);
@@ -89,7 +89,7 @@ export default function MercaditoPage() {
     setErrorMsg("");
     setGeneratingAi(true);
     try {
-      const res = await fetch(`/api/muna/image-proxy?prompt=${encodeURIComponent(formData.title + " high quality photo")}`);
+      const res = await fetch(`/api/muna/image-proxy?prompt=${encodeURIComponent(formData.title + " product photography, high quality, realistic")}`);
       if (!res.ok) throw new Error("Error generating image");
       
       const blob = await res.blob();
@@ -135,7 +135,7 @@ export default function MercaditoPage() {
         setTimeout(() => {
           setSuccess(false);
           setShowModal(false);
-        }, 1500);
+        }, 2000);
       } else {
         setErrorMsg(data.error || "Ocurrió un error al procesar.");
       }
@@ -152,282 +152,376 @@ export default function MercaditoPage() {
   });
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-4 md:px-8 max-w-6xl mx-auto">
-      {/* Title */}
-      <div className="flex justify-between items-center flex-wrap gap-4 mb-12 animate-fadeInUp">
-        <div>
-          <span className="text-sm uppercase tracking-widest text-[#ff5500] font-bold px-3 py-1 border border-[#ff5500]/30 bg-[#ff5500]/5 rounded-full">
+    <main className="min-h-screen bg-[var(--bg-main)] pb-24">
+      {/* ── STUNNING HERO SECTION ── */}
+      <section className="relative pt-32 pb-20 px-4 md:px-8 overflow-hidden">
+        {/* Animated Background Blobs */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#ff5500]/20 rounded-full blur-[120px] opacity-60 mix-blend-screen pointer-events-none" />
+        <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-[#ffaa00]/10 rounded-full blur-[100px] opacity-40 mix-blend-screen pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+
+        <div className="max-w-6xl mx-auto relative z-10 flex flex-col items-center text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ff5500]/10 border border-[#ff5500]/30 text-[#ff5500] font-bold text-xs uppercase tracking-widest mb-6 backdrop-blur-md">
+            <Sparkles className="w-4 h-4" />
             {t("MERCADITO LOCAL", "LOCAL MARKETPLACE", "K'ÍIWIK")}
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black mt-4 tracking-tight flex items-center gap-3 text-white">
-            <ShoppingBag className="w-8 h-8 text-[#ff5500]" />
-            <span>{t("Clasificados de la Comunidad", "Community Classifieds", "Clasificados")}</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight mb-6">
+            Encuentra lo que <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff5500] to-[#ffaa00]">necesitas aquí.</span>
           </h1>
-          <p className="text-base text-[var(--text-secondary)] mt-3">
-            {t("Ventas locales, eventos culturales, servicios profesionales y promociones de la península.", "Local sales, cultural events, and promos.", "Ventas locales de la península.")}
+          
+          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mb-10 font-medium leading-relaxed">
+            {t("Compra, vende y descubre servicios locales en la península. Desde artículos usados hasta eventos culturales increíbles.", "Buy, sell, and discover local services in the peninsula. From used items to amazing cultural events.", "Kíinsaj, koonol yéetel k'a'ajsaj meyajil te' péeninsula.")}
           </p>
-        </div>
-
-        <button
-          onClick={() => setShowModal(true)}
-          className="btn-primary"
-        >
-          <Plus className="w-5 h-5" />
-          <span>{t("Publicar Clasificado", "Publish Ad", "Publicar")}</span>
-        </button>
-      </div>
-
-      {/* Filter tabs */}
-      <div className="flex gap-2 border-b border-[var(--border-subtle)] pb-4 mb-8 overflow-x-auto">
-        {[
-          { key: "ALL", label: t("Todos", "All", "Todos"), icon: <Filter className="w-4 h-4" /> },
-          { key: "GENERAL", label: t("Venta / Compra", "For Sale / Buy", "Venta"), icon: <Tag className="w-4 h-4" /> },
-          { key: "EVENT", label: t("Eventos", "Events", "Eventos"), icon: <Calendar className="w-4 h-4" /> },
-        ].map((tab) => (
+          
           <button
-            key={tab.key}
-            onClick={() => setFilter(tab.key)}
-            className={`px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 border transition-all ${
-              filter === tab.key
-                ? "bg-[#ff5500]/10 border-[#ff5500] text-white"
-                : "bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[rgba(255,255,255,0.2)]"
-            }`}
+            onClick={() => setShowModal(true)}
+            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-black text-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] active:scale-95"
           >
-            {tab.icon}
-            <span>{tab.label}</span>
+            <Plus className="w-6 h-6 transition-transform group-hover:rotate-90" />
+            <span>{t("Publicar Anuncio Gratis", "Post Free Ad", "Publicar")}</span>
           </button>
-        ))}
-      </div>
+        </div>
+      </section>
 
-      {/* Gallery */}
-      {loading ? (
-        <div className="text-center py-12 text-base text-[var(--text-secondary)] flex items-center justify-center gap-3">
-          <Loader2 className="w-5 h-5 animate-spin text-[#ff5500]" />
-          Cargando anuncios...
-        </div>
-      ) : filteredItems.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-[var(--border-subtle)] rounded-2xl text-base text-[var(--text-secondary)]">
-          No hay clasificados en esta categoría todavía. ¡Publica el tuyo hoy!
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="card p-5 flex flex-col justify-between group"
-                 style={{
-                   transition: "transform 0.18s ease, box-shadow 0.18s ease",
-                   gap: "16px",
-                   backgroundColor: "var(--bg-card)",
-                   border: "1px solid var(--border-subtle)",
-                   borderRadius: "16px",
-                   boxShadow: "var(--shadow-card)",
-                 }}
-                 onMouseEnter={(e) => {
-                   (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
-                   (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
-                 }}
-                 onMouseLeave={(e) => {
-                   (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                   (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
-                 }}
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
+        {/* ── FILTER TABS ── */}
+        <div className="flex gap-3 border-b border-[var(--border-subtle)] pb-6 mb-10 overflow-x-auto scrollbar-hide sticky top-20 z-20 bg-[var(--bg-main)]/80 backdrop-blur-xl pt-4">
+          {[
+            { key: "ALL", label: t("Todos", "All", "Todos"), icon: <Store className="w-5 h-5" /> },
+            { key: "GENERAL", label: t("Compra / Venta", "Buy / Sell", "Venta"), icon: <Tag className="w-5 h-5" /> },
+            { key: "EVENT", label: t("Eventos", "Events", "Eventos"), icon: <Calendar className="w-5 h-5" /> },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              className={`px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2.5 transition-all whitespace-nowrap ${
+                filter === tab.key
+                  ? "bg-[#ff5500] text-white shadow-[0_4px_20px_rgba(255,85,0,0.4)]"
+                  : "bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[#ff5500]/50 hover:text-white"
+              }`}
             >
-              <div>
-                {item.imageUrl && (
-                  <div className="w-full h-48 rounded-xl overflow-hidden mb-4 border border-[var(--border-subtle)] bg-black/50">
-                    <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                )}
-                <div className="flex justify-between items-start gap-2">
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-[#ff5500] px-2 py-0.5 border border-[#ff5500]/20 bg-[#ff5500]/5 rounded-full">
-                    {item.category === "EVENT" ? "EVENTO" : "VENTA"}
-                  </span>
-                  {item.price !== null && (
-                    <span className="text-base font-black text-[#ff5500]">${item.price} USD</span>
-                  )}
-                </div>
-                <h3 className="font-bold text-lg text-white mt-3">{item.title}</h3>
-                <p className="text-sm text-[var(--text-secondary)] mt-2 line-clamp-3 leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-
-              <div className="border-t border-[var(--border-subtle)] pt-4 flex items-center justify-between text-xs text-[var(--text-secondary)] font-medium">
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-[#ff5500]" />
-                  {item.location}
-                </span>
-                <span>{new Date(item.createdAt).toLocaleDateString()}</span>
-              </div>
-            </div>
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
           ))}
         </div>
-      )}
 
-      {/* Create Modal */}
+        {/* ── GALLERY ── */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-32 text-[var(--text-secondary)]">
+            <div className="relative w-16 h-16 mb-6">
+              <div className="absolute inset-0 border-4 border-[#ff5500]/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-[#ff5500] rounded-full border-t-transparent animate-spin"></div>
+            </div>
+            <p className="font-bold tracking-wider uppercase text-sm">Cargando el mercadito...</p>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="text-center py-32 bg-[var(--bg-card)] border border-dashed border-[var(--border-subtle)] rounded-3xl">
+            <ShoppingBag className="w-16 h-16 text-[var(--border-subtle)] mx-auto mb-6" />
+            <h3 className="text-2xl font-bold text-white mb-2">No hay anuncios aún</h3>
+            <p className="text-[var(--text-secondary)] mb-8 max-w-md mx-auto">Sé la primera persona en publicar en esta categoría. ¡Es totalmente gratis y toma menos de un minuto!</p>
+            <button onClick={() => setShowModal(true)} className="btn-primary">
+              Publicar ahora
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredItems.map((item) => (
+              <div 
+                key={item.id} 
+                className="group bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden hover:border-[#ff5500]/30 transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,85,0,0.1)] hover:-translate-y-1 flex flex-col"
+              >
+                {/* Image Area */}
+                <div className="relative aspect-[4/3] bg-black/40 overflow-hidden">
+                  {item.imageUrl ? (
+                    <img 
+                      src={item.imageUrl} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <ImagePlaceholder />
+                    </div>
+                  )}
+                  
+                  {/* Badges Overlay */}
+                  <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                    <span className="backdrop-blur-md bg-black/50 border border-white/10 text-white text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-wider shadow-lg">
+                      {item.category === "EVENT" ? "🎉 Evento" : "🛍️ Venta"}
+                    </span>
+                    {item.price !== null && (
+                      <span className="bg-[#ff5500] text-white font-black px-3 py-1 rounded-full text-sm shadow-lg">
+                        ${item.price}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Content Area */}
+                <div className="p-5 flex flex-col flex-grow">
+                  <h3 className="font-bold text-lg text-white mb-2 leading-tight line-clamp-2 group-hover:text-[#ff5500] transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-[var(--text-secondary)] line-clamp-3 leading-relaxed flex-grow mb-4">
+                    {item.description}
+                  </p>
+                  
+                  {/* Footer */}
+                  <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs font-semibold text-[var(--text-secondary)]">
+                    <div className="flex items-center gap-1.5 truncate max-w-[60%]">
+                      <MapPin className="w-3.5 h-3.5 text-[#ff5500] shrink-0" />
+                      <span className="truncate">{item.location}</span>
+                    </div>
+                    <span className="shrink-0">{new Date(item.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── CREATE MODAL ── */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] flex items-center justify-center p-4">
-          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl max-w-lg w-full p-6 md:p-8 space-y-6 animate-fadeInUp shadow-[0_0_50px_rgba(255,85,0,0.15)] max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-4">
-              <h3 className="font-black text-xl text-white flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-[#ff5500]" />
-                Publicar en el Mercado
-              </h3>
-              <button onClick={() => setShowModal(false)} className="text-[var(--text-secondary)] hover:text-white p-2 rounded-lg hover:bg-white/5 transition-colors">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[2000] flex items-center justify-center p-4 overflow-y-auto">
+          <div 
+            className="relative bg-[#111111] border border-white/10 rounded-3xl max-w-2xl w-full p-8 shadow-[0_0_100px_rgba(255,85,0,0.15)] my-8"
+            style={{ animation: 'modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h3 className="font-black text-2xl text-white flex items-center gap-3">
+                  <span className="bg-gradient-to-br from-[#ff5500] to-[#ffaa00] text-transparent bg-clip-text">Publicar Anuncio</span>
+                </h3>
+                <p className="text-[var(--text-secondary)] text-sm mt-1">Completa los detalles para que la comunidad lo vea.</p>
+              </div>
+              <button 
+                onClick={() => setShowModal(false)} 
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-[var(--text-secondary)] hover:text-white hover:bg-white/10 transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {success ? (
-              <div className="text-center py-10 animate-fadeInUp">
-                <CheckCircle className="w-16 h-16 text-[#ff5500] mx-auto mb-4" />
-                <p className="text-lg text-white font-bold">¡Publicación exitosa!</p>
+              <div className="text-center py-16">
+                <div className="w-24 h-24 bg-[#ff5500]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="w-12 h-12 text-[#ff5500]" />
+                </div>
+                <h3 className="text-3xl font-black text-white mb-2">¡Todo listo!</h3>
+                <p className="text-[var(--text-secondary)] text-lg">Tu anuncio ya está publicado en el Mercadito.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {errorMsg && <div className="p-3 text-sm bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg">{errorMsg}</div>}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {errorMsg && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl text-sm font-medium flex items-start gap-3">
+                    <span className="shrink-0 mt-0.5">⚠️</span>
+                    {errorMsg}
+                  </div>
+                )}
 
-                <div>
-                  <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-1.5 tracking-wider">Título de la Publicación</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Computadora Mac M1 seminueva"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    className="input text-base py-3"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-1.5 tracking-wider">Descripción</label>
-                  <textarea
-                    required
-                    placeholder="Detalles sobre el producto, evento, método de entrega..."
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    className="input text-base min-h-[100px] py-3"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-1.5 tracking-wider">Precio (USD - Opcional)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2">
+                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-2 tracking-wider">Título de la Publicación</label>
                     <input
-                      type="number"
-                      placeholder="e.g. 450"
-                      name="price"
-                      value={formData.price}
+                      type="text"
+                      required
+                      placeholder="Ej. MacBook Pro M1 2020 en excelente estado"
+                      name="title"
+                      value={formData.title}
                       onChange={handleInputChange}
-                      className="input text-base py-3"
+                      className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3.5 focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] transition-all outline-none"
                     />
                   </div>
+
+                  <div className="md:col-span-2">
+                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-2 tracking-wider">Descripción detallada</label>
+                    <textarea
+                      required
+                      placeholder="Describe los detalles, condiciones, métodos de entrega o información del evento..."
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3.5 focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] transition-all outline-none min-h-[120px] resize-y"
+                    />
+                  </div>
+
                   <div>
-                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-1.5 tracking-wider">Categoría</label>
+                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-2 tracking-wider">Precio (USD - Opcional)</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] font-bold">$</span>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                        className="w-full bg-white/5 border border-white/10 text-white rounded-xl pl-8 pr-4 py-3.5 focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] transition-all outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-2 tracking-wider">Categoría</label>
                     <select
                       name="category"
                       value={formData.category}
                       onChange={handleInputChange}
-                      className="input text-base py-3"
+                      className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3.5 focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] transition-all outline-none appearance-none"
                     >
-                      <option value="GENERAL">Venta / Clasificados</option>
-                      <option value="EVENT">Eventos locales</option>
+                      <option value="GENERAL" className="bg-[#111]">Venta / Producto</option>
+                      <option value="EVENT" className="bg-[#111]">Evento Local</option>
                     </select>
                   </div>
+
+                  <div className="md:col-span-2">
+                    <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-2 tracking-wider">Ubicación</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]" />
+                      <input
+                        type="text"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleInputChange}
+                        className="w-full bg-white/5 border border-white/10 text-white rounded-xl pl-11 pr-4 py-3.5 focus:border-[#ff5500] focus:ring-1 focus:ring-[#ff5500] transition-all outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-1.5 tracking-wider">Ubicación</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    className="input text-base py-3"
-                  />
-                </div>
-
-                {/* Imagen Section */}
-                <div className="border border-[var(--border-subtle)] rounded-xl p-4 bg-black/20">
-                  <label className="text-xs font-bold text-white uppercase block mb-3 flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4 text-[#ff5500]" /> Imagen de Portada
-                  </label>
+                {/* ── ENHANCED IMAGE SECTION ── */}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mt-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="text-sm font-bold text-white flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-[#ff5500]" />
+                      Foto del Producto / Evento
+                    </label>
+                  </div>
                   
-                  <div className="flex gap-2 mb-4 bg-black/40 p-1 rounded-lg">
-                    <button type="button" onClick={() => setImageMode("URL")} className={`flex-1 text-xs py-2 rounded-md font-bold transition-colors ${imageMode === "URL" ? "bg-[#ff5500] text-white" : "text-[var(--text-secondary)] hover:text-white"}`}>URL</button>
-                    <button type="button" onClick={() => setImageMode("UPLOAD")} className={`flex-1 text-xs py-2 rounded-md font-bold transition-colors ${imageMode === "UPLOAD" ? "bg-[#ff5500] text-white" : "text-[var(--text-secondary)] hover:text-white"}`}>Subir</button>
-                    <button type="button" onClick={() => setImageMode("AI")} className={`flex-1 text-xs py-2 rounded-md font-bold transition-colors ${imageMode === "AI" ? "bg-[#ff5500] text-white" : "text-[var(--text-secondary)] hover:text-white"}`}>Generar con IA</button>
+                  {/* Mode Switcher */}
+                  <div className="flex bg-black/40 p-1 rounded-xl mb-5">
+                    {[
+                      { id: "UPLOAD", label: "Subir Foto", icon: <Upload className="w-4 h-4" /> },
+                      { id: "AI", label: "Generar con IA", icon: <Sparkles className="w-4 h-4" /> },
+                      { id: "URL", label: "Enlace URL", icon: <Tag className="w-4 h-4" /> }
+                    ].map(mode => (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => setImageMode(mode.id as any)}
+                        className={`flex-1 flex items-center justify-center gap-2 text-xs py-2.5 rounded-lg font-bold transition-all ${
+                          imageMode === mode.id 
+                            ? "bg-[#ff5500] text-white shadow-md" 
+                            : "text-[var(--text-secondary)] hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {mode.icon} <span className="hidden sm:inline">{mode.label}</span>
+                      </button>
+                    ))}
                   </div>
 
-                  {imageMode === "URL" && (
-                    <input
-                      type="text"
-                      placeholder="https://..."
-                      name="imageUrl"
-                      value={formData.imageUrl}
-                      onChange={handleInputChange}
-                      className="input text-sm py-3"
-                    />
-                  )}
-
-                  {imageMode === "UPLOAD" && (
-                    <div className="flex flex-col gap-3">
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        ref={fileInputRef} 
-                        onChange={handleFileUpload} 
-                        className="hidden" 
-                      />
-                      <button 
-                        type="button" 
+                  {/* Mode Content */}
+                  <div className="min-h-[140px] flex flex-col justify-center">
+                    {imageMode === "UPLOAD" && (
+                      <div 
                         onClick={() => fileInputRef.current?.click()}
-                        className="btn-secondary w-full justify-center flex items-center gap-2 py-3"
+                        className="border-2 border-dashed border-white/20 rounded-xl p-8 text-center cursor-pointer hover:border-[#ff5500]/50 hover:bg-[#ff5500]/5 transition-all group"
                       >
-                        <Upload className="w-4 h-4" /> Seleccionar Imagen
-                      </button>
-                    </div>
-                  )}
+                        <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
+                        <Upload className="w-8 h-8 text-[var(--text-secondary)] group-hover:text-[#ff5500] mx-auto mb-3 transition-colors" />
+                        <p className="text-sm font-bold text-white mb-1">Click para subir una imagen</p>
+                        <p className="text-xs text-[var(--text-secondary)]">PNG, JPG, WEBP (Max 4MB)</p>
+                      </div>
+                    )}
 
-                  {imageMode === "AI" && (
-                    <div className="flex flex-col gap-3">
-                      <p className="text-xs text-[var(--text-secondary)]">Se utilizará el título de tu publicación para generar una imagen automáticamente.</p>
-                      <button 
-                        type="button" 
-                        onClick={handleGenerateAi}
-                        disabled={generatingAi || !formData.title}
-                        className="btn-secondary w-full justify-center flex items-center gap-2 py-3"
-                        style={{ opacity: generatingAi || !formData.title ? 0.5 : 1 }}
-                      >
-                        {generatingAi ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
-                        {generatingAi ? "Generando..." : "Generar con Muna AI"}
-                      </button>
-                    </div>
-                  )}
+                    {imageMode === "AI" && (
+                      <div className="border border-[#ff5500]/30 bg-[#ff5500]/5 rounded-xl p-6 text-center">
+                        <Bot className="w-10 h-10 text-[#ffaa00] mx-auto mb-3" />
+                        <p className="text-sm text-white font-medium mb-4 max-w-sm mx-auto">
+                          Muna AI creará una foto profesional basada en tu título: 
+                          <strong className="block mt-1 text-[#ff5500]">"{formData.title || "..."}"</strong>
+                        </p>
+                        <button 
+                          type="button" 
+                          onClick={handleGenerateAi}
+                          disabled={generatingAi || !formData.title}
+                          className="relative inline-flex items-center gap-2 bg-gradient-to-r from-[#ff5500] to-[#ffaa00] text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 overflow-hidden"
+                        >
+                          {generatingAi && (
+                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                          )}
+                          {generatingAi ? <Loader2 className="w-4 h-4 animate-spin relative z-10" /> : <Sparkles className="w-4 h-4 relative z-10" />}
+                          <span className="relative z-10">{generatingAi ? "Creando Magia..." : "Generar Imagen Ahora"}</span>
+                        </button>
+                      </div>
+                    )}
 
+                    {imageMode === "URL" && (
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Pega el enlace de la imagen (https://...)"
+                          name="imageUrl"
+                          value={formData.imageUrl}
+                          onChange={handleInputChange}
+                          className="w-full bg-black/40 border border-white/10 text-white rounded-xl px-4 py-3 focus:border-[#ff5500] outline-none transition-all"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Image Preview */}
                   {formData.imageUrl && (
-                    <div className="mt-4 rounded-lg overflow-hidden border border-[var(--border-subtle)] relative h-32">
+                    <div className="mt-5 relative aspect-video rounded-xl overflow-hidden border border-white/20 shadow-lg bg-black/50 group">
                       <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
-                      <button type="button" onClick={() => setFormData(prev => ({...prev, imageUrl: ""}))} className="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full hover:bg-[#ff5500] transition-colors">
-                        <X className="w-4 h-4" />
-                      </button>
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button 
+                          type="button" 
+                          onClick={() => setFormData(prev => ({...prev, imageUrl: ""}))} 
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-red-600 transition-colors"
+                        >
+                          <X className="w-4 h-4" /> Eliminar Foto
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="btn-primary w-full justify-center py-4 text-base"
-                  style={{ opacity: submitting ? 0.7 : 1 }}
-                >
-                  {submitting ? "Publicando..." : "Publicar Anuncio"}
-                </button>
+                <div className="pt-4 border-t border-white/10">
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-white text-black font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:bg-gray-200 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                  >
+                    {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <CheckCircle className="w-6 h-6" />}
+                    {submitting ? "Publicando Anuncio..." : "Publicar Anuncio Ahora"}
+                  </button>
+                </div>
               </form>
             )}
           </div>
         </div>
       )}
+
+      {/* Global styles for animations that might not be in globals.css */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes modalSlideUp {
+          from { opacity: 0; transform: translateY(40px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}} />
     </main>
+  );
+}
+
+// Minimal placeholder component for images
+function ImagePlaceholder() {
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center text-[var(--border-subtle)]">
+      <ImageIcon className="w-10 h-10 mb-2 opacity-50" />
+    </div>
   );
 }
