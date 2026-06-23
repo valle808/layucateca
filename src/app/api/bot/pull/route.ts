@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
 
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+
 // ─────────────────────────────────────────────────────────────────────────────
 // FREE AI PROVIDERS:
 //  1. Groq (primary)    → https://console.groq.com  — free, no billing
@@ -572,32 +575,18 @@ async function handleSync() {
     if (newCats.length > 0) dynamicCategories = [...dynamicCategories, ...newCats];
   } catch {}
 
-  // Fetch RSS feeds for all categories in parallel
-  console.log("[PIPELINE] 📰 Fetching RSS feeds...");
-  const feedsByCategory = await Promise.all(
-    dynamicCategories.map(async (cat) => ({ cat, headlines: await fetchFeedsForCategory(cat) }))
-  );
-  const feedMap = Object.fromEntries(feedsByCategory.map(({ cat, headlines }) => [cat, headlines]));
-  console.log(`[PIPELINE] 📰 ${feedsByCategory.map(f => `${f.cat}(${f.headlines.length})`).join(", ")}`);
+  // Pick ONE random category to avoid Vercel 10-second timeout limits on the free tier.
+  // Since cron-job runs every minute, all categories will be populated throughout the day.
+  const selectedCategory = dynamicCategories[Math.floor(Math.random() * dynamicCategories.length)];
+  console.log(`[PIPELINE] 🎲 Selected single category: ${selectedCategory}`);
 
-  // Run categories in staggered batches of 2 to stay under Groq 12k TPM limit
-  const BATCH_SIZE = 2;
-  const BATCH_DELAY_MS = 9000; // 9s between batches keeps TPM well under limit
-  const allResults: PromiseSettledResult<any>[] = [];
+  console.log(`[PIPELINE] 📰 Fetching RSS feeds for ${selectedCategory}...`);
+  const headlines = await fetchFeedsForCategory(selectedCategory);
 
-  for (let i = 0; i < dynamicCategories.length; i += BATCH_SIZE) {
-    const batch = dynamicCategories.slice(i, i + BATCH_SIZE);
-    if (i > 0) {
-      console.log(`[PIPELINE] ⏳ Pausing ${BATCH_DELAY_MS / 1000}s before next batch...`);
-      await sleep(BATCH_DELAY_MS);
-    }
-    console.log(`[PIPELINE] 🔄 Batch ${Math.floor(i / BATCH_SIZE) + 1}: [${batch.join(", ")}]`);
-    const batchResults = await Promise.allSettled(
-      batch.map((cat) => runCategoryPipeline(client, model, cat, feedMap[cat] || []))
-    );
-    allResults.push(...batchResults);
-  }
-  const results = allResults;
+  const result = await runCategoryPipeline(client, model, selectedCategory, headlines);
+  
+  const results = [{ status: "fulfilled", value: result }];
+
 
   const summary = results.map((r) =>
     r.status === "fulfilled" ? r.value : { category: "unknown", success: false, error: String(r.reason) }
