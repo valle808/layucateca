@@ -88,10 +88,13 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { content, authorName, authorId, roomSlug, roomPassword } = await req.json();
+    const { content, authorName, authorId, roomSlug, roomPassword, imageUrl, location } = await req.json();
 
-    if (!content || !roomSlug) {
-      return NextResponse.json({ error: "Content and roomSlug are required" }, { status: 400 });
+    if (!content && !imageUrl && !location) {
+      return NextResponse.json({ error: "Content, image, or location is required" }, { status: 400 });
+    }
+    if (!roomSlug) {
+      return NextResponse.json({ error: "RoomSlug is required" }, { status: 400 });
     }
 
     const room = await (prisma as any).chatRoom.findUnique({
@@ -113,7 +116,7 @@ export async function POST(req: Request) {
     }
 
     // Run AI content moderation
-    const moderatedContent = await moderateChatMessage(content);
+    const moderatedContent = content ? await moderateChatMessage(content) : "";
 
     const message = await (prisma as any).chatMessage.create({
       data: {
@@ -121,6 +124,8 @@ export async function POST(req: Request) {
         authorName: authorName || "Invitado",
         authorId: authorId || null,
         roomId: room.id,
+        imageUrl: imageUrl || null,
+        location: location || null,
       },
     });
 

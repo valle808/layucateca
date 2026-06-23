@@ -116,6 +116,8 @@ model ChatMessage {
   authorId   String?
   authorName String   @default("Guest")
   roomId     String
+  imageUrl   String?
+  location   String?
   createdAt  DateTime @default(now())
   author     User?    @relation(fields: [authorId], references: [id])
   room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
