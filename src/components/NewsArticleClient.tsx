@@ -50,9 +50,6 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
   const { t, translateDb, language } = useLanguage();
   const { user } = useAuth();
 
-  const [summary, setSummary] = useState("");
-  const [loadingSummary, setLoadingSummary] = useState(true);
-
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [commentInput, setCommentInput] = useState("");
@@ -61,21 +58,7 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
   const pageUrl = typeof window !== "undefined" ? window.location.href : "";
   const shareText = encodeURIComponent(`Lee esta noticia en La Yucateca: ${post.title}`);
 
-  // Fetch AI Summary
   useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        const res = await fetch(`/api/news/summarize?postId=${post.id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setSummary(data.summary || "");
-        }
-      } catch (e) {
-        console.error("Failed to load summary", e);
-      } finally {
-        setLoadingSummary(false);
-      }
-    };
 
     const fetchComments = async () => {
       try {
@@ -91,7 +74,6 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
       }
     };
 
-    fetchSummary();
     fetchComments();
   }, [post.id]);
 
@@ -211,20 +193,6 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
             })}
           </p>
 
-          {/* AI Summarization TL;DR Block */}
-          <div className="p-5 rounded-2xl border border-[rgba(255,85,0,0.25)] bg-[rgba(255,85,0,0.02)] mb-8 shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#ff5500] uppercase tracking-wider mb-2">
-              <Sparkles className="w-4 h-4 text-[#ff5500] animate-pulse" />
-              <span>Resumen por Inteligencia Artificial (TL;DR)</span>
-            </div>
-            {loadingSummary ? (
-              <div className="text-xs text-gray-500 dark:text-[rgba(255,255,255,0.4)]">Generando resumen cognitivo...</div>
-            ) : (
-              <p className="text-xs text-gray-700 dark:text-[rgba(255,255,255,0.7)] whitespace-pre-line leading-relaxed font-mono">
-                {summary}
-              </p>
-            )}
-          </div>
 
           {/* Web Speech Reader integration */}
           <SpeechPlayer text={post.content} />
