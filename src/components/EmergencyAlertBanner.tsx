@@ -198,11 +198,16 @@ export default function EmergencyAlertBanner() {
   }, [fetchWeather]);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (!loading && weather && !closed) {
       document.documentElement.style.setProperty("--banner-height", "42px");
+      timer = setTimeout(() => {
+        setClosed(true);
+      }, 5000);
     } else {
       document.documentElement.style.setProperty("--banner-height", "0px");
     }
+    return () => clearTimeout(timer);
   }, [loading, weather, closed]);
 
   if (loading || !weather || closed) return null;
