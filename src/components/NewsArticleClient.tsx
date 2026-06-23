@@ -7,21 +7,82 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
 import Footer from "@/components/Footer";
 import SpeechPlayer from "@/components/SpeechPlayer";
-import { Mail, MessageCircle, Sparkles, Send, MessageSquare } from "lucide-react";
+import { Mail, MessageCircle, Send, MessageSquare, Clock, MapPin, Share2 } from "lucide-react";
 
-// Local inline SVG icons for social platforms to ensure compatibility
+// ─── Social icons ─────────────────────────────────────────────────────────────
 const FacebookIcon = ({ className }: { className?: string }) => (
-  <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+  <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
-
 const TwitterIcon = ({ className }: { className?: string }) => (
-  <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+  <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.25 2.25h6.94l4.265 5.641 5.789-5.641zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+  </svg>
+);
+const TelegramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+  </svg>
+);
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
   </svg>
 );
 
+// ─── Boilerplate scrubber ─────────────────────────────────────────────────────
+// Removes the AI-generated report headers and section labels in all three languages.
+function cleanContent(raw: string): string {
+  // Remove the bracketed report header lines
+  raw = raw.replace(/\[REAL-TIME MULTI-AGENT SWARM JOURNALISTIC REPORT[^\]]*\]/gi, "");
+  raw = raw.replace(/\[REPORTE PERIODÍSTICO DE ENJAMBRE MULTI-AGENTE[^\]]*\]/gi, "");
+  raw = raw.replace(/\[PÉEKTSIL MULTI-AGENTE[^\]]*\]/gi, "");
+
+  // Remove bold section labels (Spanish, English, Mayan variants)
+  const labels = [
+    "\\*\\*Resumen Ejecutivo:\\*\\*",
+    "\\*\\*Executive Summary:\\*\\*",
+    "\\*\\*Tsol T'aan:\\*\\*",
+    "\\*\\*Contexto y Análisis de Datos \\(Redacción AI\\):\\*\\*",
+    "\\*\\*Context and Data Analysis \\(AI Drafting\\):\\*\\*",
+    "\\*\\*Xook yéetel Meyaj \\(Redacción AI\\):\\*\\*",
+    "\\*\\*Verificación y Revisión Editorial \\(Fact-Checkers\\):\\*\\*",
+    "\\*\\*Editorial Verification and Fact-Checking:\\*\\*",
+    "\\*\\*U T'oxol ti' Facebook Fan Page:\\*\\*",
+    "\\*\\*Distribución Autónoma en Facebook Fan Page:\\*\\*",
+    "\\*\\*Autonomous Facebook Fan Page Distribution:\\*\\*",
+    "\\*\\*LA YUCATECA VIRAL ENGINE\\*\\*",
+    "— LA YUCATECA VIRAL ENGINE",
+  ];
+  for (const label of labels) {
+    raw = raw.replace(new RegExp(label, "gi"), "");
+  }
+
+  // Remove any remaining **Bold:** patterns that are section labels (catch-all)
+  raw = raw.replace(/\*\*[^*]{1,60}:\*\*/g, "");
+
+  // Remove the || separator that splits language variants — keep only the first segment
+  if (raw.includes("||")) {
+    raw = raw.split("||")[0];
+  }
+
+  // Remove any leftover asterisks used for bold markdown
+  raw = raw.replace(/\*\*/g, "");
+
+  // Collapse excessive blank lines (3+ newlines → 2)
+  raw = raw.replace(/\n{3,}/g, "\n\n");
+
+  return raw.trim();
+}
+
+// Estimate read time in minutes
+function readTime(text: string): number {
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface Post {
   id: string;
   title: string;
@@ -46,6 +107,20 @@ interface Comment {
   createdAt: string;
 }
 
+// ─── Fallback hero images per state/category ─────────────────────────────────
+const FALLBACK_IMAGES: Record<string, string> = {
+  Yucatán: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+  "Quintana Roo": "https://images.unsplash.com/photo-1682686578023-dc680e7a3aeb?w=1200&q=80",
+  Campeche: "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=1200&q=80",
+  default: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80",
+};
+
+function getHeroImage(post: Post): string {
+  if (post.imageUrl && post.imageUrl.startsWith("http")) return post.imageUrl;
+  return FALLBACK_IMAGES[post.state] ?? FALLBACK_IMAGES.default;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function NewsArticleClient({ post, similarPosts = [] }: NewsArticleClientProps) {
   const { t, translateDb, language } = useLanguage();
   const { user } = useAuth();
@@ -54,12 +129,19 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
   const [loadingComments, setLoadingComments] = useState(true);
   const [commentInput, setCommentInput] = useState("");
   const [commentError, setCommentError] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareText = encodeURIComponent(`Lee esta noticia en La Yucateca: ${post.title}`);
+  const pageUrl = typeof window !== "undefined" ? window.location.href : `https://layucateca.com/news/${post.slug}`;
+  const shareText = encodeURIComponent(`Lee esta noticia en La Yucateca: ${post.title.split(" || ")[0]}`);
+
+  const heroImage = getHeroImage(post);
+  const rawContent = translateDb(post.content);
+  const cleanedContent = cleanContent(rawContent);
+  const paragraphs = cleanedContent.split("\n").filter((p) => p.trim().length > 0);
+  const mins = readTime(cleanedContent);
+  const displayTitle = translateDb(post.title).split(" || ")[0];
 
   useEffect(() => {
-
     const fetchComments = async () => {
       try {
         const res = await fetch(`/api/comments?postId=${post.id}`);
@@ -73,18 +155,15 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
         setLoadingComments(false);
       }
     };
-
     fetchComments();
   }, [post.id]);
 
   const handlePostComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentInput.trim()) return;
-
     setCommentError("");
     const text = commentInput;
     setCommentInput("");
-
     try {
       const res = await fetch("/api/comments", {
         method: "POST",
@@ -96,142 +175,161 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
           postId: post.id,
         }),
       });
-
       const data = await res.json();
       if (res.ok && data.success) {
-        // Refresh comments list
         setComments([data.comment, ...comments]);
       } else {
         setCommentError(data.error || "Ocurrió un error al enviar tu comentario.");
       }
-    } catch (err) {
+    } catch {
       setCommentError("Error de red.");
     }
   };
 
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(pageUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <>
-      {/* Sticky Social Share Widget (Left Side on Desktop, Bottom on Mobile) */}
-      <div className="fixed left-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4 z-40 bg-[rgba(15,15,25,0.7)] border border-[rgba(255,255,255,0.08)] backdrop-blur-md p-3 rounded-full shadow-lg">
-        <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[rgba(255,255,255,0.6)] hover:text-[#ff5500] p-2 hover:bg-[rgba(255,255,255,0.05)] rounded-full transition-all"
-          title="Compartir en Facebook"
-        >
-          <FacebookIcon className="w-5 h-5" />
-        </a>
-        <a
-          href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[rgba(255,255,255,0.6)] hover:text-[#ff5500] p-2 hover:bg-[rgba(255,255,255,0.05)] rounded-full transition-all"
-          title="Compartir en X"
-        >
-          <TwitterIcon className="w-5 h-5" />
-        </a>
-        <a
-          href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[rgba(255,255,255,0.6)] hover:text-[#ff5500] p-2 hover:bg-[rgba(255,255,255,0.05)] rounded-full transition-all"
-          title="Compartir en WhatsApp"
-        >
-          <MessageCircle className="w-5 h-5" />
-        </a>
-        <a
-          href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`}
-          className="text-[rgba(255,255,255,0.6)] hover:text-[#ff5500] p-2 hover:bg-[rgba(255,255,255,0.05)] rounded-full transition-all"
-          title="Enviar por Correo"
-        >
-          <Mail className="w-5 h-5" />
-        </a>
+      {/* ── Sticky desktop share bar ── */}
+      <div className="fixed left-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-3 z-40">
+        {[
+          { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, icon: <FacebookIcon className="w-4 h-4" />, label: "Facebook", color: "#1877f2" },
+          { href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`, icon: <TwitterIcon className="w-4 h-4" />, label: "X / Twitter", color: "#000" },
+          { href: `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${shareText}`, icon: <TelegramIcon className="w-4 h-4" />, label: "Telegram", color: "#0088cc" },
+          { href: `https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`, icon: <WhatsAppIcon className="w-4 h-4" />, label: "WhatsApp", color: "#25d366" },
+          { href: `mailto:?subject=${encodeURIComponent(displayTitle)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`, icon: <Mail className="w-4 h-4" />, label: "Email", color: "#ff5500" },
+        ].map(({ href, icon, label, color }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={label}
+            style={{ "--hover-color": color } as React.CSSProperties}
+            className="w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-[rgba(20,20,30,0.9)] border border-gray-200 dark:border-[rgba(255,255,255,0.08)] text-gray-500 dark:text-[rgba(255,255,255,0.55)] shadow-md hover:text-white hover:border-transparent transition-all duration-200"
+            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = color; (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = ""; (e.currentTarget as HTMLAnchorElement).style.color = ""; }}
+          >
+            {icon}
+          </a>
+        ))}
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row lg:justify-center gap-8">
-        <article className="flex-1 w-full max-w-3xl mx-auto lg:mx-0">
-          <Link
-            href="/news"
-            style={{
-              color: "var(--text-secondary)",
-              textDecoration: "none",
-              fontSize: "0.875rem",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              marginBottom: "32px",
-              transition: "color 0.2s",
-            }}
-          >
-            ← {t("Volver a Noticias", "Back to News", "Volver Péektsil")}
-          </Link>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10 lg:justify-center">
+        {/* ── Main article column ── */}
+        <article className="flex-1 w-full max-w-3xl mx-auto lg:mx-0 min-w-0">
 
-          <div style={{ display: "flex", gap: "8px", marginBottom: "20px", alignItems: "center" }}>
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-xs text-gray-500 dark:text-[rgba(255,255,255,0.4)] mb-6 flex-wrap">
+            <Link href="/" className="hover:text-[#ff5500] transition-colors">Inicio</Link>
+            <span>/</span>
+            <Link href="/news" className="hover:text-[#ff5500] transition-colors">{t("Noticias", "News", "Péektsil")}</Link>
+            <span>/</span>
+            <span className="text-gray-700 dark:text-[rgba(255,255,255,0.6)] line-clamp-1">{displayTitle}</span>
+          </nav>
+
+          {/* Category badges */}
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
             <span className="badge badge-news">{t("Noticias", "News", "Péektsil")}</span>
-            <span className="badge badge-portfolio">📍 {post.state}</span>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full bg-[rgba(255,85,0,0.12)] text-[#ff5500] border border-[rgba(255,85,0,0.2)]">
+              <MapPin className="w-3 h-3" /> {post.state}
+            </span>
           </div>
 
+          {/* Title */}
           <h1
             style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
+              fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
               fontWeight: 900,
               lineHeight: 1.15,
-              marginBottom: "20px",
+              marginBottom: "16px",
+              letterSpacing: "-0.02em",
             }}
           >
-            {translateDb(post.title)}
+            {displayTitle}
           </h1>
 
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "24px" }}>
-            {t("Publicado el ", "Published on ", "Pata'ab ti' ")}{" "}
-            {new Date(post.createdAt).toLocaleDateString(language === "es" ? "es-ES" : language === "my" ? "es-MX" : "en-US", {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </p>
-
-
-          {/* Web Speech Reader integration */}
-          <SpeechPlayer text={post.content} />
-
-          {post.imageUrl && (
-            <div
-              style={{
-                borderRadius: "16px",
-                overflow: "hidden",
-                marginBottom: "40px",
-                maxHeight: "480px",
-                border: "1px solid var(--border-subtle)",
-              }}
-            >
-              <img src={post.imageUrl} alt={translateDb(post.title)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          {/* Meta row */}
+          <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-500 dark:text-[rgba(255,255,255,0.45)] border-b border-gray-200 dark:border-[rgba(255,255,255,0.07)] pb-4">
+            <div className="flex items-center gap-1.5 font-medium text-gray-700 dark:text-[rgba(255,255,255,0.75)]">
+              <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} alt="" className="w-5 h-5 rounded-full object-cover" />
+              <span>La Yucateca</span>
             </div>
-          )}
+            <span>·</span>
+            <time dateTime={post.createdAt}>
+              {new Date(post.createdAt).toLocaleDateString(language === "es" ? "es-MX" : "en-US", {
+                weekday: "long", month: "long", day: "numeric", year: "numeric",
+              })}
+            </time>
+            <span>·</span>
+            <div className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5" />
+              <span>{mins} {t("min de lectura", "min read", "min")}</span>
+            </div>
+          </div>
 
-          <div className="divider" />
+          {/* Hero Image — always shown */}
+          <div
+            style={{
+              borderRadius: "16px",
+              overflow: "hidden",
+              marginBottom: "36px",
+              aspectRatio: "16/9",
+              background: "var(--surface)",
+              border: "1px solid var(--border-subtle)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+            }}
+          >
+            <img
+              src={heroImage}
+              alt={displayTitle}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              loading="eager"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = FALLBACK_IMAGES.default;
+              }}
+            />
+          </div>
 
+          {/* Speech player */}
+          <SpeechPlayer text={cleanedContent} />
+
+          {/* Article body */}
           <div
             className="article-body"
             style={{
               color: "var(--text-primary)",
-              fontSize: "1.15rem",
-              lineHeight: 2.1,
-              letterSpacing: "0.01em",
+              fontSize: "1.125rem",
+              lineHeight: 1.9,
+              letterSpacing: "0.012em",
+              marginTop: "28px",
             }}
           >
-            {translateDb(post.content).split('\n').map((paragraph, idx) => {
-              if (!paragraph.trim()) return null;
+            {paragraphs.map((paragraph, idx) => {
+              // Inject a mid-article ad after the 3rd paragraph
+              if (idx === 3) {
+                return (
+                  <React.Fragment key={idx}>
+                    <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
+                    <p
+                      style={{ marginBottom: "1.6em" }}
+                      className={idx === 0 ? "first-letter:text-5xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-1" : ""}
+                    >
+                      {paragraph}
+                    </p>
+                  </React.Fragment>
+                );
+              }
               return (
-                <p 
-                  key={idx} 
-                  style={{ 
-                    marginBottom: "1.5em", 
-                    opacity: 0.9 
-                  }}
-                  className={idx === 0 ? "first-letter:text-6xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-2" : ""}
+                <p
+                  key={idx}
+                  style={{ marginBottom: "1.6em" }}
+                  className={idx === 0 ? "first-letter:text-5xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-1" : ""}
                 >
                   {paragraph}
                 </p>
@@ -239,40 +337,55 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
             })}
           </div>
 
-          <div className="divider" />
+          <div className="divider my-8" />
 
-          {/* Social Sharing before AdSense */}
-          <div className="mb-6 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{t("Comparte esta noticia", "Share this news", "K'eex le péektsil")}</h3>
-            <div className="flex justify-center lg:justify-start gap-3">
-              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#1877f2] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><FacebookIcon className="w-5 h-5" /></a>
-              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#1da1f2] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><TwitterIcon className="w-5 h-5" /></a>
-              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#25d366] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><MessageCircle className="w-5 h-5" /></a>
-              <a href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`} className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><Mail className="w-5 h-5" /></a>
+          {/* Bottom share bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-5 px-5 rounded-2xl bg-gray-50 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.07)] mb-8">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-[rgba(255,255,255,0.75)]">
+              <Share2 className="w-4 h-4 text-[#ff5500]" />
+              {t("Comparte esta noticia", "Share this article", "K'eex le péektsil")}
+            </div>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {[
+                { href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, icon: <FacebookIcon className="w-4 h-4" />, label: "Facebook", bg: "#1877f2" },
+                { href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`, icon: <TwitterIcon className="w-4 h-4" />, label: "X", bg: "#000" },
+                { href: `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${shareText}`, icon: <TelegramIcon className="w-4 h-4" />, label: "Telegram", bg: "#0088cc" },
+                { href: `https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`, icon: <WhatsAppIcon className="w-4 h-4" />, label: "WhatsApp", bg: "#25d366" },
+                { href: `mailto:?subject=${encodeURIComponent(displayTitle)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`, icon: <Mail className="w-4 h-4" />, label: "Email", bg: "#ff5500" },
+              ].map(({ href, icon, label, bg }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={label}
+                  className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)] hover:text-white transition-all duration-200"
+                  style={{ background: "transparent" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = bg; (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "transparent"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; (e.currentTarget as HTMLAnchorElement).style.color = ""; (e.currentTarget as HTMLAnchorElement).style.borderColor = ""; }}
+                >
+                  {icon} {label}
+                </a>
+              ))}
+              <button
+                onClick={handleCopyLink}
+                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)] hover:bg-[#ff5500] hover:text-white hover:border-transparent transition-all duration-200"
+              >
+                {copied ? "✓ Copiado" : "🔗 Copiar"}
+              </button>
             </div>
           </div>
 
-          {/* AdSense — one ad per article, placed after body, before comments */}
+          {/* AdSense — bottom of article */}
           <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
 
-          {/* Mobile Sharing shortcuts */}
-          <div className="flex lg:hidden gap-3 items-center justify-center py-4 border-b border-gray-200 dark:border-[rgba(255,255,255,0.06)] mb-8">
-            <span className="text-xs text-gray-500 dark:text-[rgba(255,255,255,0.4)] uppercase font-bold">{t("Compartir:", "Share:", "Compartir:")}</span>
-            <div className="flex justify-center gap-2">
-              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.06)] rounded-full text-gray-600 dark:text-white"><FacebookIcon className="w-4 h-4" /></a>
-              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.06)] rounded-full text-gray-600 dark:text-white"><TwitterIcon className="w-4 h-4" /></a>
-              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.06)] rounded-full text-gray-600 dark:text-white"><MessageCircle className="w-4 h-4" /></a>
-            </div>
-          </div>
-
-          {/* Comments Section */}
-          <section className="space-y-6 mb-12">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center justify-center lg:justify-start gap-2">
+          {/* Comments section */}
+          <section className="space-y-6 mt-10 mb-12">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 border-b border-gray-200 dark:border-[rgba(255,255,255,0.07)] pb-3">
               <MessageSquare className="w-5 h-5 text-[#ff5500]" />
-              <span>{t("Comentarios de la Comunidad", "Community Comments", "Comentarios")} ({comments.length})</span>
+              {t("Comentarios de la Comunidad", "Community Comments", "Comentarios")} ({comments.length})
             </h3>
 
-            {/* Post comment form */}
             <form onSubmit={handlePostComment} className="space-y-3">
               {commentError && (
                 <div className="p-3 text-xs bg-[rgba(255,0,0,0.1)] border border-red-500/30 text-red-400 rounded-lg">
@@ -284,69 +397,81 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
                 onChange={(e) => setCommentInput(e.target.value)}
                 placeholder={user ? `Escribe como ${user.name}...` : "Escribe un comentario público (Anónimo)..."}
                 required
-                className="input text-xs min-h-[70px]"
+                className="input text-sm min-h-[80px] w-full"
               />
               <div className="flex justify-end">
-                <button type="submit" className="btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-2 px-5 text-xs font-bold flex items-center gap-2">
-                  <span>{t("Comentar", "Post Comment", "Comentar")}</span>
+                <button type="submit" className="btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-2 px-5 text-sm font-bold flex items-center gap-2">
+                  {t("Comentar", "Post Comment", "Comentar")}
                   <Send className="w-3.5 h-3.5" />
                 </button>
               </div>
             </form>
 
-            {/* Comments list */}
             {loadingComments ? (
-              <div className="text-xs text-center lg:text-left text-gray-500 dark:text-[rgba(255,255,255,0.4)]">Cargando comentarios...</div>
+              <div className="text-sm text-center text-gray-500 dark:text-[rgba(255,255,255,0.4)]">Cargando comentarios...</div>
             ) : comments.length === 0 ? (
-              <div className="p-6 border border-dashed border-gray-300 dark:border-[rgba(255,255,255,0.08)] rounded-xl text-center text-xs text-gray-500 dark:text-[rgba(255,255,255,0.45)]">
-                No hay comentarios en esta noticia. ¡Sé el primero en compartir tu opinión!
+              <div className="p-6 border border-dashed border-gray-300 dark:border-[rgba(255,255,255,0.08)] rounded-xl text-center text-sm text-gray-500 dark:text-[rgba(255,255,255,0.45)]">
+                No hay comentarios. ¡Sé el primero en opinar!
               </div>
             ) : (
               <div className="space-y-4">
                 {comments.map((comm) => (
                   <div key={comm.id} className="p-4 rounded-xl border border-gray-200 dark:border-[rgba(255,255,255,0.05)] bg-gray-50 dark:bg-[rgba(15,15,25,0.3)] space-y-2">
-                    <div className="flex justify-between items-center text-[10px] text-gray-500 dark:text-[rgba(255,255,255,0.4)]">
+                    <div className="flex justify-between items-center text-[11px] text-gray-500 dark:text-[rgba(255,255,255,0.4)]">
                       <span className="font-bold text-gray-900 dark:text-white">{comm.authorName}</span>
                       <span>{new Date(comm.createdAt).toLocaleString()}</span>
                     </div>
-                    <p className="text-xs text-gray-700 dark:text-[rgba(255,255,255,0.75)] leading-relaxed">
-                      {comm.content}
-                    </p>
+                    <p className="text-sm text-gray-700 dark:text-[rgba(255,255,255,0.75)] leading-relaxed">{comm.content}</p>
                   </div>
                 ))}
               </div>
             )}
           </section>
 
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <Link href="/news" className="btn-ghost">
+          <div className="flex gap-3 flex-wrap">
+            <Link href="/news" className="btn-ghost text-sm">
               ← {t("Todas las Noticias", "All News", "Tuláakal Péektsil")}
             </Link>
           </div>
         </article>
 
-        {/* Right Sidebar: Similar News */}
+        {/* ── Right sidebar ── */}
         {similarPosts && similarPosts.length > 0 && (
-          <aside className="hidden lg:block lg:w-[340px] shrink-0 space-y-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-[rgba(255,255,255,0.1)] pb-3">
-              {t("Noticias Similares", "Similar News", "Péektsil")}
+          <aside className="hidden lg:block lg:w-[320px] xl:w-[360px] shrink-0 space-y-5">
+            <h2 className="text-base font-bold text-gray-900 dark:text-white uppercase tracking-widest border-b-2 border-[#ff5500] pb-2 inline-block">
+              {t("Más Noticias", "More News", "Más Péektsil")}
             </h2>
             <div className="flex flex-col gap-4">
-              {similarPosts.map(p => (
-                <Link key={p.id} href={`/news/${p.slug}`} className="group block bg-gray-50 dark:bg-[rgba(255,255,255,0.02)] border border-gray-200 dark:border-[rgba(255,255,255,0.05)] rounded-xl overflow-hidden hover:bg-gray-100 dark:hover:bg-[rgba(255,255,255,0.05)] transition-all">
-                  {p.imageUrl && (
-                    <div className="h-32 overflow-hidden">
-                      <img src={p.imageUrl} alt={translateDb(p.title)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <div className="text-xs text-[#ff5500] dark:text-[rgba(255,85,0,0.8)] font-bold mb-1 uppercase tracking-wider">{p.state}</div>
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-[rgba(255,255,255,0.9)] group-hover:text-[#ff5500] line-clamp-2 leading-snug">
-                      {translateDb(p.title)}
+              {similarPosts.map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/news/${p.slug}`}
+                  className="group flex gap-3 p-3 rounded-xl border border-gray-200 dark:border-[rgba(255,255,255,0.06)] bg-white dark:bg-[rgba(15,15,25,0.4)] hover:border-[#ff5500]/40 hover:shadow-md transition-all"
+                >
+                  <div
+                    className="flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden bg-gray-100 dark:bg-[rgba(255,255,255,0.04)]"
+                    style={{ minWidth: "80px" }}
+                  >
+                    <img
+                      src={p.imageUrl ?? FALLBACK_IMAGES[p.state] ?? FALLBACK_IMAGES.default}
+                      alt={translateDb(p.title).split(" || ")[0]}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK_IMAGES.default; }}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center min-w-0">
+                    <div className="text-[10px] text-[#ff5500] font-bold uppercase tracking-wider mb-1">{p.state}</div>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-[rgba(255,255,255,0.9)] group-hover:text-[#ff5500] line-clamp-2 leading-snug transition-colors">
+                      {translateDb(p.title).split(" || ")[0]}
                     </h3>
                   </div>
                 </Link>
               ))}
+            </div>
+
+            {/* Sidebar AdSense */}
+            <div className="sticky top-24">
+              <AdSenseAd adFormat="auto" fullWidthResponsive={false} />
             </div>
           </aside>
         )}
