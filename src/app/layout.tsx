@@ -32,12 +32,19 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* ── Google AdSense verification + auto-ads ── */}
+        {/* PERMANENT: Do NOT remove. Required for AdSense approval and ad serving. */}
         <meta name="google-adsense-account" content="ca-pub-8867340586657793" />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8867340586657793"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
-        {/* Google AdSense — loaded after page is interactive to avoid blocking render */}
+        {/* Google AdSense — secondary load via Next.js Script for SPA navigations */}
         <Script
-          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8867340586657793"
           crossOrigin="anonymous"
           strategy="afterInteractive"
