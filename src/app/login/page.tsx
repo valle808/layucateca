@@ -132,7 +132,7 @@ export default function LoginPage() {
                     type="text"
                     name="name"
                     required
-                    placeholder="e.g. Sergio Valle"
+                    placeholder="e.g. Itzamná Cauich"
                     value={formData.name}
                     onChange={handleInputChange}
                     className="input pl-10 text-xs"
@@ -170,7 +170,7 @@ export default function LoginPage() {
                 type="email"
                 name="email"
                 required
-                placeholder="sergio@example.com"
+                placeholder="itzamna@ejemplo.com"
                 value={formData.email}
                 onChange={handleInputChange}
                 className="input pl-10 text-xs"

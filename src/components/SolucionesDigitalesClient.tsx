@@ -430,7 +430,7 @@ export default function SolucionesDigitalesClient({ portfolioItems }: Soluciones
                           type="text"
                           name="name"
                           required
-                          placeholder="e.g. Sergio Valle"
+                          placeholder="e.g. Itzamná Cauich"
                           value={formData.name}
                           onChange={handleInputChange}
                           style={{
@@ -453,7 +453,7 @@ export default function SolucionesDigitalesClient({ portfolioItems }: Soluciones
                           type="email"
                           name="email"
                           required
-                          placeholder="sergio@example.com"
+                          placeholder="itzamna@ejemplo.com"
                           value={formData.email}
                           onChange={handleInputChange}
                           style={{
