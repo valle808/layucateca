@@ -214,14 +214,29 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
           <div className="divider" />
 
           <div
+            className="article-body"
             style={{
-              color: "var(--text-secondary)",
-              fontSize: "1.05rem",
-              lineHeight: 1.85,
-              whiteSpace: "pre-wrap",
+              color: "var(--text-primary)",
+              fontSize: "1.15rem",
+              lineHeight: 2.1,
+              letterSpacing: "0.01em",
             }}
           >
-            {translateDb(post.content)}
+            {translateDb(post.content).split('\n').map((paragraph, idx) => {
+              if (!paragraph.trim()) return null;
+              return (
+                <p 
+                  key={idx} 
+                  style={{ 
+                    marginBottom: "1.5em", 
+                    opacity: 0.9 
+                  }}
+                  className={idx === 0 ? "first-letter:text-6xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-2" : ""}
+                >
+                  {paragraph}
+                </p>
+              );
+            })}
           </div>
 
           <div className="divider" />
