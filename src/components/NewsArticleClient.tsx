@@ -387,9 +387,9 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
               {t("Comentarios de la Comunidad", "Community Comments", "Comentarios")} ({comments.length})
             </h3>
 
-            <form onSubmit={handlePostComment} className="space-y-3">
+            <form onSubmit={handlePostComment} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {commentError && (
-                <div className="p-3 text-xs bg-[rgba(255,0,0,0.1)] border border-red-500/30 text-red-400 rounded-lg">
+                <div style={{ padding: "10px 14px", background: "rgba(255,50,50,0.1)", border: "1px solid rgba(255,50,50,0.25)", borderRadius: 8, fontSize: "0.8rem", color: "#f87171" }}>
                   {commentError}
                 </div>
               )}
@@ -398,12 +398,20 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
                 onChange={(e) => setCommentInput(e.target.value)}
                 placeholder={user ? `Escribe como ${user.name}...` : "Escribe un comentario público (Anónimo)..."}
                 required
-                className="input text-sm min-h-[80px] w-full"
+                className="input text-sm w-full"
+                style={{ minHeight: 88, resize: "vertical" }}
               />
-              <div className="flex justify-end">
-                <button type="submit" className="btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-2 px-5 text-sm font-bold flex items-center gap-2">
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <button type="submit" style={{
+                  background: "#ff5500", color: "#fff",
+                  padding: "10px 22px", borderRadius: 9,
+                  fontWeight: 700, fontSize: "0.85rem",
+                  border: "none", cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 7,
+                  boxShadow: "0 3px 12px rgba(255,85,0,0.3)",
+                }}>
                   {t("Comentar", "Post Comment", "Comentar")}
-                  <Send className="w-3.5 h-3.5" />
+                  <Send style={{ width: 14, height: 14 }} />
                 </button>
               </div>
             </form>
