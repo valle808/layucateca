@@ -34,7 +34,7 @@ const TICKER_ITEMS = [
   "📰 Diseño web profesional a medida — desde $499",
   "🤖 Muna AI disponible 24/7 para asistencia inteligente",
   "🌐 Nuevo portal ciudadano — reporta tu colonia",
-  "💼 Marketplace de servicios digitales ahora activo",
+  "💼 Mercadito de servicios digitales ahora activo",
 ];
 
 function BreakingTicker({ posts, translateDb }: { posts: Post[], translateDb: (str: string) => string }) {

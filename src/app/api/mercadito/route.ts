@@ -11,7 +11,7 @@ export async function GET() {
     });
     return NextResponse.json({ success: true, items });
   } catch (error) {
-    console.error("[MARKETPLACE GET ERROR]", error);
+    console.error("[MERCADITO GET ERROR]", error);
     return NextResponse.json({ error: "Failed to fetch items" }, { status: 500 });
   }
 }
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, item }, { status: 201 });
   } catch (error) {
-    console.error("[MARKETPLACE POST ERROR]", error);
-    return NextResponse.json({ error: "Failed to create marketplace item" }, { status: 500 });
+    console.error("[MERCADITO POST ERROR]", error);
+    return NextResponse.json({ error: "Failed to create mercadito item" }, { status: 500 });
   }
 }
