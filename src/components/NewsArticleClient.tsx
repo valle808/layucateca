@@ -168,7 +168,7 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row gap-8">
-        <article className="flex-1 w-full lg:max-w-[780px] mx-auto lg:mx-0">
+        <article className="flex-1 w-full max-w-3xl mx-auto lg:mx-0">
           <Link
             href="/news"
             style={{
@@ -218,9 +218,9 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
               <span>Resumen por Inteligencia Artificial (TL;DR)</span>
             </div>
             {loadingSummary ? (
-              <div className="text-xs text-[rgba(255,255,255,0.4)]">Generando resumen cognitivo...</div>
+              <div className="text-xs text-gray-500 dark:text-[rgba(255,255,255,0.4)]">Generando resumen cognitivo...</div>
             ) : (
-              <p className="text-xs text-[rgba(255,255,255,0.7)] whitespace-pre-line leading-relaxed font-mono">
+              <p className="text-xs text-gray-700 dark:text-[rgba(255,255,255,0.7)] whitespace-pre-line leading-relaxed font-mono">
                 {summary}
               </p>
             )}
@@ -259,13 +259,13 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
           <div className="divider" />
 
           {/* Social Sharing before AdSense */}
-          <div className="mb-6">
-            <h3 className="text-lg font-bold text-white mb-3">{t("Comparte esta noticia", "Share this news", "K'eex le péektsil")}</h3>
-            <div className="flex gap-3">
-              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#1877f2] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><FacebookIcon className="w-5 h-5" /></a>
-              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#1da1f2] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><TwitterIcon className="w-5 h-5" /></a>
-              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#25d366] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><MessageCircle className="w-5 h-5" /></a>
-              <a href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`} className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><Mail className="w-5 h-5" /></a>
+          <div className="mb-6 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{t("Comparte esta noticia", "Share this news", "K'eex le péektsil")}</h3>
+            <div className="flex justify-center lg:justify-start gap-3">
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#1877f2] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><FacebookIcon className="w-5 h-5" /></a>
+              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#1da1f2] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><TwitterIcon className="w-5 h-5" /></a>
+              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#25d366] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><MessageCircle className="w-5 h-5" /></a>
+              <a href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`} className="p-3 bg-gray-100 dark:bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] hover:text-white rounded-full transition-colors border border-gray-200 dark:border-[rgba(255,255,255,0.1)] text-gray-600 dark:text-[rgba(255,255,255,0.7)]"><Mail className="w-5 h-5" /></a>
             </div>
           </div>
 
@@ -273,18 +273,18 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
           <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
 
           {/* Mobile Sharing shortcuts */}
-          <div className="flex lg:hidden gap-3 items-center py-4 border-b border-[rgba(255,255,255,0.06)] mb-8">
-            <span className="text-xs text-[rgba(255,255,255,0.4)] uppercase font-bold">{t("Compartir:", "Share:", "Compartir:")}</span>
-            <div className="flex gap-2">
-              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-full text-white"><FacebookIcon className="w-4 h-4" /></a>
-              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-full text-white"><TwitterIcon className="w-4 h-4" /></a>
-              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-full text-white"><MessageCircle className="w-4 h-4" /></a>
+          <div className="flex lg:hidden gap-3 items-center justify-center py-4 border-b border-gray-200 dark:border-[rgba(255,255,255,0.06)] mb-8">
+            <span className="text-xs text-gray-500 dark:text-[rgba(255,255,255,0.4)] uppercase font-bold">{t("Compartir:", "Share:", "Compartir:")}</span>
+            <div className="flex justify-center gap-2">
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.06)] rounded-full text-gray-600 dark:text-white"><FacebookIcon className="w-4 h-4" /></a>
+              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.06)] rounded-full text-gray-600 dark:text-white"><TwitterIcon className="w-4 h-4" /></a>
+              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-100 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.06)] rounded-full text-gray-600 dark:text-white"><MessageCircle className="w-4 h-4" /></a>
             </div>
           </div>
 
           {/* Comments Section */}
           <section className="space-y-6 mb-12">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center justify-center lg:justify-start gap-2">
               <MessageSquare className="w-5 h-5 text-[#ff5500]" />
               <span>{t("Comentarios de la Comunidad", "Community Comments", "Comentarios")} ({comments.length})</span>
             </h3>
@@ -313,20 +313,20 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
 
             {/* Comments list */}
             {loadingComments ? (
-              <div className="text-xs text-[rgba(255,255,255,0.4)]">Cargando comentarios...</div>
+              <div className="text-xs text-center lg:text-left text-gray-500 dark:text-[rgba(255,255,255,0.4)]">Cargando comentarios...</div>
             ) : comments.length === 0 ? (
-              <div className="p-6 border border-dashed border-[rgba(255,255,255,0.08)] rounded-xl text-center text-xs text-[rgba(255,255,255,0.45)]">
+              <div className="p-6 border border-dashed border-gray-300 dark:border-[rgba(255,255,255,0.08)] rounded-xl text-center text-xs text-gray-500 dark:text-[rgba(255,255,255,0.45)]">
                 No hay comentarios en esta noticia. ¡Sé el primero en compartir tu opinión!
               </div>
             ) : (
               <div className="space-y-4">
                 {comments.map((comm) => (
-                  <div key={comm.id} className="p-4 rounded-xl border border-[rgba(255,255,255,0.05)] bg-[rgba(15,15,25,0.3)] space-y-2">
-                    <div className="flex justify-between items-center text-[10px] text-[rgba(255,255,255,0.4)]">
-                      <span className="font-bold text-white">{comm.authorName}</span>
+                  <div key={comm.id} className="p-4 rounded-xl border border-gray-200 dark:border-[rgba(255,255,255,0.05)] bg-gray-50 dark:bg-[rgba(15,15,25,0.3)] space-y-2">
+                    <div className="flex justify-between items-center text-[10px] text-gray-500 dark:text-[rgba(255,255,255,0.4)]">
+                      <span className="font-bold text-gray-900 dark:text-white">{comm.authorName}</span>
                       <span>{new Date(comm.createdAt).toLocaleString()}</span>
                     </div>
-                    <p className="text-xs text-[rgba(255,255,255,0.75)] leading-relaxed">
+                    <p className="text-xs text-gray-700 dark:text-[rgba(255,255,255,0.75)] leading-relaxed">
                       {comm.content}
                     </p>
                   </div>
@@ -344,21 +344,21 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
 
         {/* Right Sidebar: Similar News */}
         {similarPosts && similarPosts.length > 0 && (
-          <aside className="lg:w-[340px] shrink-0 space-y-6">
-            <h2 className="text-xl font-bold text-white border-b border-[rgba(255,255,255,0.1)] pb-3">
+          <aside className="hidden lg:block lg:w-[340px] shrink-0 space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-[rgba(255,255,255,0.1)] pb-3">
               {t("Noticias Similares", "Similar News", "Péektsil")}
             </h2>
             <div className="flex flex-col gap-4">
               {similarPosts.map(p => (
-                <Link key={p.id} href={`/news/${p.slug}`} className="group block bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl overflow-hidden hover:bg-[rgba(255,255,255,0.05)] transition-all">
+                <Link key={p.id} href={`/news/${p.slug}`} className="group block bg-gray-50 dark:bg-[rgba(255,255,255,0.02)] border border-gray-200 dark:border-[rgba(255,255,255,0.05)] rounded-xl overflow-hidden hover:bg-gray-100 dark:hover:bg-[rgba(255,255,255,0.05)] transition-all">
                   {p.imageUrl && (
                     <div className="h-32 overflow-hidden">
                       <img src={p.imageUrl} alt={translateDb(p.title)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                   )}
                   <div className="p-4">
-                    <div className="text-xs text-[rgba(255,85,0,0.8)] font-bold mb-1 uppercase tracking-wider">{p.state}</div>
-                    <h3 className="text-sm font-semibold text-[rgba(255,255,255,0.9)] group-hover:text-[#ff5500] line-clamp-2 leading-snug">
+                    <div className="text-xs text-[#ff5500] dark:text-[rgba(255,85,0,0.8)] font-bold mb-1 uppercase tracking-wider">{p.state}</div>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-[rgba(255,255,255,0.9)] group-hover:text-[#ff5500] line-clamp-2 leading-snug">
                       {translateDb(p.title)}
                     </h3>
                   </div>
