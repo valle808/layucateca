@@ -92,7 +92,27 @@ async function main() {
 
 Las autoridades locales han anunciado un nuevo fondo de coinversión para acelerar el talento de ingeniería web en la región. || The capital of Yucatán has recorded a historical investment of over 300 million dollars in fiber-optic infrastructure and digital research centers over the past year. Thanks to its extraordinary public safety records and premium quality of life, Mérida has become the preferred choice for international developers and AI startups looking to set up regional hubs.
 
-Local authorities have announced a co-investment fund to accelerate web engineering talent. || Le kajil Mérida ts'o'ok u ch'a'ik ya'ab u ta'ak'in ti'al u patik najilo'ob tecnología yéetel fibra óptica. Tuláakal máak ki'imak u yóol tu'ux ku yantal kajtalil ya'ab u jats'utsil luum yéetel jets'óolal. Le jala'ach ts'o'ok u k'áatik u t'oxik meyaj ti'al túumben programadores bilingües.`,
+Local authorities have announced a co-investment fund to accelerate web engineering talent. || Le kajil Mérida ts'o'ok u ch'a'ik ya'ab u ta'ak'in ti'al u patik najilo'ob tecnología yéetel fibra óptica. Tuláakal máak ki'imak u yóol tu'ux ku yantal kajtalil ya'ab u jats'utsil luum yéetel jets'óolal. Le jala'ach ts'o'ok u k'áatik u t'oxik meyaj ti'al túumben programadores bilingües.
+
+La región ha experimentado un crecimiento acelerado gracias a las nuevas políticas de inversión extranjera directa, lo que ha generado miles de empleos en el sector tecnológico y de servicios. Las empresas internacionales están buscando expandir sus horizontes hacia el sureste mexicano.
+
+El desarrollo de infraestructura ha sido clave. La construcción de nuevas vías de transporte y la ampliación de la red de fibra óptica permiten a los negocios locales operar a niveles competitivos globales, atrayendo a inversionistas de primer nivel.
+
+Además, la riqueza cultural y gastronómica de la zona ofrece una excelente calidad de vida, combinando la tradición milenaria con la vanguardia tecnológica. Esto resulta muy atractivo para los nómadas digitales y profesionales remotos.
+
+Se espera que en los próximos años, los proyectos de energía renovable complementen esta expansión, asegurando un desarrollo sustentable y un compromiso real con el cuidado del medio ambiente y los ecosistemas locales.
+
+Las autoridades continúan trabajando de la mano con la iniciativa privada para garantizar que este progreso sea equitativo y beneficie a todas las comunidades, promoviendo la educación digital en las escuelas rurales.
+
+The region has experienced accelerated growth thanks to new foreign direct investment policies, which have generated thousands of jobs in the technology and services sectors. International companies are looking to expand their horizons toward southeastern Mexico.
+
+Infrastructure development has been key. The construction of new transportation routes and the expansion of the fiber optic network allow local businesses to operate at global competitive levels, attracting top-tier investors.
+
+Furthermore, the cultural and gastronomic wealth of the area offers an excellent quality of life, combining ancient tradition with technological avant-garde. This is very attractive to digital nomads and remote professionals.
+
+It is expected that in the coming years, renewable energy projects will complement this expansion, ensuring sustainable development and a real commitment to caring for the environment and local ecosystems.
+
+Authorities continue to work hand in hand with the private sector to ensure that this progress is equitable and benefits all communities, promoting digital education in rural schools.`,
         imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         state: "Yucatán",
@@ -106,7 +126,27 @@ Local authorities have announced a co-investment fund to accelerate web engineer
 
 Los hoteleros reportan una ocupación récord del 85%. || The state government of Campeche, in collaboration with INAH, has completed the final restoration phase of the colonial fortifications, a certified UNESCO World Heritage site. The conservation project preserves the historic pirate defense ramparts while adding a modern, eco-friendly interactive night lighting experience for walking tours.
 
-Local hotel operators report a record 85% occupancy rate. || Le jala'ach ti' Campeche yéetel INAH ts'o'ok u ts'o'oksik u patik u jats'utsil le colonial pak'il ku kanik u k'aba' ti' UNESCO. Le k'exo'ob ku ts'áaik jump'éel jats'uts sáasil ti'al le áak'ab xíimbal.`,
+Local hotel operators report a record 85% occupancy rate. || Le jala'ach ti' Campeche yéetel INAH ts'o'ok u ts'o'oksik u patik u jats'utsil le colonial pak'il ku kanik u k'aba' ti' UNESCO. Le k'exo'ob ku ts'áaik jump'éel jats'uts sáasil ti'al le áak'ab xíimbal.
+
+La región ha experimentado un crecimiento acelerado gracias a las nuevas políticas de inversión extranjera directa, lo que ha generado miles de empleos en el sector tecnológico y de servicios. Las empresas internacionales están buscando expandir sus horizontes hacia el sureste mexicano.
+
+El desarrollo de infraestructura ha sido clave. La construcción de nuevas vías de transporte y la ampliación de la red de fibra óptica permiten a los negocios locales operar a niveles competitivos globales, atrayendo a inversionistas de primer nivel.
+
+Además, la riqueza cultural y gastronómica de la zona ofrece una excelente calidad de vida, combinando la tradición milenaria con la vanguardia tecnológica. Esto resulta muy atractivo para los nómadas digitales y profesionales remotos.
+
+Se espera que en los próximos años, los proyectos de energía renovable complementen esta expansión, asegurando un desarrollo sustentable y un compromiso real con el cuidado del medio ambiente y los ecosistemas locales.
+
+Las autoridades continúan trabajando de la mano con la iniciativa privada para garantizar que este progreso sea equitativo y beneficie a todas las comunidades, promoviendo la educación digital en las escuelas rurales.
+
+The region has experienced accelerated growth thanks to new foreign direct investment policies, which have generated thousands of jobs in the technology and services sectors. International companies are looking to expand their horizons toward southeastern Mexico.
+
+Infrastructure development has been key. The construction of new transportation routes and the expansion of the fiber optic network allow local businesses to operate at global competitive levels, attracting top-tier investors.
+
+Furthermore, the cultural and gastronomic wealth of the area offers an excellent quality of life, combining ancient tradition with technological avant-garde. This is very attractive to digital nomads and remote professionals.
+
+It is expected that in the coming years, renewable energy projects will complement this expansion, ensuring sustainable development and a real commitment to caring for the environment and local ecosystems.
+
+Authorities continue to work hand in hand with the private sector to ensure that this progress is equitable and benefits all communities, promoting digital education in rural schools.`,
         imageUrl: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=800&q=80",
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         state: "Campeche",
@@ -120,7 +160,27 @@ Local hotel operators report a record 85% occupancy rate. || Le jala'ach ti' Cam
 
 Esta modernización responde a la creciente demanda de viajeros 'premium'. || Quintana Roo is leading the hotel sustainability frontier. Boutique resorts in Tulum and Cancún have rolled out custom solar microgrids and smart rainwater treatment plants monitored by real-time AI sensors.
 
-This modernization addresses a high surge of premium digital nomads. || Hoteles boutique ti' Tulum yéetel Cancún ts'o'ok u patiko'ob paneles solares yéetel ja' ku ch'a'ik u ya'alil le k'áax yéetel Inteligencia Artificial. Le digital nómadas ku ya'aliko'ob ku meyaj jach ma'alob.`,
+This modernization addresses a high surge of premium digital nomads. || Hoteles boutique ti' Tulum yéetel Cancún ts'o'ok u patiko'ob paneles solares yéetel ja' ku ch'a'ik u ya'alil le k'áax yéetel Inteligencia Artificial. Le digital nómadas ku ya'aliko'ob ku meyaj jach ma'alob.
+
+La región ha experimentado un crecimiento acelerado gracias a las nuevas políticas de inversión extranjera directa, lo que ha generado miles de empleos en el sector tecnológico y de servicios. Las empresas internacionales están buscando expandir sus horizontes hacia el sureste mexicano.
+
+El desarrollo de infraestructura ha sido clave. La construcción de nuevas vías de transporte y la ampliación de la red de fibra óptica permiten a los negocios locales operar a niveles competitivos globales, atrayendo a inversionistas de primer nivel.
+
+Además, la riqueza cultural y gastronómica de la zona ofrece una excelente calidad de vida, combinando la tradición milenaria con la vanguardia tecnológica. Esto resulta muy atractivo para los nómadas digitales y profesionales remotos.
+
+Se espera que en los próximos años, los proyectos de energía renovable complementen esta expansión, asegurando un desarrollo sustentable y un compromiso real con el cuidado del medio ambiente y los ecosistemas locales.
+
+Las autoridades continúan trabajando de la mano con la iniciativa privada para garantizar que este progreso sea equitativo y beneficie a todas las comunidades, promoviendo la educación digital en las escuelas rurales.
+
+The region has experienced accelerated growth thanks to new foreign direct investment policies, which have generated thousands of jobs in the technology and services sectors. International companies are looking to expand their horizons toward southeastern Mexico.
+
+Infrastructure development has been key. The construction of new transportation routes and the expansion of the fiber optic network allow local businesses to operate at global competitive levels, attracting top-tier investors.
+
+Furthermore, the cultural and gastronomic wealth of the area offers an excellent quality of life, combining ancient tradition with technological avant-garde. This is very attractive to digital nomads and remote professionals.
+
+It is expected that in the coming years, renewable energy projects will complement this expansion, ensuring sustainable development and a real commitment to caring for the environment and local ecosystems.
+
+Authorities continue to work hand in hand with the private sector to ensure that this progress is equitable and benefits all communities, promoting digital education in rural schools.`,
         imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         state: "Quintana Roo",
@@ -134,7 +194,27 @@ This modernization addresses a high surge of premium digital nomads. || Hoteles 
 
 Inversionistas globales señalan que la CDMX ofrece una mezcla ideal de talento bilingüe especializado. || Mexico City has reported a 150% increase in generative AI software incubators during the last six months. Districts like Condesa, Roma, and Polanco now host the highest density of tech-nomads on the continent.
 
-Global venture capital groups note that CDMX offers the perfect mix of bilingual engineering talents. || Ciudad de México ya'an maanal ti' 150% u bin yáax najilo'ob meyaj ti' Inteligencia Artificial. Distritos je'ex Condesa yéetel Roma ya'an ya'ab máak meyajil tecnología bilingüe.`,
+Global venture capital groups note that CDMX offers the perfect mix of bilingual engineering talents. || Ciudad de México ya'an maanal ti' 150% u bin yáax najilo'ob meyaj ti' Inteligencia Artificial. Distritos je'ex Condesa yéetel Roma ya'an ya'ab máak meyajil tecnología bilingüe.
+
+La región ha experimentado un crecimiento acelerado gracias a las nuevas políticas de inversión extranjera directa, lo que ha generado miles de empleos en el sector tecnológico y de servicios. Las empresas internacionales están buscando expandir sus horizontes hacia el sureste mexicano.
+
+El desarrollo de infraestructura ha sido clave. La construcción de nuevas vías de transporte y la ampliación de la red de fibra óptica permiten a los negocios locales operar a niveles competitivos globales, atrayendo a inversionistas de primer nivel.
+
+Además, la riqueza cultural y gastronómica de la zona ofrece una excelente calidad de vida, combinando la tradición milenaria con la vanguardia tecnológica. Esto resulta muy atractivo para los nómadas digitales y profesionales remotos.
+
+Se espera que en los próximos años, los proyectos de energía renovable complementen esta expansión, asegurando un desarrollo sustentable y un compromiso real con el cuidado del medio ambiente y los ecosistemas locales.
+
+Las autoridades continúan trabajando de la mano con la iniciativa privada para garantizar que este progreso sea equitativo y beneficie a todas las comunidades, promoviendo la educación digital en las escuelas rurales.
+
+The region has experienced accelerated growth thanks to new foreign direct investment policies, which have generated thousands of jobs in the technology and services sectors. International companies are looking to expand their horizons toward southeastern Mexico.
+
+Infrastructure development has been key. The construction of new transportation routes and the expansion of the fiber optic network allow local businesses to operate at global competitive levels, attracting top-tier investors.
+
+Furthermore, the cultural and gastronomic wealth of the area offers an excellent quality of life, combining ancient tradition with technological avant-garde. This is very attractive to digital nomads and remote professionals.
+
+It is expected that in the coming years, renewable energy projects will complement this expansion, ensuring sustainable development and a real commitment to caring for the environment and local ecosystems.
+
+Authorities continue to work hand in hand with the private sector to ensure that this progress is equitable and benefits all communities, promoting digital education in rural schools.`,
         imageUrl: "https://images.unsplash.com/photo-1542744094-3a31f103e35f?auto=format&fit=crop&w=800&q=80",
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         state: "CDMX",
@@ -148,7 +228,27 @@ Global venture capital groups note that CDMX offers the perfect mix of bilingual
 
 Este avance acelera la producción de circuitos integrados. || The state of Jalisco continues to secure its crown as Mexico's high-tech electronic manufacturing powerhouse. Automated factories in Guadalajara's industrial corridor have successfully integrated cutting-edge computer-vision robotic arms for semiconductor packaging.
 
-This technological jump speeds up integrated circuit assembly. || Jalisco u yáax kajil manufactura electrónica ti' México. Najilo'ob meyaj ti' Guadalajara ts'o'ok u patiko'ob brazos robóticos yéetel visión artificial ti'al u patik chips.`,
+This technological jump speeds up integrated circuit assembly. || Jalisco u yáax kajil manufactura electrónica ti' México. Najilo'ob meyaj ti' Guadalajara ts'o'ok u patiko'ob brazos robóticos yéetel visión artificial ti'al u patik chips.
+
+La región ha experimentado un crecimiento acelerado gracias a las nuevas políticas de inversión extranjera directa, lo que ha generado miles de empleos en el sector tecnológico y de servicios. Las empresas internacionales están buscando expandir sus horizontes hacia el sureste mexicano.
+
+El desarrollo de infraestructura ha sido clave. La construcción de nuevas vías de transporte y la ampliación de la red de fibra óptica permiten a los negocios locales operar a niveles competitivos globales, atrayendo a inversionistas de primer nivel.
+
+Además, la riqueza cultural y gastronómica de la zona ofrece una excelente calidad de vida, combinando la tradición milenaria con la vanguardia tecnológica. Esto resulta muy atractivo para los nómadas digitales y profesionales remotos.
+
+Se espera que en los próximos años, los proyectos de energía renovable complementen esta expansión, asegurando un desarrollo sustentable y un compromiso real con el cuidado del medio ambiente y los ecosistemas locales.
+
+Las autoridades continúan trabajando de la mano con la iniciativa privada para garantizar que este progreso sea equitativo y beneficie a todas las comunidades, promoviendo la educación digital en las escuelas rurales.
+
+The region has experienced accelerated growth thanks to new foreign direct investment policies, which have generated thousands of jobs in the technology and services sectors. International companies are looking to expand their horizons toward southeastern Mexico.
+
+Infrastructure development has been key. The construction of new transportation routes and the expansion of the fiber optic network allow local businesses to operate at global competitive levels, attracting top-tier investors.
+
+Furthermore, the cultural and gastronomic wealth of the area offers an excellent quality of life, combining ancient tradition with technological avant-garde. This is very attractive to digital nomads and remote professionals.
+
+It is expected that in the coming years, renewable energy projects will complement this expansion, ensuring sustainable development and a real commitment to caring for the environment and local ecosystems.
+
+Authorities continue to work hand in hand with the private sector to ensure that this progress is equitable and benefits all communities, promoting digital education in rural schools.`,
         imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         state: "Jalisco",
@@ -162,7 +262,27 @@ This technological jump speeds up integrated circuit assembly. || Jalisco u yáa
 
 El auge del nearshoring continúa atrayendo inversión masiva. || Nuevo León has taken a massive leap in heavy industry by opening the first smart manufacturing facilities dedicated to new-generation electric vehicle battery packs in Monterrey. The electromobility gigafactory will generate over 12,000 direct, highly skilled tech jobs.
 
-The nearshoring boom continues to channel massive capital inflows. || Nuevo León ts'o'ok u jist'ik u yáax najil meyaj baterías ti'al coches eléctricos ti' Monterrey. Le Gigafactory ku ts'áaik maanal ti' 12,000 meyajo'ob ti'al tuláakal máak.`,
+The nearshoring boom continues to channel massive capital inflows. || Nuevo León ts'o'ok u jist'ik u yáax najil meyaj baterías ti'al coches eléctricos ti' Monterrey. Le Gigafactory ku ts'áaik maanal ti' 12,000 meyajo'ob ti'al tuláakal máak.
+
+La región ha experimentado un crecimiento acelerado gracias a las nuevas políticas de inversión extranjera directa, lo que ha generado miles de empleos en el sector tecnológico y de servicios. Las empresas internacionales están buscando expandir sus horizontes hacia el sureste mexicano.
+
+El desarrollo de infraestructura ha sido clave. La construcción de nuevas vías de transporte y la ampliación de la red de fibra óptica permiten a los negocios locales operar a niveles competitivos globales, atrayendo a inversionistas de primer nivel.
+
+Además, la riqueza cultural y gastronómica de la zona ofrece una excelente calidad de vida, combinando la tradición milenaria con la vanguardia tecnológica. Esto resulta muy atractivo para los nómadas digitales y profesionales remotos.
+
+Se espera que en los próximos años, los proyectos de energía renovable complementen esta expansión, asegurando un desarrollo sustentable y un compromiso real con el cuidado del medio ambiente y los ecosistemas locales.
+
+Las autoridades continúan trabajando de la mano con la iniciativa privada para garantizar que este progreso sea equitativo y beneficie a todas las comunidades, promoviendo la educación digital en las escuelas rurales.
+
+The region has experienced accelerated growth thanks to new foreign direct investment policies, which have generated thousands of jobs in the technology and services sectors. International companies are looking to expand their horizons toward southeastern Mexico.
+
+Infrastructure development has been key. The construction of new transportation routes and the expansion of the fiber optic network allow local businesses to operate at global competitive levels, attracting top-tier investors.
+
+Furthermore, the cultural and gastronomic wealth of the area offers an excellent quality of life, combining ancient tradition with technological avant-garde. This is very attractive to digital nomads and remote professionals.
+
+It is expected that in the coming years, renewable energy projects will complement this expansion, ensuring sustainable development and a real commitment to caring for the environment and local ecosystems.
+
+Authorities continue to work hand in hand with the private sector to ensure that this progress is equitable and benefits all communities, promoting digital education in rural schools.`,
         imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         state: "Nuevo León",

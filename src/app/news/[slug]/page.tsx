@@ -71,5 +71,27 @@ export default async function NewsArticlePage({ params }: Props) {
 
   if (!serializedPost) notFound();
 
-  return <NewsArticleClient post={serializedPost} similarPosts={similarPosts} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: serializedPost.title.split(" || ")[0],
+    image: serializedPost.imageUrl ? [serializedPost.imageUrl] : [],
+    datePublished: serializedPost.createdAt,
+    dateModified: serializedPost.createdAt,
+    author: [{
+      "@type": "Organization",
+      "name": "La Yucateca",
+      "url": "https://layucateca.com"
+    }]
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <NewsArticleClient post={serializedPost} similarPosts={similarPosts} />
+    </>
+  );
 }
