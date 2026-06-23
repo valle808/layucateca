@@ -33,7 +33,7 @@ export default function ContactForm() {
           >
             {t("Nombre", "First Name")}
           </label>
-          <input id="first-name" type="text" placeholder="Sergio" className="input" required />
+          <input id="first-name" type="text" placeholder="Itzamná" className="input" required />
         </div>
         <div>
           <label
@@ -50,7 +50,7 @@ export default function ContactForm() {
           >
             {t("Apellido", "Last Name")}
           </label>
-          <input id="last-name" type="text" placeholder="Valle" className="input" required />
+          <input id="last-name" type="text" placeholder="Cauich" className="input" required />
         </div>
       </div>
 

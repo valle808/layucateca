@@ -130,7 +130,17 @@ export default function MarketplacePage() {
 
         <button
           onClick={() => setShowModal(true)}
-          className="btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-3 px-6 text-xs font-bold flex items-center gap-2"
+          style={{
+            background: "#ff5500", color: "#fff",
+            padding: "12px 24px", borderRadius: "10px",
+            fontWeight: 700, fontSize: "0.85rem",
+            border: "none", cursor: "pointer",
+            display: "flex", alignItems: "center", gap: "8px",
+            boxShadow: "0 4px 14px rgba(255,85,0,0.3)",
+            transition: "opacity 0.18s ease, transform 0.1s ease",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
         >
           <Plus className="w-4 h-4" />
           <span>{t("Publicar Clasificado", "Publish Ad", "Publicar")}</span>
@@ -169,7 +179,20 @@ export default function MarketplacePage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
-            <div key={item.id} className="card p-5 space-y-4 flex flex-col justify-between">
+            <div key={item.id} className="card p-5 flex flex-col justify-between"
+                 style={{
+                   transition: "transform 0.18s ease, box-shadow 0.18s ease",
+                   gap: "16px",
+                 }}
+                 onMouseEnter={(e) => {
+                   (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+                   (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
+                 }}
+                 onMouseLeave={(e) => {
+                   (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                   (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
+                 }}
+            >
               <div>
                 {item.imageUrl && (
                   <div className="w-full h-44 rounded-xl overflow-hidden mb-4 border border-[rgba(255,255,255,0.06)]">
@@ -302,7 +325,16 @@ export default function MarketplacePage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full btn-primary border-[#ff5500] hover:bg-[rgba(255,85,0,0.1)] py-2.5 text-xs font-bold"
+                  style={{
+                    width: "100%",
+                    background: "#ff5500", color: "#fff",
+                    padding: "12px", borderRadius: "10px",
+                    fontWeight: 700, fontSize: "0.85rem",
+                    border: "none", cursor: "pointer",
+                    boxShadow: "0 4px 14px rgba(255,85,0,0.3)",
+                    transition: "opacity 0.18s ease",
+                    opacity: submitting ? 0.7 : 1,
+                  }}
                 >
                   {submitting ? "Publicando..." : "Publicar Anuncio"}
                 </button>
