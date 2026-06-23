@@ -123,7 +123,7 @@ export default function OpinionRoomPage() {
     setFetchError("");
     try {
       const pw = roomPasswords[slug] || "";
-      const url = `/api/chat/messages?roomSlug=${slug}${pw ? \`&roomPassword=\${encodeURIComponent(pw)}\` : ""}`;
+      const url = `/api/chat/messages?roomSlug=${slug}${pw ? `&roomPassword=${encodeURIComponent(pw)}` : ""}`;
       const res = await fetch(url);
       const data = await res.json();
 
@@ -183,7 +183,7 @@ export default function OpinionRoomPage() {
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setAttachedLocation(\`\${position.coords.latitude},\${position.coords.longitude}\`);
+        setAttachedLocation(`${position.coords.latitude},${position.coords.longitude}`);
       },
       () => {
         alert("No se pudo obtener la ubicación.");
@@ -287,7 +287,7 @@ export default function OpinionRoomPage() {
     
     setUnlockError("");
     try {
-      const url = \`/api/chat/messages?roomSlug=\${unlockTargetSlug}&roomPassword=\${encodeURIComponent(unlockPasswordInput)}\`;
+      const url = `/api/chat/messages?roomSlug=${unlockTargetSlug}&roomPassword=${encodeURIComponent(unlockPasswordInput)}`;
       const res = await fetch(url);
       
       if (res.ok) {
@@ -809,13 +809,13 @@ export default function OpinionRoomPage() {
         </div>
       )}
 
-      <style dangerouslySetInnerHTML={{__html: \`
+      <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 10px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 85, 0, 0.5); }
-      \`}} />
+      `}} />
     </main>
   );
 }
