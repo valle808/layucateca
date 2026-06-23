@@ -16,14 +16,14 @@ export const dynamic = "force-dynamic";
 // ─── Rate-limit helpers ───────────────────────────────────────────────────────
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function withRetry<T>(fn: () => Promise<T>, retries = 4, baseDelay = 6000): Promise<T> {
+async function withRetry<T>(fn: () => Promise<T>, retries = 2, baseDelay = 1000): Promise<T> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       return await fn();
     } catch (err: any) {
       const is429 = err?.status === 429 || String(err?.message).includes("429");
       if (is429 && attempt < retries) {
-        const delay = baseDelay * Math.pow(1.8, attempt);
+        const delay = baseDelay * Math.pow(1.5, attempt);
         console.warn(`[RETRY] 429 hit — waiting ${Math.round(delay / 1000)}s (attempt ${attempt + 1}/${retries})`);
         await sleep(delay);
         continue;
@@ -158,13 +158,13 @@ async function fetchFeedsForCategory(category: string): Promise<string[]> {
       try {
         const res = await fetch(url, {
           headers: { "User-Agent": "Mozilla/5.0 (compatible; LaYucatecaBot/1.0)" },
-          signal: AbortSignal.timeout(6000),
+          signal: AbortSignal.timeout(3000), // Speed up RSS fail-fast
         });
         if (!res.ok) return [] as string[];
         const text = await res.text();
         const items = text.match(/<item>[\s\S]*?<\/item>/g) || [];
         return items
-          .slice(0, 8)
+          .slice(0, 5)
           .map((item) => {
             const m = item.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>|<title>([\s\S]*?)<\/title>/);
             return (m?.[1] || m?.[2] || "").replace(/<[^>]*>/g, "").trim();
@@ -181,7 +181,7 @@ async function fetchFeedsForCategory(category: string): Promise<string[]> {
     .flatMap((r) => r.value);
 
   const seen = new Set<string>();
-  return all.filter((h) => { if (seen.has(h)) return false; seen.add(h); return true; }).slice(0, 20);
+  return all.filter((h) => { if (seen.has(h)) return false; seen.add(h); return true; }).slice(0, 15);
 }
 
 // ─── Reporter names ───────────────────────────────────────────────────────────
@@ -219,16 +219,9 @@ async function generateImage(topic: string, category: string): Promise<string> {
   return pollinationsUrl;
 }
 
-// ─── Provider factory: Groq (primary) → OpenRouter (fallback) ────────────────
+// ─── Provider factory: OpenRouter (primary, fast) → Groq (fallback) ────────────────
 function makeClient(): { client: OpenAI; provider: string; model: string } {
-  const groqKey = process.env.GROQ_API_KEY;
-  if (groqKey) {
-    return {
-      client: new OpenAI({ apiKey: groqKey, baseURL: "https://api.groq.com/openai/v1" }),
-      provider: "Groq",
-      model: "llama-3.3-70b-versatile",
-    };
-  }
+  // Use OpenRouter with Gemini 2.5 Flash as primary for speed and rate limits
   const orKey = process.env.OPENROUTER_API_KEY;
   if (orKey) {
     return {
@@ -241,10 +234,18 @@ function makeClient(): { client: OpenAI; provider: string; model: string } {
         },
       }),
       provider: "OpenRouter",
-      model: process.env.OPENROUTER_MODEL || "meta-llama/llama-3.3-70b-instruct:free",
+      model: "google/gemini-2.5-flash:free", // Insanely fast, generous rate limits
     };
   }
-  throw new Error("No AI provider. Add GROQ_API_KEY (free: console.groq.com) or OPENROUTER_API_KEY.");
+  const groqKey = process.env.GROQ_API_KEY;
+  if (groqKey) {
+    return {
+      client: new OpenAI({ apiKey: groqKey, baseURL: "https://api.groq.com/openai/v1" }),
+      provider: "Groq",
+      model: "llama-3.3-70b-versatile",
+    };
+  }
+  throw new Error("No AI provider. Add OPENROUTER_API_KEY or GROQ_API_KEY.");
 }
 
 // ─── AGENT 1: SCOUT ──────────────────────────────────────────────────────────
@@ -287,7 +288,7 @@ Return ONLY this JSON (all values in Spanish):
       },
     ],
     temperature: 0.85,
-    max_tokens: 900,
+    max_tokens: 600, // Reduced from 900 for speed
   }));
 
   const parsed = extractJson((res.choices[0].message.content || "").trim());
@@ -322,7 +323,7 @@ async function writerAgent(client: OpenAI, model: string, scoutData: any) {
       },
       {
         role: "user",
-        content: `Write a complete professional news article about: "${scoutData.topic}" in ${scoutData.geography || "Yucatán"}.
+        content: `Write a concise news article about: "${scoutData.topic}" in ${scoutData.geography || "Yucatán"}.
 
 FACTS:
 Who: ${scoutData.who || ""}
@@ -338,20 +339,19 @@ Context: ${scoutData.context || ""}
 JOURNALISM STANDARDS (mandatory):
 1. HEADLINE: 5-10 words, active voice, present tense
 2. BYLINE: "${reporter}, Redacción La Yucateca — ${today}"
-3. LEAD: WHO-WHAT-WHEN-WHERE in 1-2 sentences (most critical info first)
+3. LEAD: WHO-WHAT-WHEN-WHERE in 1-2 sentences
 4. NUT GRAPH: Why this matters broadly
-5. BODY: 3-5 paragraphs with supporting details in decreasing importance. Include the direct quote.
+5. BODY: 2-3 short paragraphs. Include the direct quote.
 6. CLOSING: Next steps or community impact
-7. STYLE: Short sentences. Active voice. Third person. No opinion.
 
 Return ONLY this JSON:
 {
   "title": "[Spanish headline || English headline || Maya headline]",
   "slug": "[lowercase-hyphenated-no-accents-max-60-chars]",
   "byline": "${reporter}",
-  "content_es": "[Full Spanish article, minimum 400 words, inverted pyramid]",
-  "content_en": "[Professional English translation, minimum 350 words]",
-  "content_my": "[Dignified Maya language adaptation]",
+  "content_es": "[Full Spanish article, approx 200 words]",
+  "content_en": "[Professional English translation, approx 150 words]",
+  "content_my": "[Short Maya language adaptation, approx 50 words]",
   "summary_es": "[2-sentence Facebook-ready summary, max 250 chars]",
   "category": "${scoutData.category}",
   "state": "${scoutData.geography}"
@@ -359,7 +359,7 @@ Return ONLY this JSON:
       },
     ],
     temperature: 0.72,
-    max_tokens: 3500,
+    max_tokens: 1500, // Reduced from 3500 for speed
   }));
 
   const parsed = extractJson((res.choices[0].message.content || "").trim());
