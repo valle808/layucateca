@@ -37,12 +37,27 @@ export default async function NewsArticlePage({ params }: Props) {
   }
 
   let serializedPost: any = null;
+  let similarPosts: any[] = [];
 
   if (post) {
     serializedPost = {
       ...post,
       createdAt: post.createdAt instanceof Date ? post.createdAt.toISOString() : post.createdAt,
     };
+    
+    try {
+      const related = await prisma.post.findMany({
+        where: { published: true, id: { not: post.id } },
+        take: 4,
+        orderBy: { createdAt: "desc" }
+      });
+      similarPosts = related.map(p => ({
+        ...p,
+        createdAt: p.createdAt instanceof Date ? p.createdAt.toISOString() : p.createdAt,
+      }));
+    } catch (e) {
+      console.error("Error fetching similar posts", e);
+    }
   } else {
     const botItem = getBotNewsBySlug(slug);
     if (botItem) {
@@ -56,5 +71,5 @@ export default async function NewsArticlePage({ params }: Props) {
 
   if (!serializedPost) notFound();
 
-  return <NewsArticleClient post={serializedPost} />;
+  return <NewsArticleClient post={serializedPost} similarPosts={similarPosts} />;
 }

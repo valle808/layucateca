@@ -101,6 +101,12 @@ const Icons = {
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
       <circle cx="12" cy="7" r="4"></circle>
     </svg>
+  ),
+  Classroom: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+    </svg>
   )
 };
 
@@ -359,6 +365,7 @@ export default function Sidebar() {
               { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
               { href: "/marketplace", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },
               { href: "/muna", label: t("Muna AI", "Muna AI", "Muna AI"), icon: <Icons.Ai /> },
+              { href: "/classroom", label: "Aula Virtual (Proyecto)", icon: <Icons.Classroom /> },
               {
                 href: user ? "#" : "/login",
                 label: user ? `${user.name} (Salir)` : t("Ingresar", "Sign In", "Ingresar"),

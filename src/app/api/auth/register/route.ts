@@ -4,12 +4,19 @@ import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
-    const { email, password, name } = await req.json();
+    const { email, password, name, accessCode } = await req.json();
 
     if (!email || !password || !name) {
       return NextResponse.json(
         { error: "Todos los campos son obligatorios" },
         { status: 400 }
+      );
+    }
+
+    if (accessCode !== "Unir!mx001") {
+      return NextResponse.json(
+        { error: "Código de acceso del proyecto incorrecto." },
+        { status: 403 }
       );
     }
 

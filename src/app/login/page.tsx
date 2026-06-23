@@ -121,23 +121,43 @@ export default function LoginPage() {
           {successMsg && <div className="p-3 text-xs bg-[rgba(0,255,0,0.1)] border border-emerald-500/30 text-emerald-400 rounded-lg">{successMsg}</div>}
 
           {!isLoginTab && (
-            <div>
-              <label className="text-[10px] font-bold text-[rgba(255,255,255,0.4)] uppercase block mb-1">Nombre</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[rgba(255,255,255,0.45)] pointer-events-none">
-                  <User className="w-4 h-4" />
-                </span>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  placeholder="e.g. Sergio Valle"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="input pl-10 text-xs"
-                />
+            <>
+              <div>
+                <label className="text-[10px] font-bold text-[rgba(255,255,255,0.4)] uppercase block mb-1">Nombre</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[rgba(255,255,255,0.45)] pointer-events-none">
+                    <User className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    placeholder="e.g. Sergio Valle"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="input pl-10 text-xs"
+                  />
+                </div>
               </div>
-            </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-[#ff5500] uppercase block mb-1 mt-4">Código de Acceso del Proyecto</label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-[#ff5500] pointer-events-none">
+                    <Sparkles className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    name="accessCode"
+                    required
+                    placeholder="Requerido para el proyecto de IA"
+                    value={(formData as any).accessCode || ""}
+                    onChange={handleInputChange}
+                    className="input pl-10 text-xs border-[#ff5500]/30 focus:border-[#ff5500] focus:ring-[#ff5500]"
+                  />
+                </div>
+              </div>
+            </>
           )}
 
           <div>

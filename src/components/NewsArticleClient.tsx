@@ -36,6 +36,7 @@ interface Post {
 
 interface NewsArticleClientProps {
   post: Post;
+  similarPosts?: Post[];
 }
 
 interface Comment {
@@ -45,7 +46,7 @@ interface Comment {
   createdAt: string;
 }
 
-export default function NewsArticleClient({ post }: NewsArticleClientProps) {
+export default function NewsArticleClient({ post, similarPosts = [] }: NewsArticleClientProps) {
   const { t, translateDb, language } = useLanguage();
   const { user } = useAuth();
 
@@ -166,8 +167,8 @@ export default function NewsArticleClient({ post }: NewsArticleClientProps) {
         </a>
       </div>
 
-      <main>
-        <article style={{ padding: "60px 24px 80px", maxWidth: "780px", margin: "0 auto" }}>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row gap-8">
+        <article className="flex-1 w-full lg:max-w-[780px] mx-auto lg:mx-0">
           <Link
             href="/news"
             style={{
@@ -257,6 +258,17 @@ export default function NewsArticleClient({ post }: NewsArticleClientProps) {
 
           <div className="divider" />
 
+          {/* Social Sharing before AdSense */}
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-white mb-3">{t("Comparte esta noticia", "Share this news", "K'eex le péektsil")}</h3>
+            <div className="flex gap-3">
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#1877f2] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><FacebookIcon className="w-5 h-5" /></a>
+              <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#1da1f2] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><TwitterIcon className="w-5 h-5" /></a>
+              <a href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#25d366] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><MessageCircle className="w-5 h-5" /></a>
+              <a href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${shareText}%20${encodeURIComponent(pageUrl)}`} className="p-3 bg-[rgba(255,255,255,0.05)] hover:bg-[#ff5500] hover:text-white rounded-full transition-colors border border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)]"><Mail className="w-5 h-5" /></a>
+            </div>
+          </div>
+
           {/* AdSense — one ad per article, placed after body, before comments */}
           <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
 
@@ -327,11 +339,34 @@ export default function NewsArticleClient({ post }: NewsArticleClientProps) {
             <Link href="/news" className="btn-ghost">
               ← {t("Todas las Noticias", "All News", "Tuláakal Péektsil")}
             </Link>
-            <Link href="/contact" className="btn-secondary">
-              {t("Contacto", "Contact Us", "Tsikbal")}
-            </Link>
           </div>
         </article>
+
+        {/* Right Sidebar: Similar News */}
+        {similarPosts && similarPosts.length > 0 && (
+          <aside className="lg:w-[340px] shrink-0 space-y-6">
+            <h2 className="text-xl font-bold text-white border-b border-[rgba(255,255,255,0.1)] pb-3">
+              {t("Noticias Similares", "Similar News", "Péektsil")}
+            </h2>
+            <div className="flex flex-col gap-4">
+              {similarPosts.map(p => (
+                <Link key={p.id} href={`/news/${p.slug}`} className="group block bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl overflow-hidden hover:bg-[rgba(255,255,255,0.05)] transition-all">
+                  {p.imageUrl && (
+                    <div className="h-32 overflow-hidden">
+                      <img src={p.imageUrl} alt={translateDb(p.title)} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <div className="text-xs text-[rgba(255,85,0,0.8)] font-bold mb-1 uppercase tracking-wider">{p.state}</div>
+                    <h3 className="text-sm font-semibold text-[rgba(255,255,255,0.9)] group-hover:text-[#ff5500] line-clamp-2 leading-snug">
+                      {translateDb(p.title)}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </aside>
+        )}
       </main>
       <Footer />
     </>

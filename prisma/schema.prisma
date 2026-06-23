@@ -298,3 +298,37 @@ model ReportSnapshot {
   timestamp      DateTime @default(now())
 }
 
+// ─── Layucateca Virtual Classroom Models ──────────────────────────
+
+model ProjectSuggestion {
+  id          String           @id @default(cuid())
+  name        String
+  suggestedBy String
+  createdAt   DateTime         @default(now())
+  votes       SuggestionVote[]
+}
+
+model SuggestionVote {
+  id           String            @id @default(cuid())
+  suggestionId String
+  userId       String
+  suggestion   ProjectSuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  
+  @@unique([suggestionId, userId])
+}
+
+model ProjectProposal {
+  id          String   @id @default(cuid())
+  title       String   @default("Propuesta de Solución de IA")
+  content     String   @default("")
+  status      String   @default("DRAFT")
+  updatedAt   DateTime @updatedAt
+  updatedBy   String   @default("System")
+}
+
+model MonroeMemory {
+  id         String   @id @default(cuid())
+  content    String
+  authorName String
+  createdAt  DateTime @default(now())
+}
