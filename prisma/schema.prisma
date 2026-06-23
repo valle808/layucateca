@@ -103,6 +103,8 @@ model ChatRoom {
   state       String?
   city        String?
   isTemporary Boolean       @default(false)
+  isPrivate   Boolean       @default(false)
+  password    String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   messages    ChatMessage[]

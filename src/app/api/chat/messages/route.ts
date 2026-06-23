@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
+import bcrypt from "bcryptjs";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const roomSlug = searchParams.get("roomSlug");
+    const roomPassword = searchParams.get("roomPassword");
 
     if (!roomSlug) {
       return NextResponse.json({ error: "Room slug is required" }, { status: 400 });
@@ -59,6 +61,16 @@ export async function GET(req: Request) {
 
     if (!room) {
       return NextResponse.json({ error: "Room not found" }, { status: 404 });
+    }
+
+    if (room.isPrivate) {
+      if (!roomPassword) {
+        return NextResponse.json({ error: "Se requiere contraseña para esta sala." }, { status: 401 });
+      }
+      const isValid = await bcrypt.compare(roomPassword, room.password || "");
+      if (!isValid) {
+        return NextResponse.json({ error: "Contraseña incorrecta." }, { status: 401 });
+      }
     }
 
     const messages = await (prisma as any).chatMessage.findMany({
@@ -76,7 +88,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { content, authorName, authorId, roomSlug } = await req.json();
+    const { content, authorName, authorId, roomSlug, roomPassword } = await req.json();
 
     if (!content || !roomSlug) {
       return NextResponse.json({ error: "Content and roomSlug are required" }, { status: 400 });
@@ -88,6 +100,16 @@ export async function POST(req: Request) {
 
     if (!room) {
       return NextResponse.json({ error: "Room not found" }, { status: 404 });
+    }
+
+    if (room.isPrivate) {
+      if (!roomPassword) {
+        return NextResponse.json({ error: "Se requiere contraseña para publicar en esta sala." }, { status: 401 });
+      }
+      const isValid = await bcrypt.compare(roomPassword, room.password || "");
+      if (!isValid) {
+        return NextResponse.json({ error: "Contraseña incorrecta." }, { status: 401 });
+      }
     }
 
     // Run AI content moderation
