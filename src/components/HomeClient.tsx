@@ -37,7 +37,7 @@ const TICKER_ITEMS = [
   "💼 Marketplace de servicios digitales ahora activo",
 ];
 
-function BreakingTicker() {
+function BreakingTicker({ posts, translateDb }: { posts: Post[], translateDb: (str: string) => string }) {
   return (
     <div style={{
       background: "#c0392b",
@@ -66,10 +66,19 @@ function BreakingTicker() {
       <div style={{ overflow: "hidden", flex: 1 }}>
         <div style={{
           display: "flex",
-          animation: "tickerScroll 28s linear infinite",
+          animation: "tickerScroll 40s linear infinite",
           whiteSpace: "nowrap",
         }}>
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+          {posts.length > 0 ? [...posts, ...posts].map((post, i) => (
+            <Link 
+              key={`${post.id}-${i}`} 
+              href={`/news/${post.slug}`} 
+              style={{ padding: "0 48px", fontSize: "0.82rem", fontWeight: 500, color: "#fff", textDecoration: "none" }}
+              className="ticker-link"
+            >
+              🔴 {translateDb(post.title)}
+            </Link>
+          )) : [...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
             <span key={i} style={{ padding: "0 48px", fontSize: "0.82rem", fontWeight: 500 }}>{item}</span>
           ))}
         </div>
@@ -81,6 +90,8 @@ function BreakingTicker() {
         }
         .cat-chip { transition: background 0.2s ease, color 0.2s ease; }
         .cat-chip:hover { background: var(--accent-gold) !important; color: #fff !important; }
+        .ticker-link { transition: color 0.2s ease; }
+        .ticker-link:hover { color: var(--accent-gold) !important; }
       `}</style>
     </div>
   );
@@ -135,7 +146,7 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
   return (
     <>
       <main style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <BreakingTicker />
+        <BreakingTicker posts={recentPosts} translateDb={translateDb} />
 
         {/* ── HERO ── */}
         <section style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 24px 0", width: "100%" }}>
