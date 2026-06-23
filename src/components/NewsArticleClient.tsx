@@ -311,15 +311,16 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
             }}
           >
             {paragraphs.map((paragraph, idx) => {
+              const dropCapClass = idx === 0
+                ? "first-letter:text-5xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-1"
+                : "";
+
               // Inject a mid-article ad after the 3rd paragraph
               if (idx === 3) {
                 return (
                   <React.Fragment key={idx}>
                     <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
-                    <p
-                      style={{ marginBottom: "1.6em" }}
-                      className={idx === 0 ? "first-letter:text-5xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-1" : ""}
-                    >
+                    <p style={{ marginBottom: "1.6em" }}>
                       {paragraph}
                     </p>
                   </React.Fragment>
@@ -329,7 +330,7 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
                 <p
                   key={idx}
                   style={{ marginBottom: "1.6em" }}
-                  className={idx === 0 ? "first-letter:text-5xl first-letter:font-black first-letter:text-[#ff5500] first-letter:mr-3 first-letter:float-left first-letter:leading-none first-letter:mt-1" : ""}
+                  className={dropCapClass}
                 >
                   {paragraph}
                 </p>
