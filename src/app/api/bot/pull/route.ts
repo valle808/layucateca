@@ -12,8 +12,6 @@ export const dynamic = "force-dynamic";
 // Image: Pollinations.ai → https://pollinations.ai  — 100% free, no key
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const dynamic = "force-dynamic";
-export const maxDuration = 300;
 
 // ─── Rate-limit helpers ───────────────────────────────────────────────────────
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
