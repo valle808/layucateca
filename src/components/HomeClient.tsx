@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import Footer from "@/components/Footer";
+import AdSenseAd from "@/components/AdSenseAd";
 import { useEffect, useState } from "react";
 
 interface Post {
@@ -317,18 +318,14 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
               {/* AdSense slot */}
               <div style={{
                 background: "var(--bg-card)",
-                border: "1px dashed var(--border-subtle)",
                 borderRadius: "12px",
-                height: "120px",
+                minHeight: "120px",
+                overflow: "hidden",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "var(--text-secondary)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.05em",
-                opacity: 0.5,
               }}>
-                PUBLICIDAD
+                <AdSenseAd adFormat="auto" fullWidthResponsive={true} />
               </div>
             </div>
           </div>

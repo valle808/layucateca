@@ -9,15 +9,52 @@ import MunaChatbot from "@/components/MunaChatbot";
 import EmergencyAlertBanner from "@/components/EmergencyAlertBanner";
 import Script from "next/script";
 
+const siteUrl = "https://layucateca.com";
+
 export const metadata: Metadata = {
-  title: "La Yucateca — News & Web Design Portal",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "La Yucateca — News & Web Design Portal",
+    template: "%s | La Yucateca"
+  },
   description:
     "Your premier source for news and professional web design services. Discover custom web solutions tailored for your business.",
-  keywords: ["web design", "news portal", "La Yucateca", "web development", "portfolio"],
+  keywords: ["news portal", "Yucatán", "México", "web design", "La Yucateca", "web development", "digital solutions"],
+  authors: [{ name: "La Yucateca" }],
+  creator: "La Yucateca",
+  publisher: "La Yucateca",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: "La Yucateca — News & Web Design Portal",
-    description: "Your premier source for news and professional web design services.",
+    description: "Your premier source for news and professional web design services in Yucatán and beyond.",
+    url: siteUrl,
+    siteName: "La Yucateca",
+    locale: "es_MX",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "La Yucateca — News & Web Design",
+    description: "Your premier source for news and professional web design services.",
+    creator: "@layucateca",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   other: {
     "google-adsense-account": "ca-pub-8867340586657793",
