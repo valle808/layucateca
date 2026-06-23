@@ -49,6 +49,17 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+        
+        {/* Facebook SDK for Comments Plugin */}
+        <div id="fb-root"></div>
+        <Script
+          async
+          defer
+          crossOrigin="anonymous"
+          src={`https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v19.0&appId=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || ""}`}
+          strategy="afterInteractive"
+        />
+
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>

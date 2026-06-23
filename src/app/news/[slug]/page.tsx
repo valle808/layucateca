@@ -21,9 +21,27 @@ export async function generateMetadata({ params }: Props) {
     post = getBotNewsBySlug(slug) as any;
   }
   if (!post) return { title: "Not Found" };
+  const title = post.title.split(" || ")[0];
+  const description = post.content.split(" || ")[0].slice(0, 160);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://layucateca.com";
+  const url = `${siteUrl}/news/${slug}`;
+
   return {
-    title: `${post.title.split(" || ")[0]} — La Yucateca`,
-    description: post.content.split(" || ")[0].slice(0, 160),
+    title: `${title} — La Yucateca`,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      images: post.imageUrl ? [{ url: post.imageUrl }] : [],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: post.imageUrl ? [post.imageUrl] : [],
+    }
   };
 }
 

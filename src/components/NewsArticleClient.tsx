@@ -125,10 +125,6 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
   const { t, translateDb, language } = useLanguage();
   const { user } = useAuth();
 
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [loadingComments, setLoadingComments] = useState(true);
-  const [commentInput, setCommentInput] = useState("");
-  const [commentError, setCommentError] = useState("");
   const [copied, setCopied] = useState(false);
 
   const pageUrl = typeof window !== "undefined" ? window.location.href : `https://layucateca.com/news/${post.slug}`;
@@ -142,49 +138,15 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
   const displayTitle = translateDb(post.title).split(" || ")[0];
 
   useEffect(() => {
-    const fetchComments = async () => {
+    // Re-parse Facebook Comments if navigation happens client-side
+    if (typeof window !== "undefined" && (window as any).FB) {
       try {
-        const res = await fetch(`/api/comments?postId=${post.id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setComments(data.comments || []);
-        }
+        (window as any).FB.XFBML.parse();
       } catch (e) {
-        console.error("Failed to load comments", e);
-      } finally {
-        setLoadingComments(false);
+        console.error("Failed to parse Facebook XFBML", e);
       }
-    };
-    fetchComments();
-  }, [post.id]);
-
-  const handlePostComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!commentInput.trim()) return;
-    setCommentError("");
-    const text = commentInput;
-    setCommentInput("");
-    try {
-      const res = await fetch("/api/comments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: text,
-          authorName: user?.name || "Anónimo",
-          authorId: user?.id || null,
-          postId: post.id,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setComments([data.comment, ...comments]);
-      } else {
-        setCommentError(data.error || "Ocurrió un error al enviar tu comentario.");
-      }
-    } catch {
-      setCommentError("Error de red.");
     }
-  };
+  }, [pageUrl]);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(pageUrl).then(() => {
@@ -383,58 +345,18 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
           {/* Comments section */}
           <section className="space-y-6 mt-10 mb-12">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 border-b border-gray-200 dark:border-[rgba(255,255,255,0.07)] pb-3">
-              <MessageSquare className="w-5 h-5 text-[#ff5500]" />
-              {t("Comentarios de la Comunidad", "Community Comments", "Comentarios")} ({comments.length})
+              <FacebookIcon className="w-5 h-5 text-[#1877f2]" />
+              {t("Comentarios de Facebook", "Facebook Comments", "Comentarios de Facebook")}
             </h3>
 
-            <form onSubmit={handlePostComment} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {commentError && (
-                <div style={{ padding: "10px 14px", background: "rgba(255,50,50,0.1)", border: "1px solid rgba(255,50,50,0.25)", borderRadius: 8, fontSize: "0.8rem", color: "#f87171" }}>
-                  {commentError}
-                </div>
-              )}
-              <textarea
-                value={commentInput}
-                onChange={(e) => setCommentInput(e.target.value)}
-                placeholder={user ? `Escribe como ${user.name}...` : "Escribe un comentario público (Anónimo)..."}
-                required
-                className="input text-sm w-full"
-                style={{ minHeight: 88, resize: "vertical" }}
-              />
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button type="submit" style={{
-                  background: "#ff5500", color: "#fff",
-                  padding: "10px 22px", borderRadius: 9,
-                  fontWeight: 700, fontSize: "0.85rem",
-                  border: "none", cursor: "pointer",
-                  display: "flex", alignItems: "center", gap: 7,
-                  boxShadow: "0 3px 12px rgba(255,85,0,0.3)",
-                }}>
-                  {t("Comentar", "Post Comment", "Comentar")}
-                  <Send style={{ width: 14, height: 14 }} />
-                </button>
-              </div>
-            </form>
-
-            {loadingComments ? (
-              <div className="text-sm text-center text-gray-500 dark:text-[rgba(255,255,255,0.4)]">Cargando comentarios...</div>
-            ) : comments.length === 0 ? (
-              <div className="p-6 border border-dashed border-gray-300 dark:border-[rgba(255,255,255,0.08)] rounded-xl text-center text-sm text-gray-500 dark:text-[rgba(255,255,255,0.45)]">
-                No hay comentarios. ¡Sé el primero en opinar!
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {comments.map((comm) => (
-                  <div key={comm.id} className="p-4 rounded-xl border border-gray-200 dark:border-[rgba(255,255,255,0.05)] bg-gray-50 dark:bg-[rgba(15,15,25,0.3)] space-y-2">
-                    <div className="flex justify-between items-center text-[11px] text-gray-500 dark:text-[rgba(255,255,255,0.4)]">
-                      <span className="font-bold text-gray-900 dark:text-white">{comm.authorName}</span>
-                      <span>{new Date(comm.createdAt).toLocaleString()}</span>
-                    </div>
-                    <p className="text-sm text-gray-700 dark:text-[rgba(255,255,255,0.75)] leading-relaxed">{comm.content}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="bg-white dark:bg-[#e4e6eb] rounded-xl overflow-hidden p-2">
+              <div 
+                className="fb-comments" 
+                data-href={pageUrl} 
+                data-width="100%" 
+                data-numposts="5"
+              ></div>
+            </div>
           </section>
 
           <div className="flex gap-3 flex-wrap">
