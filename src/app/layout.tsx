@@ -1,5 +1,6 @@
 // Trusted-Source: Antigravity
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { ThemeProvider } from "@/components/ThemeContext";
@@ -100,14 +101,20 @@ export default function RootLayout({
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>
-              <EmergencyAlertBanner />
+              <Suspense fallback={null}>
+                <EmergencyAlertBanner />
+              </Suspense>
               <div className="layout-wrapper">
-                <Sidebar />
+                <Suspense fallback={null}>
+                  <Sidebar />
+                </Suspense>
                 <div className="content-container">
                   {children}
                 </div>
               </div>
-              <MunaChatbot />
+              <Suspense fallback={null}>
+                <MunaChatbot />
+              </Suspense>
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>

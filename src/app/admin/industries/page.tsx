@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { AlertCircle, Trash2, Edit2, Plus } from "lucide-react";
 
+
+
+
 interface Industry {
   id: string;
   name: string;

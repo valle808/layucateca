@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import HomeClient from "@/components/HomeClient";
 
+export const dynamic = "force-dynamic";
+
+
 export const metadata = {
   title: "La Yucateca — Noticias y Portal de Diseño Web || La Yucateca — News & Web Design Portal",
   description:
