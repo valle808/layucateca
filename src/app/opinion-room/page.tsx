@@ -389,14 +389,14 @@ export default function OpinionRoomPage() {
                   <button
                     key={room.id}
                     onClick={() => handleRoomClick(room)}
-                    className={\`w-full text-left px-4 py-3 rounded-2xl border flex items-center justify-between transition-all group \${
+                    className={`w-full text-left px-4 py-3 rounded-2xl border flex items-center justify-between transition-all group ${
                       isActive
                         ? "bg-white/80 dark:bg-white/10 border-white dark:border-white/10 shadow-sm"
                         : "bg-white/30 dark:bg-transparent border-transparent hover:bg-white/50 dark:hover:bg-white/5"
-                    }\`}
+                    }`}
                   >
                     <div className="flex items-center gap-3 overflow-hidden">
-                      <div className={\`p-2.5 rounded-xl transition-all \${isActive ? 'bg-gradient-to-br from-[#ff5500] to-orange-500 text-white shadow-md' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 group-hover:bg-white dark:group-hover:bg-white/10'}\`}>
+                      <div className={`p-2.5 rounded-xl transition-all ${isActive ? 'bg-gradient-to-br from-[#ff5500] to-orange-500 text-white shadow-md' : 'bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-white/40 group-hover:bg-white dark:group-hover:bg-white/10'}`}>
                         {room.type === "PUBLIC" ? (
                           <Globe className="w-4 h-4" />
                         ) : room.type === "REGIONAL" ? (
@@ -406,7 +406,7 @@ export default function OpinionRoomPage() {
                         )}
                       </div>
                       <div className="truncate pr-2">
-                        <span className={\`font-bold text-sm block truncate \${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-white/70'}\`}>
+                        <span className={`font-bold text-sm block truncate ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-white/70'}`}>
                           {room.name}
                         </span>
                         {room.city && <span className="text-[10px] font-medium text-slate-400 dark:text-white/40 block mt-0.5">{room.city}, {room.state}</span>}
@@ -493,18 +493,18 @@ export default function OpinionRoomPage() {
                 const isMe = msg.authorName === getActiveDisplayName() || (msg.authorId === user?.id && user?.id != null);
                 
                 return (
-                  <div key={msg.id} className={\`flex gap-4 \${isMe ? 'flex-row-reverse' : 'flex-row'}\`}>
+                  <div key={msg.id} className={`flex gap-4 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                     <div className="shrink-0 flex flex-col items-center">
-                      <div className={\`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-md \${
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-md ${
                         isMe 
                           ? 'bg-gradient-to-br from-[#ff5500] to-pink-500 text-white' 
                           : 'bg-white dark:bg-[#1a1a24] text-slate-600 dark:text-white/80 border border-slate-200 dark:border-white/10'
-                      }\`}>
+                      }`}>
                         {msg.authorName.slice(0, 2).toUpperCase()}
                       </div>
                     </div>
                     
-                    <div className={\`flex flex-col \${isMe ? 'items-end' : 'items-start'} max-w-[85%] md:max-w-[75%]\`}>
+                    <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] md:max-w-[75%]`}>
                       <div className="flex items-baseline gap-2 px-1 mb-1.5">
                         <span className="text-xs font-bold text-slate-700 dark:text-white/90">{isMe ? 'Tú' : msg.authorName}</span>
                         <span className="text-[10px] font-semibold text-slate-400 dark:text-white/40">
@@ -512,33 +512,33 @@ export default function OpinionRoomPage() {
                         </span>
                       </div>
                       
-                      <div className={\`flex flex-col gap-2 \${isMe ? 'items-end' : 'items-start'}\`}>
+                      <div className={`flex flex-col gap-2 ${isMe ? 'items-end' : 'items-start'}`}>
                         {msg.content && (
-                          <div className={\`px-5 py-3.5 text-[15px] leading-relaxed shadow-sm backdrop-blur-md \${
+                          <div className={`px-5 py-3.5 text-[15px] leading-relaxed shadow-sm backdrop-blur-md ${
                             isMe 
                               ? 'bg-gradient-to-br from-[#ff5500] to-orange-500 text-white rounded-3xl rounded-tr-md' 
                               : 'bg-white/80 dark:bg-white/10 text-slate-800 dark:text-white/90 border border-white dark:border-white/5 rounded-3xl rounded-tl-md'
-                          }\`}>
+                          }`}>
                             {msg.content}
                           </div>
                         )}
 
                         {msg.imageUrl && (
-                          <div className={\`overflow-hidden shadow-sm border \${isMe ? 'border-orange-500/30 rounded-3xl rounded-tr-md' : 'border-slate-200 dark:border-white/10 rounded-3xl rounded-tl-md'} bg-black/5\`}>
+                          <div className={`overflow-hidden shadow-sm border ${isMe ? 'border-orange-500/30 rounded-3xl rounded-tr-md' : 'border-slate-200 dark:border-white/10 rounded-3xl rounded-tl-md'} bg-black/5`}>
                             <img src={msg.imageUrl} alt="Adjunto" className="max-w-full md:max-w-sm max-h-64 object-contain" loading="lazy" />
                           </div>
                         )}
 
                         {msg.location && (
                           <a 
-                            href={\`https://www.google.com/maps?q=\${msg.location}\`} 
+                            href={`https://www.google.com/maps?q=${msg.location}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={\`flex items-center gap-3 px-4 py-3 shadow-sm backdrop-blur-md transition-transform hover:scale-[1.02] active:scale-95 \${
+                            className={`flex items-center gap-3 px-4 py-3 shadow-sm backdrop-blur-md transition-transform hover:scale-[1.02] active:scale-95 ${
                               isMe 
                                 ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-3xl rounded-tr-md border border-emerald-400/30' 
                                 : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-100 border border-emerald-200 dark:border-emerald-500/20 rounded-3xl rounded-tl-md'
-                            }\`}
+                            }`}
                           >
                             <div className="p-2 bg-white/20 rounded-full shrink-0">
                               <MapPin className="w-5 h-5" />
@@ -738,7 +738,7 @@ export default function OpinionRoomPage() {
                       }}
                       className="sr-only"
                     />
-                    <div className={\`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all \${isNewRoomPrivate ? 'bg-[#ff5500] border-[#ff5500]' : 'border-slate-300 dark:border-white/20 bg-white dark:bg-black/30 group-hover:border-[#ff5500]/50'}\`}>
+                    <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${isNewRoomPrivate ? 'bg-[#ff5500] border-[#ff5500]' : 'border-slate-300 dark:border-white/20 bg-white dark:bg-black/30 group-hover:border-[#ff5500]/50'}`}>
                       {isNewRoomPrivate && <span className="text-white text-sm">✓</span>}
                     </div>
                   </div>
