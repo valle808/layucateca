@@ -147,41 +147,33 @@ export default function Sidebar() {
   }, [isCollapsed]);
 
   // Sidebar styling for desktop vs mobile drawer
+  const sidebarBase: React.CSSProperties = {
+    position: "fixed",
+    top: "var(--banner-height, 0px)",
+    left: 0,
+    bottom: 0,
+    background: "var(--bg-card)",
+    backdropFilter: "blur(40px) saturate(1.5)",
+    WebkitBackdropFilter: "blur(40px) saturate(1.5)",
+    borderRight: "1px solid var(--border-subtle)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "28px 0",
+  };
   const sidebarStyle: React.CSSProperties = isMobile
     ? {
-        position: "fixed",
-        top: "var(--banner-height, 0px)",
-        left: 0,
-        bottom: 0,
-        width: "280px",
-        background: "var(--bg-card)",
-        backdropFilter: "blur(40px)",
-        WebkitBackdropFilter: "blur(40px)",
-        borderRight: "1px solid var(--border-subtle)",
+        ...sidebarBase,
+        width: "260px",
         zIndex: 1000,
-        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition: "transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)",
         transform: isOpen ? "translateX(0%)" : "translateX(-100%)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "32px 0",
       }
     : {
-        position: "fixed",
-        top: "var(--banner-height, 0px)",
-        left: 0,
-        bottom: 0,
+        ...sidebarBase,
         width: isCollapsed ? "var(--sidebar-collapsed-width)" : "var(--sidebar-width)",
-        background: "var(--bg-card)",
-        backdropFilter: "blur(30px)",
-        WebkitBackdropFilter: "blur(30px)",
-        borderRight: "1px solid var(--border-subtle)",
         zIndex: 100,
-        transition: "width 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "32px 0",
+        transition: "width 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
       };
 
   return (
@@ -295,11 +287,11 @@ export default function Sidebar() {
         <div>
           <div
             style={{
-              padding: isCollapsed ? "0 20px" : "0 32px",
+              padding: isCollapsed ? "0 14px" : "0 20px",
               display: "flex",
               alignItems: "center",
-              justifyContent: isCollapsed ? "center" : "space-between",
-              marginBottom: "48px",
+              justifyContent: isCollapsed ? "center" : "flex-start",
+              marginBottom: "36px",
             }}
           >
             {/* Logo */}
@@ -309,36 +301,32 @@ export default function Sidebar() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "16px",
+                gap: "12px",
                 textDecoration: "none",
               }}
             >
               <div
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: "#ff5500",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "var(--text-primary)",
                   flexShrink: 0,
-                  border: "1px solid var(--border-subtle)",
+                  boxShadow: "0 4px 14px rgba(255,85,0,0.35)",
                 }}
               >
-                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="2" x2="12" y2="22"></line>
-                  <line x1="2" y1="12" x2="22" y2="12"></line>
-                </svg>
+                <span style={{ color: "#fff", fontWeight: 900, fontSize: "0.8rem", letterSpacing: "-0.03em" }}>LA</span>
               </div>
               {(!isCollapsed || isMobile) && (
                 <span
                   style={{
-                    fontWeight: 700,
-                    fontSize: "1rem",
+                    fontWeight: 800,
+                    fontSize: "0.95rem",
                     color: "var(--text-primary)",
-                    letterSpacing: "0.2em",
-                    textTransform: "uppercase",
+                    letterSpacing: "-0.01em",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -353,8 +341,8 @@ export default function Sidebar() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "12px",
-              padding: isCollapsed && !isMobile ? "0 16px" : "0 24px",
+              gap: "4px",
+              padding: isCollapsed && !isMobile ? "0 10px" : "0 14px",
             }}
           >
             {[
@@ -371,46 +359,60 @@ export default function Sidebar() {
                 icon: <Icons.User />,
                 action: user ? () => logout() : undefined,
               },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => {
-                  setIsOpen(false);
-                  if (item.action) {
-                    item.action();
-                  }
-                }}
-                style={{
-                  padding: "12px 16px",
-                  color: "var(--text-secondary)",
-                  textDecoration: "none",
-                  fontWeight: 500,
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.05em",
-                  border: "1px solid transparent",
-                  borderRadius: "8px",
-                  transition: "all 0.2s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  justifyContent: isCollapsed && !isMobile ? "center" : "flex-start",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                  (e.currentTarget as HTMLElement).style.border = "1px solid var(--border-subtle)";
-                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
-                  (e.currentTarget as HTMLElement).style.border = "1px solid transparent";
-                  (e.currentTarget as HTMLElement).style.background = "transparent";
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center" }}>{item.icon}</span>
-                {(!isCollapsed || isMobile) && <span>{item.label}</span>}
-              </Link>
-            ))}
+            ].map((item) => {
+              const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (item.action) item.action();
+                  }}
+                  style={{
+                    padding: isCollapsed && !isMobile ? "11px" : "10px 14px",
+                    color: isActive ? "#ff5500" : "var(--text-secondary)",
+                    textDecoration: "none",
+                    fontWeight: isActive ? 600 : 500,
+                    fontSize: "0.875rem",
+                    borderRadius: "10px",
+                    transition: "all 0.18s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    justifyContent: isCollapsed && !isMobile ? "center" : "flex-start",
+                    background: isActive ? "rgba(255,85,0,0.09)" : "transparent",
+                    position: "relative",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
+                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                      (e.currentTarget as HTMLElement).style.background = "transparent";
+                    }
+                  }}
+                >
+                  {isActive && (
+                    <span style={{
+                      position: "absolute",
+                      left: 0,
+                      top: "20%",
+                      bottom: "20%",
+                      width: 3,
+                      borderRadius: "0 3px 3px 0",
+                      background: "#ff5500",
+                    }} />
+                  )}
+                  <span style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>{item.icon}</span>
+                  {(!isCollapsed || isMobile) && <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.label}</span>}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -449,61 +451,45 @@ export default function Sidebar() {
         {/* Bottom Section */}
         <div
           style={{
-            padding: isCollapsed && !isMobile ? "0 16px" : "0 24px",
+            padding: isCollapsed && !isMobile ? "0 10px" : "0 14px",
             display: "flex",
             flexDirection: "column",
-            gap: "16px",
+            gap: "10px",
           }}
         >
           {isCollapsed && !isMobile ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
-              {/* Compact Language button */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
               <button
                 onClick={() => setLanguage(language === "es" ? "en" : language === "en" ? "my" : "es")}
                 style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "8px",
-                  background: "var(--text-primary)",
-                  color: "var(--bg-primary)",
-                  border: "none",
-                  fontSize: "0.75rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "transform 0.2s ease",
+                  width: 40, height: 40, borderRadius: 10,
+                  background: "#ff5500", color: "#fff",
+                  border: "none", fontSize: "0.7rem", fontWeight: 800,
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  letterSpacing: "0.06em", transition: "opacity 0.18s ease",
                 }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.85")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
                 title="Change Language"
               >
                 {language.toUpperCase()}
               </button>
-              {/* Compact Theme button */}
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "8px",
-                  background: "transparent",
-                  border: "1px solid var(--border-subtle)",
-                  color: "var(--text-secondary)",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "all 0.2s ease",
+                  width: 40, height: 40, borderRadius: 10,
+                  background: "transparent", border: "1px solid var(--border-subtle)",
+                  color: "var(--text-secondary)", cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "all 0.18s ease",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,85,0,0.09)";
+                  (e.currentTarget as HTMLElement).style.color = "#ff5500";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
                   (e.currentTarget as HTMLElement).style.background = "transparent";
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
                 }}
                 title="Toggle Theme"
               >
@@ -515,13 +501,11 @@ export default function Sidebar() {
               {/* Language Switcher */}
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "4px",
-                  borderRadius: "8px",
+                  display: "flex", alignItems: "center",
+                  padding: "4px", borderRadius: 11,
                   border: "1px solid var(--border-subtle)",
-                  background: "var(--bg-primary)",
+                  background: "rgba(0,0,0,0.03)",
+                  gap: 3,
                 }}
               >
                 {[
@@ -534,16 +518,12 @@ export default function Sidebar() {
                     onClick={() => setLanguage(lang.code as "es" | "en" | "my")}
                     style={{
                       flex: 1,
-                      background: language === lang.code ? "var(--text-primary)" : "transparent",
-                      color: language === lang.code ? "var(--bg-primary)" : "var(--text-secondary)",
-                      border: "none",
-                      borderRadius: "6px",
-                      padding: "10px 0",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      letterSpacing: "0.1em",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
+                      background: language === lang.code ? "#ff5500" : "transparent",
+                      color: language === lang.code ? "#fff" : "var(--text-secondary)",
+                      border: "none", borderRadius: 8,
+                      padding: "8px 0", fontSize: "0.72rem", fontWeight: 700,
+                      letterSpacing: "0.08em", cursor: "pointer",
+                      transition: "all 0.18s ease",
                     }}
                   >
                     {lang.label}
@@ -555,41 +535,26 @@ export default function Sidebar() {
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "12px",
-                  padding: "12px",
-                  background: "transparent",
-                  borderRadius: "8px",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  gap: 10, padding: "10px",
+                  background: "transparent", borderRadius: 10,
                   border: "1px solid var(--border-subtle)",
                   color: "var(--text-secondary)",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.05em",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
+                  fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.04em",
+                  cursor: "pointer", transition: "all 0.18s ease",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
-                  (e.currentTarget as HTMLElement).style.background = "var(--bg-card-hover)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,85,0,0.09)";
+                  (e.currentTarget as HTMLElement).style.color = "#ff5500";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,85,0,0.28)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
                   (e.currentTarget as HTMLElement).style.background = "transparent";
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
                 }}
               >
-                {theme === "dark" ? (
-                  <>
-                    <Icons.ThemeDark />
-                    <span>Akbal</span>
-                  </>
-                ) : (
-                  <>
-                    <Icons.ThemeLight />
-                    <span>K'in</span>
-                  </>
-                )}
+                {theme === "dark" ? <><Icons.ThemeDark /><span>Modo Akbal</span></> : <><Icons.ThemeLight /><span>Modo K'in</span></>}
               </button>
             </>
           )}
