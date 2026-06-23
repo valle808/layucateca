@@ -583,12 +583,7 @@ async function handleSync() {
 
   const result = await runCategoryPipeline(client, model, selectedCategory, headlines);
   
-  const results = [{ status: "fulfilled", value: result }];
-
-
-  const summary = results.map((r) =>
-    r.status === "fulfilled" ? r.value : { category: "unknown", success: false, error: String(r.reason) }
-  );
+  const summary = [result];
 
   const elapsed = Date.now() - startTime;
   const successCount = summary.filter((s) => s.success).length;
