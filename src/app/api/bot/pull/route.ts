@@ -341,7 +341,7 @@ JOURNALISM STANDARDS (mandatory):
 2. BYLINE: "${reporter}, Redacción La Yucateca — ${today}"
 3. LEAD: WHO-WHAT-WHEN-WHERE in 1-2 sentences
 4. NUT GRAPH: Why this matters broadly
-5. BODY: 2-3 short paragraphs. Include the direct quote.
+5. BODY: Comprehensive article detailing the event, historical context, and multiple perspectives. Minimum 1024 words. Include direct quotes.
 6. CLOSING: Next steps or community impact
 
 Return ONLY this JSON:
@@ -349,8 +349,8 @@ Return ONLY this JSON:
   "title": "[Spanish headline || English headline || Maya headline]",
   "slug": "[lowercase-hyphenated-no-accents-max-60-chars]",
   "byline": "${reporter}",
-  "content_es": "[Full Spanish article, approx 200 words]",
-  "content_en": "[Professional English translation, approx 150 words]",
+  "content_es": "[Full Spanish article, absolute minimum of 1024 words, extremely detailed]",
+  "content_en": "[Professional English translation summary, approx 200 words]",
   "content_my": "[Short Maya language adaptation, approx 50 words]",
   "summary_es": "[2-sentence Facebook-ready summary, max 250 chars]",
   "category": "${scoutData.category}",
@@ -358,8 +358,8 @@ Return ONLY this JSON:
 }`,
       },
     ],
-    temperature: 0.72,
-    max_tokens: 1500, // Reduced from 3500 for speed
+    temperature: 0.75,
+    max_tokens: 4000,
   }));
 
   const parsed = extractJson((res.choices[0].message.content || "").trim());
