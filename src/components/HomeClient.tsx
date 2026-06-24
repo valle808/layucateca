@@ -103,8 +103,17 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
-  const hero = recentPosts[0];
-  const secondaryPosts = recentPosts.slice(1, 4);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const heroPosts = recentPosts.slice(0, 4);
+  const secondaryPosts = recentPosts.slice(heroPosts.length > 0 ? heroPosts.length : 1, heroPosts.length > 0 ? heroPosts.length + 3 : 4);
+
+  useEffect(() => {
+    if (heroPosts.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroPosts.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroPosts.length]);
 
   const categories = [
     { label: t("Política", "Politics", "Política"), icon: "🏛️", href: "/news" },
@@ -172,78 +181,131 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
         {/* ── MAGAZINE HERO SECTION ── */}
         <section style={{ maxWidth: "1280px", margin: "0 auto", padding: "40px 24px 0", width: "100%" }}>
           <div className="magazine-grid">
-            {/* Main Feature */}
+            {/* Main Feature Slideshow */}
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-              {hero ? (
-                <Link href={`/news/${hero.slug}`} style={{ textDecoration: "none", display: "block" }} className="hover-lift">
-                  <div className="card hero-card" style={{
-                    position: "relative",
-                    borderRadius: "16px",
-                    overflow: "hidden",
-                    background: hero.imageUrl
-                      ? `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url(${hero.imageUrl}) center/cover no-repeat`
-                      : "var(--bg-card)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
-                    padding: "32px",
-                  }}>
-                    <span style={{
-                      display: "inline-block",
-                      background: "#ff5500",
-                      color: "#fff",
-                      padding: "6px 16px",
-                      borderRadius: "6px",
-                      fontSize: "0.75rem",
-                      fontWeight: 900,
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      marginBottom: "16px",
-                      width: "fit-content",
-                      boxShadow: "0 4px 15px rgba(255,85,0,0.5)",
+              {heroPosts.length > 0 ? (
+                <div className="card hero-card hover-lift" style={{
+                  position: "relative",
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  background: "var(--bg-card)",
+                }}>
+                  {heroPosts.map((post, index) => (
+                    <Link key={post.id} href={`/news/${post.slug}`} style={{
+                      textDecoration: "none",
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      opacity: currentSlide === index ? 1 : 0,
+                      transition: "opacity 0.6s ease-in-out",
+                      zIndex: currentSlide === index ? 10 : 0,
+                      pointerEvents: currentSlide === index ? "auto" : "none",
                     }}>
-                      {t("Destacado", "Featured", "Destacado")}
-                    </span>
-                    <h1 style={{
-                      fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
-                      fontWeight: 900,
-                      color: hero.imageUrl ? "#ffffff" : "var(--text-primary)",
-                      lineHeight: 1.15,
-                      marginBottom: "16px",
-                      textShadow: hero.imageUrl ? "0 2px 24px rgba(0,0,0,0.8)" : "none",
-                      letterSpacing: "-0.02em",
-                    }}>
-                      {translateDb(hero.title)}
-                    </h1>
-                    <p style={{
-                      color: hero.imageUrl ? "rgba(255,255,255,0.9)" : "var(--text-secondary)",
-                      fontSize: "1.05rem",
-                      lineHeight: 1.6,
-                      marginBottom: "24px",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      maxWidth: "800px",
-                    }}>
-                      {translateDb(hero.content).replace(/<[^>]+>/g, "").substring(0, 200)}…
-                    </p>
-                    <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                      <span style={{ color: hero.imageUrl ? "rgba(255,255,255,0.8)" : "var(--text-secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
-                        {formatDate(hero.createdAt)}
-                      </span>
-                      <span style={{
-                        color: "#fff",
-                        fontSize: "0.85rem",
-                        fontWeight: 700,
-                        borderBottom: "2px solid #ff5500",
-                        paddingBottom: "2px",
+                      <div style={{
+                        width: "100%",
+                        height: "100%",
+                        background: post.imageUrl
+                          ? `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url(${post.imageUrl}) center/cover no-repeat`
+                          : "var(--bg-card-hover)",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end",
+                        padding: "32px",
                       }}>
-                        {t("Leer Artículo", "Read Article", "Xook")} →
-                      </span>
+                        <span style={{
+                          display: "inline-block",
+                          background: "#ff5500",
+                          color: "#fff",
+                          padding: "6px 16px",
+                          borderRadius: "6px",
+                          fontSize: "0.75rem",
+                          fontWeight: 900,
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase",
+                          marginBottom: "16px",
+                          width: "fit-content",
+                          boxShadow: "0 4px 15px rgba(255,85,0,0.5)",
+                        }}>
+                          {t("Destacado", "Featured", "Destacado")}
+                        </span>
+                        <h1 style={{
+                          fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                          fontWeight: 900,
+                          color: post.imageUrl ? "#ffffff" : "var(--text-primary)",
+                          lineHeight: 1.15,
+                          marginBottom: "16px",
+                          textShadow: post.imageUrl ? "0 2px 24px rgba(0,0,0,0.8)" : "none",
+                          letterSpacing: "-0.02em",
+                        }}>
+                          {translateDb(post.title)}
+                        </h1>
+                        <p style={{
+                          color: post.imageUrl ? "rgba(255,255,255,0.9)" : "var(--text-secondary)",
+                          fontSize: "1.05rem",
+                          lineHeight: 1.6,
+                          marginBottom: "24px",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          maxWidth: "800px",
+                        }}>
+                          {translateDb(post.content).replace(/<[^>]+>/g, "").substring(0, 200)}…
+                        </p>
+                        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                          <span style={{ color: post.imageUrl ? "rgba(255,255,255,0.8)" : "var(--text-secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
+                            {formatDate(post.createdAt)}
+                          </span>
+                          <span style={{
+                            color: "#fff",
+                            fontSize: "0.85rem",
+                            fontWeight: 700,
+                            borderBottom: "2px solid #ff5500",
+                            paddingBottom: "2px",
+                          }}>
+                            {t("Leer Artículo", "Read Article", "Xook")} →
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                  {/* Carousel Indicators */}
+                  {heroPosts.length > 1 && (
+                    <div style={{
+                      position: "absolute",
+                      bottom: "32px",
+                      right: "32px",
+                      display: "flex",
+                      gap: "8px",
+                      zIndex: 20,
+                    }}>
+                      {heroPosts.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={(e) => { 
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setCurrentSlide(index); 
+                          }}
+                          style={{
+                            width: currentSlide === index ? "24px" : "8px",
+                            height: "8px",
+                            borderRadius: "4px",
+                            background: currentSlide === index ? "#ff5500" : "rgba(255,255,255,0.4)",
+                            border: "none",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            padding: 0,
+                          }}
+                          aria-label={`Go to slide ${index + 1}`}
+                        />
+                      ))}
                     </div>
-                  </div>
-                </Link>
+                  )}
+                </div>
               ) : (
                 <div className="card hero-card" style={{
                   display: "flex",
