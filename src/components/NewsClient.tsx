@@ -147,6 +147,17 @@ export default function NewsClient({ posts: initialPosts }: NewsClientProps) {
     return () => clearInterval(agentInterval);
   }, [agentTeams.length]);
 
+  // Read category from URL params on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const categoryFromUrl = searchParams.get("category");
+      if (categoryFromUrl) {
+        setSelectedCategory(categoryFromUrl);
+      }
+    }
+  }, []);
+
   // Fetch posts & discover dynamic categories on mount
   useEffect(() => {
     fetch("/api/posts")

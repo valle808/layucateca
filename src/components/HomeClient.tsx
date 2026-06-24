@@ -116,11 +116,11 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
   }, [heroPosts.length]);
 
   const categories = [
-    { label: t("Política", "Politics", "Política"), icon: "🏛️", href: "/news" },
-    { label: t("Economía", "Economy", "Economía"), icon: "📊", href: "/news" },
-    { label: t("Cultura", "Culture", "Cultura"), icon: "🎭", href: "/news" },
-    { label: t("Tecnología", "Technology", "Tecnología"), icon: "💻", href: "/news" },
-    { label: t("Deportes", "Sports", "Deportes"), icon: "⚽", href: "/news" },
+    { label: t("Política", "Politics", "Política"), icon: "🏛️", href: "/news?category=Política" },
+    { label: t("Economía", "Economy", "Economía"), icon: "📊", href: "/news?category=Economía" },
+    { label: t("Cultura", "Culture", "Cultura"), icon: "🎭", href: "/news?category=Cultura" },
+    { label: t("Tecnología", "Technology", "Tecnología"), icon: "💻", href: "/news?category=Tecnología" },
+    { label: t("Deportes", "Sports", "Deportes"), icon: "⚽", href: "/news?category=Deportes" },
     { label: t("Opinión", "Opinion", "Opinión"), icon: "✍️", href: "/opinion-room" },
   ];
 

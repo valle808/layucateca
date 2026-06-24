@@ -102,6 +102,7 @@ export default function Navbar() {
             { href: "/", label: t("Inicio", "Home", "Yáax") },
             { href: "/news", label: t("Noticias", "News", "Péektsil") },
             { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob") },
+            { href: "/muna", label: "Muna AI" },
             { href: "/contact", label: t("Contacto", "Contact", "Tsikbal") },
           ].map((item) => (
             <Link
@@ -264,6 +265,7 @@ export default function Navbar() {
             { href: "/", label: t("Inicio", "Home", "Yáax") },
             { href: "/news", label: t("Noticias", "News", "Péektsil") },
             { href: "/portfolio", label: t("Portafolio", "Portfolio", "Meyajo'ob") },
+            { href: "/muna", label: "Muna AI" },
             { href: "/contact", label: t("Contacto", "Contact", "Tsikbal") },
           ].map((item) => (
             <Link
