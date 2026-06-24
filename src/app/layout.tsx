@@ -15,12 +15,12 @@ const siteUrl = "https://layucateca.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "La Yucateca — News & Web Design Portal",
+    default: "La Yucateca — News & Community Website",
     template: "%s | La Yucateca"
   },
   description:
-    "Your premier source for news and professional web design services. Discover custom web solutions tailored for your business.",
-  keywords: ["news portal", "Yucatán", "México", "web design", "La Yucateca", "web development", "digital solutions"],
+    "Your premier source for local news and community engagement in Yucatán and beyond.",
+  keywords: ["news portal", "Yucatán", "México", "noticias", "La Yucateca", "comunidad", "community website"],
   authors: [{ name: "La Yucateca" }],
   creator: "La Yucateca",
   publisher: "La Yucateca",
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: "La Yucateca — News & Web Design Portal",
-    description: "Your premier source for news and professional web design services in Yucatán and beyond.",
+    title: "La Yucateca — News & Community Website",
+    description: "Your premier source for local news and community engagement in Yucatán and beyond.",
     url: siteUrl,
     siteName: "La Yucateca",
     locale: "es_MX",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "La Yucateca — News & Web Design",
-    description: "Your premier source for news and professional web design services.",
+    title: "La Yucateca — News & Community Website",
+    description: "Your premier source for local news and community engagement.",
     creator: "@layucateca",
   },
   robots: {

@@ -5,9 +5,9 @@ export const dynamic = "force-dynamic";
 
 
 export const metadata = {
-  title: "La Yucateca — Noticias y Portal de Diseño Web || La Yucateca — News & Web Design Portal",
+  title: "La Yucateca — Portal de Noticias y Comunidad || News and Community Portal",
   description:
-    "Tu fuente principal de noticias y servicios profesionales de diseño web a medida. || Your premier source for news and professional bespoke web design services.",
+    "Tu fuente principal de noticias locales y comunidad. || Your premier source for local news and community.",
 };
 
 export default async function HomePage() {
