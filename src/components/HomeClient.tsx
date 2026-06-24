@@ -115,29 +115,6 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
     { label: t("Opinión", "Opinion", "Opinión"), icon: "✍️", href: "/opinion-room" },
   ];
 
-  const services = [
-    {
-      icon: "🌐",
-      title: t("Diseño Web", "Web Design", "Diseño Web"),
-      desc: t("Sitios premium a medida desde $499. Rápidos, elegantes y optimizados.", "Premium bespoke websites from $499. Fast, elegant, and optimized.", ""),
-      href: "/soluciones-digitales",
-      color: "var(--accent-gold)",
-    },
-    {
-      icon: "🤖",
-      title: "Muna AI",
-      desc: t("Asistente inteligente para tu negocio. Disponible 24/7 en español e inglés.", "Intelligent assistant for your business. Available 24/7.", ""),
-      href: "/muna",
-      color: "var(--accent-gold)",
-    },
-    {
-      icon: "🖥️",
-      title: t("Soluciones Digitales", "Digital Solutions", "Soluciones Digitales"),
-      desc: t("Desarrollo de software a medida, arquitectura cloud, ciberseguridad y automatización.", "Custom software development, cloud architecture, cybersecurity, and automation.", ""),
-      href: "/soluciones-digitales",
-      color: "var(--accent-gold)",
-    },
-  ];
 
   const formatDate = (d: Date | string) => {
     const date = new Date(d);
@@ -331,51 +308,6 @@ export default function HomeClient({ recentPosts }: HomeClientProps) {
           </div>
         </section>
 
-        {/* ── SERVICES STRIP ── */}
-        <section style={{ maxWidth: "1280px", margin: "48px auto 0", padding: "0 24px", width: "100%" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-            <div style={{ width: "3px", height: "22px", background: "#ff5500", borderRadius: "2px" }} />
-            <h2 style={{
-              fontSize: "0.8rem", fontWeight: 800,
-              color: "var(--text-primary)",
-              letterSpacing: "0.1em", textTransform: "uppercase",
-            }}>
-              {t("Nuestros Servicios", "Our Services", "Nuestros Servicios")}
-            </h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "18px" }}>
-            {services.map((svc) => (
-              <Link key={svc.title} href={svc.href} style={{ textDecoration: "none" }}>
-                <div className="card" style={{
-                  borderRadius: "16px",
-                  padding: "28px 24px",
-                  transition: "transform 0.18s ease, box-shadow 0.18s ease",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
-                }}
-                >
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 12,
-                    background: "rgba(255,85,0,0.1)", border: "1.5px solid rgba(255,85,0,0.18)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1.4rem", marginBottom: "16px",
-                  }}>{svc.icon}</div>
-                  <h3 style={{ fontSize: "1rem", fontWeight: 800, letterSpacing: "-0.01em", color: "var(--text-primary)", marginBottom: "8px" }}>{svc.title}</h3>
-                  <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", lineHeight: 1.65, marginBottom: "18px" }}>{svc.desc}</p>
-                  <span style={{ color: "#ff5500", fontSize: "0.82rem", fontWeight: 700 }}>
-                    {t("Conocer más →", "Learn more →", "Conocer más →")}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
 
         {/* ── ALL NEWS GRID ── */}
         {recentPosts.length > 0 && (

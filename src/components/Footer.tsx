@@ -24,7 +24,7 @@ export default function Footer() {
             gap: "24px",
             marginBottom: "48px",
             opacity: 0.35,
-            color: "#ffffff",
+            color: "var(--text-primary)",
           }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
@@ -64,7 +64,7 @@ export default function Footer() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#ffffff",
+                  color: "var(--text-primary)",
                 }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
@@ -73,7 +73,7 @@ export default function Footer() {
                   <line x1="2" y1="12" x2="22" y2="12"></line>
                 </svg>
               </div>
-              <span style={{ fontWeight: 500, fontSize: "1.1rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "#ffffff" }}>
+              <span style={{ fontWeight: 500, fontSize: "1.1rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-primary)" }}>
                 La Yucateca
               </span>
             </div>
@@ -88,7 +88,7 @@ export default function Footer() {
 
           {/* Enlaces / Links */}
           <div>
-            <h4 style={{ color: "#ffffff", fontWeight: 600, marginBottom: "16px", fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            <h4 style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: "16px", fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
               {t("Enlaces", "Links", "Nu'ukbesaj")}
             </h4>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -117,7 +117,7 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 style={{ color: "#ffffff", fontWeight: 600, marginBottom: "16px", fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            <h4 style={{ color: "var(--text-primary)", fontWeight: 600, marginBottom: "16px", fontSize: "0.9rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
               Legal
             </h4>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
