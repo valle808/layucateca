@@ -291,40 +291,6 @@ export default function MunaChatbot() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Action chips */}
-          <div style={{ display: "flex", gap: "6px", padding: "10px 20px", overflowX: "auto", borderTop: "1px solid var(--border-subtle)" }}>
-            {[
-              { label: t("Diseño Web", "Web Design", "Diseño Web"), query: "servicios" },
-              { label: t("Noticias K'iin", "K'iin News", "Péektsil"), query: "noticias" },
-              { label: t("Quién es Muna?", "Who is Muna?", "Máaxen Muna?"), query: "quién es muna" },
-            ].map((chip) => (
-              <button
-                key={chip.query}
-                onClick={() => handleSend(chip.label)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: "14px",
-                  background: "var(--bg-secondary)",
-                  border: "1px solid var(--border-accent)",
-                  color: "var(--text-primary)",
-                  fontSize: "0.75rem",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "var(--text-primary)";
-                  e.currentTarget.style.color = "var(--bg-primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "var(--bg-secondary)";
-                  e.currentTarget.style.color = "var(--text-primary)";
-                }}
-              >
-                {chip.label}
-              </button>
-            ))}
-          </div>
 
           {/* Input box */}
           <form
