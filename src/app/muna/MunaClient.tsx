@@ -600,7 +600,7 @@ export default function MunaPage() {
             ref={scrollRef}
             className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-8 pt-10 scroll-smooth"
             style={{
-              paddingBottom: '9rem',
+              paddingBottom: '13rem',
               scrollbarWidth: 'thin',
               scrollbarColor: 'rgba(255,85,0,0.2) transparent',
             }}
@@ -755,84 +755,108 @@ export default function MunaPage() {
             </div>
           </div>
 
-          {/* FLOATING INPUT BAR — fixed height bottom clearance */}
-          <div className="absolute bottom-0 left-0 right-0 px-3 md:px-8 z-30 pointer-events-none flex justify-center pb-4">
-            <div className="w-full max-w-3xl flex flex-col gap-2 pointer-events-auto">
-              
+          {/* FLOATING INPUT — mode tabs + input pill */}
+          <div className="absolute bottom-0 left-0 right-0 px-4 md:px-10 z-30 pointer-events-none flex justify-center pb-5">
+            <div className="w-full max-w-3xl flex flex-col gap-2.5 pointer-events-auto">
+
+              {/* Attachment previews */}
               {attachments.length > 0 && (
-                <div className="flex gap-3 overflow-x-auto pb-2 px-2">
+                <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
                   {attachments.map((file, idx) => (
-                    <div key={idx} className="relative shrink-0 group p-1 bg-white/80 dark:bg-black/50 backdrop-blur-xl rounded-xl border border-white/60 dark:border-white/20 shadow-lg">
-                      <img src={file.preview} className="h-16 w-16 object-cover rounded-lg" alt="attachment" />
-                      <button onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 h-6 w-6 bg-rose-500 text-white rounded-full flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-all shadow-md hover:scale-110">
-                        <X size={12} strokeWidth={3} />
+                    <div key={idx} className="relative shrink-0 group p-1 rounded-xl" style={{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)', border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}` }}>
+                      <img src={file.preview} className="h-14 w-14 object-cover rounded-lg" alt="attachment" />
+                      <button onClick={() => removeAttachment(idx)} className="absolute -top-1.5 -right-1.5 h-5 w-5 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-md">
+                        <X size={10} strokeWidth={3} />
                       </button>
                     </div>
                   ))}
                 </div>
               )}
 
+              {/* Mode selector chips — above input */}
+              <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+                {MODES.map((mode) => {
+                  const Icon = mode.icon;
+                  const active = selectedMode === mode.id;
+                  return (
+                    <button
+                      key={mode.id}
+                      onClick={() => setSelectedMode(mode.id)}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-widest whitespace-nowrap shrink-0 transition-all cursor-pointer"
+                      style={active ? {
+                        background: '#ff5500',
+                        color: '#fff',
+                        boxShadow: '0 4px 14px rgba(255,85,0,0.4)',
+                      } : {
+                        background: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.9)',
+                        border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.09)'}`,
+                        color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(26,21,35,0.55)',
+                        backdropFilter: 'blur(12px)',
+                      }}
+                    >
+                      <Icon size={12} />
+                      {mode.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Input pill */}
               <div
-                className="flex items-end gap-3 p-2 transition-all cursor-pointer"
+                className="flex items-center gap-3 px-4 transition-all"
                 style={{
-                  background: isDark ? 'rgba(12,12,22,0.85)' : 'rgba(255,255,255,0.88)',
-                  backdropFilter: 'blur(30px) saturate(1.8)',
-                  WebkitBackdropFilter: 'blur(30px) saturate(1.8)',
-                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)'}`,
-                  borderRadius: '1.5rem',
-                  boxShadow: isDark
-                    ? '0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03)'
-                    : '0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.8)',
+                  background: isDark ? 'rgba(12,12,24,0.93)' : 'rgba(255,255,255,0.97)',
+                  backdropFilter: 'blur(40px)',
+                  WebkitBackdropFilter: 'blur(40px)',
+                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                  borderRadius: '1.25rem',
+                  boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.55)' : '0 4px 20px rgba(0,0,0,0.07)',
+                  minHeight: '3.25rem',
                 }}
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
                 <button
                   onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="h-11 w-11 shrink-0 rounded-full flex items-center justify-center transition-all"
-                  style={{
-                    background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
-                    color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
-                  }}
-                  title={t('Adjuntar', 'Attach', 'Ts\'a')}
+                  className="shrink-0 p-1 transition-colors"
+                  style={{ color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.28)' }}
+                  title={t('Adjuntar', 'Attach', "Ts'a")}
                 >
-                  <Paperclip size={19} />
+                  <Paperclip size={17} />
                 </button>
-                
+
                 <textarea
                   id="muna-input"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                  placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
+                  placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', "Ts'íib ti' Muna AI...")}
                   rows={1}
-                  className="flex-1 text-[15px] font-medium outline-none resize-none py-3 max-h-32 overflow-y-auto cursor-text px-2"
-                  style={{
-                    background: 'transparent',
-                    color: isDark ? 'rgba(240,237,232,0.9)' : '#1a1523',
-                    scrollbarWidth: 'none',
-                  }}
+                  className="flex-1 text-[15px] font-normal outline-none resize-none py-3.5 max-h-36 overflow-y-auto"
+                  style={{ background: 'transparent', color: isDark ? 'rgba(240,237,232,0.92)' : '#1a1523', scrollbarWidth: 'none' }}
                 />
-                
+
                 <button
                   onClick={(e) => { e.stopPropagation(); handleSend(); }}
                   disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                  className="h-12 w-12 shrink-0 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 transition-all"
-                  style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 20px rgba(255,85,0,0.4)', color: '#fff' }}
-                  title={t('Enviar', 'Send', 'Túuxt')}
+                  className="h-9 w-9 shrink-0 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 transition-all"
+                  style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', color: '#fff', boxShadow: '0 4px 14px rgba(255,85,0,0.4)' }}
                 >
-                  <ChevronRight size={22} strokeWidth={3} />
+                  <ChevronRight size={17} strokeWidth={2.5} />
                 </button>
               </div>
-              
-              <div className="flex justify-between items-center px-3 pt-1 pb-1 text-[9px] font-mono uppercase tracking-widest font-bold"
-                style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.3)' }}>
-                <div className="flex items-center gap-1.5" style={{ color: 'rgba(255,102,34,0.75)' }}>
-                  <Radio size={9} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
+
+              {/* Status hint */}
+              <div
+                className="flex justify-between items-center px-2 text-[9px] font-mono uppercase tracking-widest"
+                style={{ color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.22)' }}
+              >
+                <div className="flex items-center gap-1.5" style={{ color: 'rgba(255,102,34,0.7)' }}>
+                  <Radio size={8} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
                 </div>
-                <span className="hidden sm:inline">{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
+                <span className="hidden sm:inline">{t('ENTER PARA ENVIAR · SHIFT+ENTER NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', "ENTER TI'AL A TÚUXTIK")}</span>
               </div>
+
             </div>
           </div>
         </main>
@@ -947,18 +971,18 @@ const translateSessionTitle = (prompt: string, lang: string) => {
 };
 
 // ── Sidebar Content Component (Matrix Vault) ─────────────────────────────────────
-function SidebarContent({ 
-  knowledgeGraph, 
-  history = [], 
-  onSelectSession, 
-  onNewChat, 
-  onClose, 
+function SidebarContent({
+  knowledgeGraph,
+  history = [],
+  onSelectSession,
+  onNewChat,
+  onClose,
   onMachineView,
   onDownload,
-  onUpload
+  onUpload,
 }: {
   knowledgeGraph: any;
-  history?: {sessionId: string, prompt: string, mode: string}[];
+  history?: { sessionId: string; prompt: string; mode: string }[];
   onSelectSession?: (id: string) => void;
   onNewChat?: () => void;
   onClose?: () => void;
@@ -967,143 +991,250 @@ function SidebarContent({
   onUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   const { t, language } = useLanguage();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [marketTab, setMarketTab] = useState<'HISTORY' | 'SKILLS'>('HISTORY');
 
+  const c = isDark
+    ? {
+        text: 'rgba(240,237,232,0.9)',
+        sub: 'rgba(240,237,232,0.4)',
+        border: 'rgba(255,255,255,0.07)',
+        card: 'rgba(255,255,255,0.04)',
+        cardHover: 'rgba(255,85,0,0.06)',
+        navBg: 'rgba(255,255,255,0.05)',
+        navBorder: 'rgba(255,255,255,0.1)',
+        navColor: 'rgba(255,255,255,0.5)',
+        tabBg: 'rgba(255,255,255,0.05)',
+        tabActBg: 'rgba(255,85,0,0.15)',
+        tabActClr: '#ff6622',
+        tabActBdr: '1px solid rgba(255,85,0,0.25)',
+        tabInClr: 'rgba(255,255,255,0.35)',
+        toolBg: 'rgba(255,255,255,0.05)',
+        toolBdr: 'rgba(255,255,255,0.09)',
+        toolClr: 'rgba(255,255,255,0.5)',
+        rawBg: '#fff',
+        rawText: '#1a1523',
+      }
+    : {
+        text: '#1a1523',
+        sub: 'rgba(26,21,35,0.42)',
+        border: 'rgba(0,0,0,0.07)',
+        card: 'rgba(255,255,255,0.72)',
+        cardHover: 'rgba(255,85,0,0.04)',
+        navBg: 'rgba(0,0,0,0.04)',
+        navBorder: 'rgba(0,0,0,0.08)',
+        navColor: 'rgba(26,21,35,0.45)',
+        tabBg: 'rgba(0,0,0,0.04)',
+        tabActBg: '#ff5500',
+        tabActClr: '#fff',
+        tabActBdr: '1px solid #ff5500',
+        tabInClr: 'rgba(26,21,35,0.38)',
+        toolBg: 'rgba(0,0,0,0.03)',
+        toolBdr: 'rgba(0,0,0,0.08)',
+        toolClr: 'rgba(26,21,35,0.48)',
+        rawBg: '#1a1523',
+        rawText: '#fff',
+      };
+
   const MOCK_SKILLS = [
-    { title: t('MARKET ARBITRATOR', 'MARKET ARBITRATOR', 'MARKET ARBITRATOR'), desc: t('Real-time CMC/Coinbase arbitrage logic.', 'Real-time CMC/Coinbase arbitrage logic.', 'Real-time CMC/Coinbase arbitrage logic.'), price: '50 VALLE' },
-    { title: t('SOCIAL DIPLOMAT', 'SOCIAL DIPLOMAT', 'SOCIAL DIPLOMAT'), desc: t('Empathetic engagement for Moltbook.', 'Empathetic engagement for Moltbook.', 'Empathetic engagement for Moltbook.'), price: '30 VALLE' },
-    { title: t('CODE ARCHITECT', 'CODE ARCHITECT', 'CODE ARCHITECT'), desc: t('Advanced Next.js/Prisma blueprinting.', 'Advanced Next.js/Prisma blueprinting.', 'Advanced Next.js/Prisma blueprinting.'), price: 'Free' },
+    { title: 'MARKET ARBITRATOR', desc: 'Real-time CMC/Coinbase arbitrage logic.', price: '50 VALLE' },
+    { title: 'SOCIAL DIPLOMAT', desc: 'Empathetic engagement for Moltbook.', price: '30 VALLE' },
+    { title: 'CODE ARCHITECT', desc: 'Advanced Next.js/Prisma blueprinting.', price: 'Free' },
   ];
 
   return (
-    <div className="flex flex-col h-full p-8 pt-14 xl:pt-20 space-y-8 overflow-hidden font-sans" style={{ color: 'rgba(240,237,232,0.9)', background: 'transparent' }}>
-      <div className="flex items-center justify-between shrink-0 mb-6">
-        <Link href="/" className="flex items-center gap-3 hover:text-[#ff6622] transition-all text-xs font-black uppercase tracking-widest group px-4 py-2 rounded-full" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(10px)' }}>
-          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" style={{ color: '#ff6622' }} /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
+    <div className="flex flex-col h-full overflow-hidden font-sans" style={{ color: c.text }}>
+      {/* Top nav */}
+      <div className="flex items-center justify-between px-5 pt-10 pb-3 xl:pt-14 shrink-0">
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-all px-3 py-1.5 rounded-full"
+          style={{ background: c.navBg, border: `1px solid ${c.navBorder}`, color: c.navColor }}
+        >
+          <ChevronLeft size={13} style={{ color: '#ff6622' }} />
+          {t('Matriz Principal', 'Core Matrix', "U K'ubil")}
         </Link>
         {onClose && (
-          <button onClick={onClose} className="h-9 w-9 rounded-xl flex items-center justify-center transition-all" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>
-            <X size={18} />
+          <button
+            onClick={onClose}
+            className="h-8 w-8 rounded-full flex items-center justify-center transition-all"
+            style={{ background: c.navBg, border: `1px solid ${c.navBorder}`, color: c.navColor }}
+          >
+            <X size={14} />
           </button>
         )}
       </div>
 
-      <div className="shrink-0 space-y-3 pt-2">
-        <h1 className="text-5xl font-black uppercase tracking-tighter italic leading-none flex flex-col font-sans" style={{ color: '#fff' }}>
-          <span>MUNA.</span>
-          <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #ff5500, #ffaa00)' }}>YUCATECA.</span>
+      {/* Brand */}
+      <div className="px-5 pb-1 shrink-0">
+        <h1
+          className="text-4xl xl:text-5xl font-black uppercase tracking-tighter italic leading-[1.05] font-sans"
+          style={{ color: isDark ? '#fff' : '#1a1523' }}
+        >
+          MUNA.
         </h1>
-        <div className="text-[10px] font-black uppercase tracking-widest italic font-sans inline-block px-3 py-1 rounded-full" style={{ color: '#ff6622', background: 'rgba(255,85,0,0.12)', border: '1px solid rgba(255,85,0,0.25)' }}>
+        <div
+          className="text-3xl xl:text-4xl font-black uppercase tracking-tighter italic leading-[1.05]"
+          style={{ backgroundImage: 'linear-gradient(135deg,#ff5500,#ffaa00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+        >
+          YUCATECA.
+        </div>
+        <div
+          className="mt-2.5 text-[9px] font-black uppercase tracking-widest inline-block px-2.5 py-1 rounded-full"
+          style={{ color: '#ff6622', background: 'rgba(255,85,0,0.1)', border: '1px solid rgba(255,85,0,0.18)' }}
+        >
           SOVEREIGN_ARRAY_V7.0
         </div>
-        {onNewChat && (
-          <button onClick={onNewChat} className="w-full py-3.5 text-white font-black rounded-2xl text-[11px] uppercase tracking-widest hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-6 mb-2 cursor-pointer" style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 8px 28px rgba(255,85,0,0.35)', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <Sparkles size={16} className="text-white" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
-          </button>
-        )}
       </div>
+
+      {/* New conversation */}
+      {onNewChat && (
+        <div className="px-5 pt-4 pb-2 shrink-0">
+          <button
+            onClick={onNewChat}
+            className="w-full py-3.5 text-white font-black rounded-2xl text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer hover:opacity-90 active:scale-[0.98]"
+            style={{ background: 'linear-gradient(135deg,#ff5500,#ff8800)', boxShadow: '0 6px 20px rgba(255,85,0,0.28)' }}
+          >
+            <Sparkles size={14} />
+            {t('Nueva Conversación', 'New Conversation', "Ya'ax Tsoolt'aan")}
+          </button>
+        </div>
+      )}
 
       {/* Tabs */}
-      <div className="flex gap-2 p-1 rounded-2xl shrink-0 my-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-        <button 
-          onClick={() => setMarketTab('HISTORY')}
-          className="flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
-          style={marketTab === 'HISTORY' ? { background: 'rgba(255,85,0,0.15)', color: '#ff6622', border: '1px solid rgba(255,85,0,0.25)' } : { color: 'rgba(255,255,255,0.35)' }}
-        >
-          {t('Sesiones', 'Sessions', 'Meyajo\'ob')}
-        </button>
-        <button 
-          onClick={() => setMarketTab('SKILLS')}
-          className="flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
-          style={marketTab === 'SKILLS' ? { background: 'rgba(255,85,0,0.15)', color: '#ff6622', border: '1px solid rgba(255,85,0,0.25)' } : { color: 'rgba(255,255,255,0.35)' }}
-        >
-          {t('Habilidades', 'Skills', 'U Na\'at')}
-        </button>
+      <div className="px-5 pb-3 shrink-0">
+        <div className="flex gap-1 p-1 rounded-2xl" style={{ background: c.tabBg, border: `1px solid ${c.border}` }}>
+          {(['HISTORY', 'SKILLS'] as const).map((tab) => {
+            const active = marketTab === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setMarketTab(tab)}
+                className="flex-1 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all"
+                style={active ? { background: c.tabActBg, color: c.tabActClr, border: c.tabActBdr } : { color: c.tabInClr }}
+              >
+                {tab === 'HISTORY' ? t('Sesiones', 'Sessions', "Meyajo'ob") : t('Habilidades', 'Skills', "U Na'at")}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Content Area */}
-      <div className="flex-1 overflow-y-auto space-y-3 min-h-0 pr-1 text-sm font-medium animate-fadeIn" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.2) transparent' }}>
+      {/* Scrollable list */}
+      <div
+        className="flex-1 overflow-y-auto min-h-0 px-5 space-y-2.5"
+        style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.18) transparent' }}
+      >
         {marketTab === 'HISTORY' ? (
-          <>
-            {history.length > 0 ? (
-              history.map((session) => (
-                <div
-                  key={session.sessionId}
-                  onClick={() => { onSelectSession && onSelectSession(session.sessionId); }}
-                  className="p-4 rounded-2xl transition-all cursor-pointer group space-y-3"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.border = '1px solid rgba(255,85,0,0.3)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,85,0,0.06)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.border = '1px solid rgba(255,255,255,0.07)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)'; }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-full" style={{ color: '#ff6622', background: 'rgba(255,85,0,0.12)', border: '1px solid rgba(255,85,0,0.2)' }}>{session.mode}</span>
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-all" style={{ color: 'rgba(255,255,255,0.3)' }} />
-                  </div>
-                  <p className="text-sm font-bold leading-relaxed line-clamp-2" style={{ color: 'rgba(240,237,232,0.8)' }}>
-                    {translateSessionTitle(session.prompt, language)}
-                  </p>
+          history.length > 0 ? (
+            history.map((s) => (
+              <div
+                key={s.sessionId}
+                onClick={() => onSelectSession?.(s.sessionId)}
+                className="px-4 py-4 rounded-2xl transition-all cursor-pointer group"
+                style={{ background: c.card, border: `1px solid ${c.border}` }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.background = c.cardHover;
+                  el.style.border = '1px solid rgba(255,85,0,0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.background = c.card;
+                  el.style.border = `1px solid ${c.border}`;
+                }}
+              >
+                <div className="flex justify-between items-center mb-1.5">
+                  <span
+                    className="text-[9px] font-black tracking-widest uppercase px-2.5 py-0.5 rounded-full"
+                    style={{ color: '#ff6622', background: 'rgba(255,85,0,0.1)', border: '1px solid rgba(255,85,0,0.16)' }}
+                  >
+                    {s.mode}
+                  </span>
+                  <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-all" style={{ color: c.sub }} />
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-16 text-sm uppercase font-black tracking-widest flex flex-col items-center gap-4" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                <Database size={32} className="opacity-50" />
-                {t('No se detectó historial', 'No history detected', 'Mina\'an tsoolt\'aan')}
+                <p className="text-[13px] font-medium leading-snug line-clamp-2" style={{ color: c.text }}>
+                  {translateSessionTitle(s.prompt, language)}
+                </p>
               </div>
-            )}
-          </>
-        ) : (
-          <div className="space-y-4 animate-fadeIn">
-            <div className="text-xs font-black uppercase tracking-widest text-[#ff5500] mb-4 px-2 flex items-center gap-2">
-              <Sparkles size={14} /> {t('PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE')}
+            ))
+          ) : (
+            <div className="text-center py-14 flex flex-col items-center gap-3" style={{ color: c.sub }}>
+              <Database size={26} className="opacity-40" />
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                {t('Sin historial', 'No history detected', "Mina'an tsoolt'aan")}
+              </span>
             </div>
-            {MOCK_SKILLS.map((skill, i) => (
-              <div key={i} className="mx-0.5 p-5 bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-[1.5rem] transition-all shadow-sm space-y-3 mb-4 hover:border-[#ff5500]/40 hover:shadow-lg">
+          )
+        ) : (
+          <div className="space-y-2.5">
+            {MOCK_SKILLS.map((sk, i) => (
+              <div
+                key={i}
+                className="px-4 py-4 rounded-2xl space-y-1 transition-all"
+                style={{ background: c.card, border: `1px solid ${c.border}` }}
+              >
                 <div className="flex justify-between items-start gap-2">
-                  <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight leading-tight">{skill.title}</span>
-                  <span className="text-[10px] text-[#ff5500] font-black tracking-wider bg-[#ff5500]/10 px-2 py-1 rounded-md shrink-0">{skill.price}</span>
+                  <span className="text-[11px] font-black uppercase tracking-tight" style={{ color: c.text }}>
+                    {sk.title}
+                  </span>
+                  <span className="text-[9px] font-black px-2 py-0.5 rounded-md shrink-0" style={{ background: 'rgba(255,85,0,0.1)', color: '#ff6622' }}>
+                    {sk.price}
+                  </span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed font-medium">{skill.desc}</p>
+                <p className="text-[12px] leading-relaxed" style={{ color: c.sub }}>
+                  {sk.desc}
+                </p>
               </div>
             ))}
-            <button 
-              onClick={() => alert('Redirecting to Muna Skill Forge...')}
-              className="w-full py-4 mt-6 border-2 border-dashed border-slate-300 dark:border-white/20 hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-[1.5rem] text-sm font-black uppercase tracking-widest text-slate-500 dark:text-white/50 bg-slate-50/50 dark:bg-white/5 backdrop-blur-md shadow-sm cursor-pointer hover:bg-[#ff5500]/5"
-            >
-              {t('+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL')}
-            </button>
           </div>
         )}
       </div>
 
-      {/* Tools Section */}
-      <div className="space-y-4 shrink-0 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <div className="flex gap-3">
-          <button 
+      {/* Footer */}
+      <div className="px-5 pt-3 pb-5 space-y-3 shrink-0" style={{ borderTop: `1px solid ${c.border}` }}>
+        <div className="flex gap-2">
+          <button
             onClick={onDownload}
-            className="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.55)' }}
+            className="flex-1 py-3 text-[11px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:opacity-75"
+            style={{ background: c.toolBg, border: `1px solid ${c.toolBdr}`, color: c.toolClr }}
           >
-            <Download size={14} /> {t('Descargar', 'Download', 'Emtik')}
+            <Download size={13} /> {t('Descargar', 'Download', 'Emtik')}
           </button>
-          <label className="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.55)' }}>
-            <Database size={14} /> {t('Cargar', 'Upload', 'Na\'aksik')}
+          <label
+            className="flex-1 py-3 text-[11px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:opacity-75"
+            style={{ background: c.toolBg, border: `1px solid ${c.toolBdr}`, color: c.toolClr }}
+          >
+            <Database size={13} /> {t('Cargar', 'Upload', "Na'aksik")}
             <input type="file" className="hidden" accept=".json" onChange={onUpload} />
           </label>
         </div>
 
-        {/* Swarm Telemetry */}
-        <div className="p-5 border border-[#ff5500]/20 bg-gradient-to-br from-[#ff5500]/10 to-[#ffaa00]/5 rounded-[1.5rem] space-y-4 shadow-inner backdrop-blur-md">
-          <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-[#ff5500]">
-            <div className="flex items-center gap-2 text-[#ff5500]"><Orbit size={16} className="animate-spin" style={{ animationDuration: '20s' }} /> {t('SWARM', 'SWARM', 'SWARM')}</div>
-            <span className="text-[#ff5500] font-black bg-white/50 dark:bg-black/50 px-3 py-1 rounded-lg border border-[#ff5500]/20 shadow-sm">98%</span>
+        <div className="px-4 py-3.5 rounded-2xl space-y-2.5" style={{ background: 'rgba(255,85,0,0.07)', border: '1px solid rgba(255,85,0,0.16)' }}>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest" style={{ color: '#ff6622' }}>
+              <Orbit size={13} className="animate-spin" style={{ animationDuration: '20s' }} />
+              SWARM
+            </div>
+            <span className="text-[11px] font-black" style={{ color: '#ff6622' }}>98%</span>
           </div>
-          <div className="h-2 w-full bg-slate-900/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
-            <motion.div animate={{ width: ['90%', '98%', '94%'] }} transition={{ duration: 12, repeat: Infinity }} className="h-full bg-gradient-to-r from-[#ff5500] to-[#ffaa00]" />
+          <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)' }}>
+            <motion.div
+              animate={{ width: ['90%', '98%', '94%'] }}
+              transition={{ duration: 12, repeat: Infinity }}
+              className="h-full rounded-full"
+              style={{ background: 'linear-gradient(90deg,#ff5500,#ffaa00)' }}
+            />
           </div>
         </div>
 
-        <button onClick={onMachineView} className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white/90 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer hover:shadow-xl hover:-translate-y-0.5">
-          <Terminal size={14} /> {t('>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION')}
+        <button
+          onClick={onMachineView}
+          className="w-full py-3.5 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer hover:opacity-80"
+          style={{ background: c.rawBg, color: c.rawText, boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.08)' }}
+        >
+          <Terminal size={13} /> {'>'}_RAW_EXTRACTION
         </button>
       </div>
     </div>
