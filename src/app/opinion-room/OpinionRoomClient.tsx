@@ -161,11 +161,11 @@ export default function OpinionRoomPage() {
     return () => clearInterval(interval);
   }, [activeRoom, roomPasswords]);
 
-  useEffect(() => {
-    if (!userScrolledUp.current) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   if (!userScrolledUp.current) {
+  //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [messages]);
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
