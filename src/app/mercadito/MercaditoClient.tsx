@@ -167,18 +167,18 @@ export default function MercaditoPage() {
             {t("MERCADITO LOCAL", "LOCAL MARKETPLACE", "K'ÍIWIK")}
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight mb-6">
+          <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-6">
             Encuentra lo que <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff5500] to-[#ffaa00]">necesitas aquí.</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mb-10 font-medium leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mb-10 font-medium leading-relaxed">
             {t("Compra, vende y descubre servicios locales en la península. Desde artículos usados hasta eventos culturales increíbles.", "Buy, sell, and discover local services in the peninsula. From used items to amazing cultural events.", "Kíinsaj, koonol yéetel k'a'ajsaj meyajil te' péeninsula.")}
           </p>
           
           <button
             onClick={() => setShowModal(true)}
-            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-black text-lg transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] active:scale-95"
+            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-slate-900 text-white dark:bg-white dark:text-black rounded-full font-black text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95"
           >
             <Plus className="w-6 h-6 transition-transform group-hover:rotate-90" />
             <span>{t("Publicar Anuncio Gratis", "Post Free Ad", "Publicar")}</span>
@@ -186,9 +186,9 @@ export default function MercaditoPage() {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 mt-4">
         {/* ── FILTER TABS ── */}
-        <div className="flex gap-3 border-b border-[var(--border-subtle)] pb-6 mb-10 overflow-x-auto scrollbar-hide sticky top-20 z-20 bg-[var(--bg-main)]/80 backdrop-blur-xl pt-4">
+        <div className="flex gap-3 border-b border-slate-200 dark:border-white/10 pb-6 mb-12 overflow-x-auto scrollbar-hide sticky top-20 z-20 bg-slate-50/80 dark:bg-[#111]/80 backdrop-blur-xl pt-4">
           {[
             { key: "ALL", label: t("Todos", "All", "Todos"), icon: <Store className="w-5 h-5" /> },
             { key: "GENERAL", label: t("Compra / Venta", "Buy / Sell", "Venta"), icon: <Tag className="w-5 h-5" /> },
@@ -197,10 +197,10 @@ export default function MercaditoPage() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className={`px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2.5 transition-all whitespace-nowrap ${
+              className={`px-6 py-3 rounded-full text-sm font-bold flex items-center gap-2.5 transition-all duration-300 whitespace-nowrap ${
                 filter === tab.key
-                  ? "bg-[#ff5500] text-white shadow-[0_4px_20px_rgba(255,85,0,0.4)]"
-                  : "bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[#ff5500]/50 hover:text-white"
+                  ? "bg-[#ff5500] text-white shadow-lg shadow-[#ff5500]/30 scale-105"
+                  : "bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-[#ff5500]/50 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/10"
               }`}
             >
               {tab.icon}
@@ -228,20 +228,11 @@ export default function MercaditoPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filteredItems.map((item) => (
               <div 
                 key={item.id} 
-                className="group border rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,85,0,0.3)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 48px rgba(255,85,0,0.12)"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,0.08)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 24px rgba(0,0,0,0.2)"; }}
+                className="group border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-black/40 backdrop-blur-2xl rounded-3xl overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.05)] hover:border-[#ff5500]/30"
               >
                 {/* Image Area */}
                 <div className="relative aspect-[4/3] bg-black/40 overflow-hidden">
@@ -258,8 +249,8 @@ export default function MercaditoPage() {
                   )}
                   
                   {/* Badges Overlay */}
-                  <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                    <span className="backdrop-blur-md bg-black/50 border border-white/10 text-white text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-wider shadow-lg">
+                  <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                    <span className="backdrop-blur-xl bg-white/80 dark:bg-black/60 border border-slate-200 dark:border-white/20 text-slate-900 dark:text-white text-[10px] uppercase font-black px-3 py-1.5 rounded-full tracking-wider shadow-lg">
                       {item.category === "EVENT" ? "🎉 Evento" : "🛍️ Venta"}
                     </span>
                     {item.price !== null && (
@@ -271,18 +262,18 @@ export default function MercaditoPage() {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-6 md:p-8 flex flex-col flex-grow bg-gradient-to-b from-transparent to-black/20">
-                  <h3 className="font-black text-xl text-white mb-3 leading-tight line-clamp-2 transition-colors">
+                <div className="p-6 md:p-8 flex flex-col flex-grow bg-white/40 dark:bg-transparent">
+                  <h3 className="font-black text-xl text-slate-900 dark:text-white mb-3 leading-tight line-clamp-2 group-hover:text-[#ff5500] transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="text-base text-white/70 line-clamp-3 leading-relaxed flex-grow mb-6 font-medium">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed flex-grow mb-6 font-medium">
                     {item.description}
                   </p>
                   
                   {/* Footer */}
-                  <div className="pt-5 border-t border-white/10 flex items-center justify-between text-xs font-bold text-white/60">
+                  <div className="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
                     <div className="flex items-center gap-1.5 truncate max-w-[60%]">
-                      <MapPin className="w-3.5 h-3.5 text-[#ff5500] shrink-0" />
+                      <MapPin className="w-4 h-4 text-[#ff5500] shrink-0" />
                       <span className="truncate">{item.location}</span>
                     </div>
                     <span className="shrink-0">{new Date(item.createdAt).toLocaleDateString()}</span>

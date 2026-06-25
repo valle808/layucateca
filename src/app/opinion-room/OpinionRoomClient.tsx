@@ -478,7 +478,7 @@ export default function OpinionRoomPage() {
           <div 
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="grow p-6 md:p-8 overflow-y-auto space-y-10 custom-scrollbar relative bg-slate-50/10 dark:bg-black/5"
+            className="grow p-6 md:p-10 overflow-y-auto space-y-12 custom-scrollbar relative bg-slate-50/10 dark:bg-black/5 flex flex-col-reverse"
           >
             
             {loadingMessages && messages.length === 0 ? (
@@ -502,7 +502,7 @@ export default function OpinionRoomPage() {
                 </button>
               </div>
             ) : messages.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-80 dark:opacity-60">
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-80 dark:opacity-60 my-auto">
                 <div className="w-24 h-24 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-md flex items-center justify-center mb-6 border border-white dark:border-white/10 shadow-xl">
                   <MessageSquare className="w-10 h-10 text-slate-300 dark:text-white/20" />
                 </div>
@@ -512,73 +512,75 @@ export default function OpinionRoomPage() {
                 </p>
               </div>
             ) : (
-              messages.map((msg) => {
-                const isMe = msg.authorName === getActiveDisplayName() || (msg.authorId === user?.id && user?.id != null);
-                
-                return (
-                  <div key={msg.id} className={`flex gap-4 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                    <div className="shrink-0 flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm shadow-md ${
-                        isMe 
-                          ? 'bg-gradient-to-br from-[#ff5500] to-orange-500 text-white shadow-orange-500/20' 
-                          : 'bg-white dark:bg-[#1a1a24] text-slate-600 dark:text-white/80 border border-slate-200 dark:border-white/10'
-                      }`}>
-                        {msg.authorName.slice(0, 2).toUpperCase()}
-                      </div>
-                    </div>
-                    
-                    <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] md:max-w-[70%]`}>
-                      <div className="flex items-baseline gap-2.5 px-2 mb-2">
-                        <span className="text-[13px] font-black text-slate-700 dark:text-white/90 tracking-wide">{isMe ? 'Tú' : msg.authorName}</span>
-                        <span className="text-[11px] font-bold text-slate-400 dark:text-white/40 tracking-wider">
-                          {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                        </span>
+              <div className="flex flex-col gap-12 w-full max-w-4xl mx-auto">
+                {messages.map((msg) => {
+                  const isMe = msg.authorName === getActiveDisplayName() || (msg.authorId === user?.id && user?.id != null);
+                  
+                  return (
+                    <div key={msg.id} className={`flex gap-5 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className="shrink-0 flex flex-col items-center">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-base shadow-lg ${
+                          isMe 
+                            ? 'bg-gradient-to-br from-[#ff5500] to-orange-500 text-white shadow-orange-500/30' 
+                            : 'bg-white dark:bg-[#1a1a24] text-slate-600 dark:text-white/80 border border-slate-200 dark:border-white/10'
+                        }`}>
+                          {msg.authorName.slice(0, 2).toUpperCase()}
+                        </div>
                       </div>
                       
-                      <div className={`flex flex-col gap-3 ${isMe ? 'items-end' : 'items-start'}`}>
-                        {msg.content && (
-                          <div className={`px-8 py-5 text-[17px] leading-relaxed shadow-lg backdrop-blur-2xl ${
-                            isMe 
-                              ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] text-white rounded-[2rem] rounded-tr-xl shadow-[0_10px_30px_rgba(255,85,0,0.25)] border border-white/20' 
-                              : 'bg-white dark:bg-white/10 text-slate-800 dark:text-white border border-white/50 dark:border-white/10 rounded-[2rem] rounded-tl-xl shadow-[0_10px_30px_rgba(0,0,0,0.04)]'
-                          }`}>
-                            {msg.content}
-                          </div>
-                        )}
-
-                        {msg.imageUrl && (
-                          <div className={`overflow-hidden shadow-lg border p-1 ${isMe ? 'border-orange-500/30 rounded-[2rem] rounded-tr-xl' : 'border-slate-200 dark:border-white/10 rounded-[2rem] rounded-tl-xl'} bg-white/20 dark:bg-white/5 backdrop-blur-md`}>
-                            <img src={msg.imageUrl} alt="Adjunto" className="max-w-full md:max-w-sm max-h-72 object-cover rounded-3xl" loading="lazy" />
-                          </div>
-                        )}
-
-                        {msg.location && (
-                          <a 
-                            href={`https://www.google.com/maps?q=${msg.location}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className={`flex items-center gap-4 px-5 py-4 shadow-lg backdrop-blur-xl transition-all hover:scale-105 active:scale-95 ${
+                      <div className={`flex flex-col flex-1 min-w-0 max-w-[calc(100%-3.5rem)] md:max-w-[80%] ${isMe ? 'items-end' : 'items-start'}`}>
+                        <div className={`flex items-baseline gap-3 px-2 mb-2 w-full ${isMe ? 'justify-end flex-row-reverse' : 'justify-start'}`}>
+                          <span className="text-[14px] font-black text-slate-700 dark:text-white/90 tracking-wide">{isMe ? 'Tú' : msg.authorName}</span>
+                          <span className="text-[12px] font-bold text-slate-400 dark:text-white/40 tracking-wider">
+                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        </div>
+                        
+                        <div className={`flex flex-col gap-4 w-full ${isMe ? 'items-end' : 'items-start'}`}>
+                          {msg.content && (
+                            <div className={`px-5 md:px-8 py-4 md:py-5 text-base md:text-lg leading-relaxed shadow-xl backdrop-blur-3xl break-words overflow-hidden ${
                               isMe 
-                                ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-3xl rounded-tr-md border border-white/20 shadow-[0_8px_24px_rgba(16,185,129,0.2)]' 
-                                : 'bg-emerald-50/90 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-100 border border-emerald-200 dark:border-emerald-500/20 rounded-3xl rounded-tl-md'
-                            }`}
-                          >
-                            <div className="p-2.5 bg-white/25 rounded-full shrink-0">
-                              <MapPin className="w-5 h-5" />
+                                ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] text-white rounded-[2.5rem] rounded-tr-xl shadow-orange-500/20 border border-white/20' 
+                                : 'bg-white/95 dark:bg-[#111115]/95 text-slate-800 dark:text-white/95 border border-white/50 dark:border-white/10 rounded-[2.5rem] rounded-tl-xl shadow-sm'
+                            }`}>
+                              {msg.content}
                             </div>
-                            <div className="text-left pr-3">
-                              <span className="block text-[15px] font-black tracking-tight">Ubicación Compartida</span>
-                              <span className="block text-xs font-semibold opacity-80 uppercase tracking-widest mt-0.5">Abrir Maps</span>
+                          )}
+
+                          {msg.imageUrl && (
+                            <div className={`overflow-hidden shadow-xl border p-1.5 ${isMe ? 'border-orange-500/30 rounded-[2.5rem] rounded-tr-xl' : 'border-slate-200 dark:border-white/20 rounded-[2.5rem] rounded-tl-xl'} bg-white/40 dark:bg-white/10 backdrop-blur-xl`}>
+                              <img src={msg.imageUrl} alt="Adjunto" className="max-w-full md:max-w-md max-h-96 object-cover rounded-3xl" loading="lazy" />
                             </div>
-                          </a>
-                        )}
+                          )}
+
+                          {msg.location && (
+                            <a 
+                              href={`https://www.google.com/maps?q=${msg.location}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className={`flex items-center gap-4 px-6 py-5 shadow-xl backdrop-blur-xl transition-all hover:scale-105 active:scale-95 ${
+                                isMe 
+                                  ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-[2rem] rounded-tr-xl border border-white/20 shadow-emerald-500/20' 
+                                  : 'bg-emerald-50/95 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-100 border border-emerald-200 dark:border-emerald-500/20 rounded-[2rem] rounded-tl-xl'
+                              }`}
+                            >
+                              <div className="p-3 bg-white/25 rounded-full shrink-0">
+                                <MapPin className="w-6 h-6" />
+                              </div>
+                              <div className="text-left pr-3">
+                                <span className="block text-base font-black tracking-tight">Ubicación Compartida</span>
+                                <span className="block text-xs font-bold opacity-80 uppercase tracking-widest mt-1">Abrir Maps</span>
+                              </div>
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
+                  );
+                })}
+              </div>
             )}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} className="h-4 w-full shrink-0" />
           </div>
 
           {/* Attachment Previews */}

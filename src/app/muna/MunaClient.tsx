@@ -436,7 +436,7 @@ export default function MunaPage() {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`muna-monroe-theme flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative${isDark ? ' muna-dark' : ''}`} style={{ height: "100vh" }}>
+    <div className={`muna-monroe-theme flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative${isDark ? ' muna-dark' : ''}`} style={{ height: "100dvh" }}>
 
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
@@ -516,38 +516,38 @@ export default function MunaPage() {
         </aside>
 
         {/* ── MAIN CHAT AREA ── */}
-        <main className="flex-1 relative z-10 flex flex-col min-w-0 overflow-hidden bg-transparent">
+        <main className="flex-1 relative z-10 flex flex-col min-w-0 bg-transparent">
           {/* HEADER */}
-          <header className="flex-none flex items-center gap-6 px-10 md:px-16 py-8 border-b border-slate-200/50 dark:border-white/10 bg-white/30 dark:bg-black/20 backdrop-blur-3xl z-20 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
-            <button
-              onClick={() => setSidebarOpen(s => !s)}
-              className="lg:hidden h-10 w-10 rounded-2xl border border-slate-200/80 dark:border-white/20 flex items-center justify-center text-slate-600 dark:text-white/70 hover:bg-white dark:hover:bg-white/10 transition-all shadow-sm"
-            >
-              <Layers size={18} />
-            </button>
-            <div className="h-10 w-10 bg-gradient-to-br from-[#ff5500]/20 to-[#ffaa00]/20 border border-[#ff5500]/30 rounded-2xl flex items-center justify-center shadow-lg shrink-0">
-              <BrainCircuit size={16} className="text-[#ff5500]" />
+          <header className="flex-none flex items-center justify-between px-6 md:px-10 py-5 border-b border-slate-200/50 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-xl z-20">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(s => !s)}
+                className="lg:hidden h-10 w-10 rounded-xl border border-slate-200/80 dark:border-white/20 flex items-center justify-center text-slate-600 dark:text-white/70 hover:bg-white dark:hover:bg-white/10 transition-all shadow-sm"
+              >
+                <Layers size={18} />
+              </button>
+              <div className="h-10 w-10 bg-gradient-to-br from-[#ff5500]/20 to-[#ffaa00]/20 border border-[#ff5500]/30 rounded-xl flex items-center justify-center shadow-lg shrink-0">
+                <BrainCircuit size={18} className="text-[#ff5500]" />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 font-black tracking-tight text-slate-900 dark:text-white text-base uppercase font-sans">
+                  MUNA <span className="text-[#ff5500]">V1.0</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="h-1.5 w-1.5 rounded-full bg-[#ff5500] animate-pulse shadow-[0_0_10px_rgba(255,85,0,0.8)]" />
+                  <span className="text-[9px] text-[#ff5500] font-bold tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-black tracking-tight text-slate-900 dark:text-white text-sm uppercase font-sans">
-                MUNA <span className="text-[#ff5500]">V1.0</span>
-              </div>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="h-2 w-2 rounded-full bg-[#ff5500] animate-pulse shadow-[0_0_10px_rgba(255,85,0,0.8)]" />
-                <span className="text-[10px] text-[#ff5500] font-black tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
-              </div>
-            </div>
-            <div className="ml-auto flex items-center gap-4">
-              <div className="flex items-center gap-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20 shadow-inner backdrop-blur-md">
-                <Wifi size={14} strokeWidth={2.5} className="text-emerald-500" /> {t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}
-              </div>
+            <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20 shadow-inner backdrop-blur-md">
+              <Wifi size={14} strokeWidth={2.5} className="text-emerald-500" /> <span className="hidden sm:inline">{t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}</span>
             </div>
           </header>
 
           {/* MESSAGES */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 md:px-16 py-16 space-y-12 scroll-smooth pb-64 custom-scrollbar"
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 pt-8 pb-40 space-y-10 scroll-smooth custom-scrollbar relative"
             style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent' }}>
-            <div className="max-w-5xl mx-auto space-y-16" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <div className="max-w-3xl mx-auto space-y-10 w-full">
               <AnimatePresence mode="popLayout">
                 {messages.map((m) => (
                   <motion.div
@@ -558,56 +558,56 @@ export default function MunaPage() {
                     className={`flex w-full gap-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'bot' && (
-                      <div className="h-10 w-10 shrink-0 rounded-2xl bg-gradient-to-br from-[#ff5500] to-orange-500 text-white flex items-center justify-center mt-2 shadow-[0_8px_24px_rgba(255,85,0,0.25)]">
+                      <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ff5500] to-orange-500 text-white flex items-center justify-center mt-1 shadow-lg shadow-orange-500/30">
                         <BrainCircuit size={18} />
                       </div>
                     )}
 
-                    <div className={`max-w-[85%] md:max-w-[75%] flex flex-col gap-2 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div className={`flex flex-col gap-2 max-w-[calc(100%-3rem)] md:max-w-[75%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                       {/* Identity Tag */}
-                      <div className={`flex items-center gap-2 mb-2 px-5 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm backdrop-blur-xl ${
+                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-sm backdrop-blur-xl ${
                         m.role === 'user' 
                            ? 'bg-slate-900/5 dark:bg-white/5 text-slate-800 dark:text-white/80 border border-slate-200/50 dark:border-white/10' 
-                           : 'bg-[#ff5500]/5 border border-[#ff5500]/10 text-[#ff5500]'
+                           : 'bg-[#ff5500]/10 border border-[#ff5500]/20 text-[#ff5500]'
                       }`}>
-                        {m.role === 'user' ? <span>[{t('👤 OPERADOR', '👤 OPERATOR', '👤 OPERADOR')}]</span> : <span>[{t('🧠 MUNA AI', '🧠 MUNA AI', '🧠 MUNA AI')}]</span>}
+                        {m.role === 'user' ? <span>{t('Tú', 'You', 'Tú')}</span> : <span>MUNA AI</span>}
                       </div>
  
                       {m.images && m.images.length > 0 && (
-                        <div className="flex gap-3 flex-wrap">
+                        <div className="flex gap-3 flex-wrap mt-1 mb-2">
                           {m.images.map((img, idx) => (
-                            <div key={idx} className="p-1 bg-white/20 dark:bg-white/5 border border-white/30 dark:border-white/10 backdrop-blur-xl rounded-3xl shadow-lg">
-                              <img src={img} alt="attachment" className="h-48 rounded-[1.25rem] object-cover" loading="lazy" />
+                            <div key={idx} className="p-1 bg-white/40 dark:bg-white/10 border border-white/60 dark:border-white/20 backdrop-blur-xl rounded-2xl shadow-xl">
+                              <img src={img} alt="attachment" className="h-48 rounded-xl object-cover cursor-zoom-in" loading="lazy" onClick={() => setLightboxSrc(img)} />
                             </div>
                           ))}
                         </div>
                       )}
  
-                      <div className={`px-8 py-6 rounded-[2.5rem] text-[16px] leading-[1.8] transition-all backdrop-blur-3xl shadow-[0_8px_40px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.2)] ${
+                      <div className={`px-5 py-4 text-[15px] leading-relaxed transition-all break-words overflow-hidden ${
                         m.role === 'user'
-                          ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] border border-white/20 text-white font-medium rounded-tr-xl'
-                          : 'bg-white/90 dark:bg-[#09090b]/80 border border-slate-200/50 dark:border-white/10 text-slate-800 dark:text-white rounded-tl-xl w-full'
+                          ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] border border-white/20 text-white font-medium rounded-3xl rounded-tr-sm shadow-xl shadow-orange-500/20'
+                          : 'bg-white/80 dark:bg-[#111115]/80 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 text-slate-800 dark:text-white/95 rounded-3xl rounded-tl-sm w-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]'
                       }`}>
                         {m.role === 'bot' ? (
-                          <div className="muna-markdown max-w-none w-full">
+                          <div className="muna-markdown w-full max-w-full prose prose-sm md:prose-base prose-slate dark:prose-invert prose-headings:font-black prose-p:leading-loose prose-a:text-[#ff5500] break-words">
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
                                 components={{
                                   img: ({ src, alt, ...props }) => (
-                                    <span style={{ display: 'block', position: 'relative' }} className="group my-4 p-1 bg-white/20 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-white/30 dark:border-white/10 shadow-lg">
+                                    <span style={{ display: 'block', position: 'relative' }} className="group my-4 p-1 bg-white/40 dark:bg-white/10 backdrop-blur-xl rounded-2xl border border-white/60 dark:border-white/20 shadow-xl">
                                       <img
                                         src={typeof src === 'string' ? src : undefined}
                                         alt={alt}
                                         {...props}
-                                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '1.25rem', cursor: 'zoom-in' }}
+                                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '1rem', cursor: 'zoom-in' }}
                                         onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
                                       />
                                       <span
                                         onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
-                                        className="absolute top-4 right-4 bg-black/70 backdrop-blur-md rounded-xl px-3 py-2 cursor-pointer flex items-center gap-2 text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity border border-white/20"
+                                        className="absolute top-3 right-3 bg-black/70 backdrop-blur-md rounded-lg px-2.5 py-1.5 cursor-pointer flex items-center gap-1.5 text-white text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity border border-white/20"
                                       >
-                                        <ZoomIn size={16} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
+                                        <ZoomIn size={14} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
                                       </span>
                                     </span>
                                   )
@@ -619,7 +619,7 @@ export default function MunaPage() {
                           )}
                         </div>
    
-                        <div className="flex items-center gap-2 mt-2 opacity-70 text-[10px] font-mono uppercase tracking-widest px-2">
+                        <div className="flex items-center gap-2 mt-1 opacity-70 text-[9px] font-mono uppercase tracking-widest px-2">
                           <span className={m.role === 'user' ? 'text-slate-500 dark:text-white/50' : 'text-slate-500 dark:text-white/50'}>
                             {m.role === 'bot' ? t('Muna · Yucateca v1.0', 'Muna · Yucateca v1.0', 'Muna · Yucateca v1.0') : t('Operator · Sovereign Access', 'Operator · Sovereign Access', 'Operator · Sovereign Access')}
                           </span>
@@ -628,12 +628,12 @@ export default function MunaPage() {
                               <span className="opacity-50">·</span>
                               <button
                                 onClick={() => speak(m.text, m.id)}
-                                className={`flex items-center gap-1.5 font-bold uppercase cursor-pointer transition-all px-3 py-1 rounded-full ${
+                                className={`flex items-center gap-1 font-bold uppercase cursor-pointer transition-all px-2 py-0.5 rounded-full ${
                                   isPlaying === m.id ? 'bg-[#ff5500]/10 text-[#ff5500] animate-pulse font-black' : 'hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 dark:text-white/70 hover:text-[#ff5500]'
                                 }`}
                               >
-                                {isPlaying === m.id ? <Radio size={12} className="animate-spin text-[#ff5500]" /> : <Volume2 size={12} />}
-                                {isPlaying === m.id ? t('DETENER', 'STOP AUDIO', 'DETENER') : t('PLAY AUDIO', 'PLAY AUDIO', 'PLAY AUDIO')}
+                                {isPlaying === m.id ? <Radio size={10} className="animate-spin text-[#ff5500]" /> : <Volume2 size={10} />}
+                                {isPlaying === m.id ? t('DETENER', 'STOP', 'DETENER') : t('PLAY', 'PLAY', 'PLAY')}
                               </button>
                             </>
                           )}
@@ -646,35 +646,39 @@ export default function MunaPage() {
 
               {isTyping && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4 justify-start">
-                  <div className="h-10 w-10 shrink-0 rounded-2xl bg-gradient-to-br from-[#ff5500]/20 to-orange-500/20 border border-[#ff5500]/30 flex items-center justify-center mt-2 shadow-[0_8px_24px_rgba(255,85,0,0.15)]">
-                    <BrainCircuit size={18} className="text-[#ff5500]" />
+                  <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ff5500]/20 to-orange-500/20 border border-[#ff5500]/30 flex items-center justify-center mt-1 shadow-[0_8px_24px_rgba(255,85,0,0.15)]">
+                    <BrainCircuit size={16} className="text-[#ff5500]" />
                   </div>
-                  <div className="px-8 py-5 rounded-[2.5rem] rounded-tl-xl bg-white/70 dark:bg-[#09090b]/60 backdrop-blur-3xl border border-slate-200/50 dark:border-white/10 flex items-center gap-4 shadow-[0_8px_40px_rgba(0,0,0,0.04)]">
-                    <Sparkles size={16} className="text-[#ff5500] animate-spin mr-1" />
+                  <div className="px-6 py-4 rounded-3xl rounded-tl-sm bg-white/80 dark:bg-[#111115]/80 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                    <Sparkles size={14} className="text-[#ff5500] animate-spin mr-1" />
                     {[0, 1, 2].map(n => (
                       <motion.div
                         key={n}
-                        animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.2, 0.8] }}
+                        animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
                         transition={{ duration: 1.2, repeat: Infinity, delay: n * 0.2 }}
-                        className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-[#ff5500] to-[#ffaa00]"
+                        className="h-2 w-2 rounded-full bg-gradient-to-r from-[#ff5500] to-[#ffaa00]"
                       />
                     ))}
                   </div>
                 </motion.div>
               )}
+              
+              {/* Dummy element for robust scrolling */}
+              <div className="h-8 shrink-0 w-full" />
             </div>
           </div>
 
-          {/* INPUT BAR */}
-          <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-12 pt-20 bg-gradient-to-t from-white via-white/95 dark:from-[#050505] dark:via-[#050505]/95 to-transparent z-20 pointer-events-none">
-            <div className="max-w-5xl mx-auto space-y-6" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+          {/* FLOATING PILL INPUT BAR */}
+          <div className="absolute bottom-6 left-0 right-0 px-4 md:px-8 z-30 pointer-events-none flex justify-center">
+            <div className="w-full max-w-3xl flex flex-col gap-2 pointer-events-auto">
+              
               {attachments.length > 0 && (
-                <div className="flex gap-4 mb-2 overflow-x-auto pb-2 pointer-events-auto">
+                <div className="flex gap-3 overflow-x-auto pb-2 px-2">
                   {attachments.map((file, idx) => (
-                    <div key={idx} className="relative shrink-0 group p-1 bg-white/50 dark:bg-white/10 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/20 shadow-lg">
-                      <img src={file.preview} className="h-20 w-20 object-cover rounded-xl" alt="attachment" />
-                      <button onClick={() => removeAttachment(idx)} className="absolute -top-3 -right-3 h-8 w-8 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-xl hover:scale-110">
-                        <X size={14} strokeWidth={3} />
+                    <div key={idx} className="relative shrink-0 group p-1 bg-white/80 dark:bg-black/50 backdrop-blur-xl rounded-xl border border-white/60 dark:border-white/20 shadow-lg">
+                      <img src={file.preview} className="h-16 w-16 object-cover rounded-lg" alt="attachment" />
+                      <button onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 h-6 w-6 bg-rose-500 text-white rounded-full flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-all shadow-md hover:scale-110">
+                        <X size={12} strokeWidth={3} />
                       </button>
                     </div>
                   ))}
@@ -682,17 +686,18 @@ export default function MunaPage() {
               )}
 
               <div 
-                className="flex items-end gap-4 bg-white/90 dark:bg-[#09090b]/80 backdrop-blur-3xl border border-slate-200/80 dark:border-white/10 rounded-[3rem] p-4 focus-within:border-[#ff5500]/50 focus-within:ring-4 focus-within:ring-[#ff5500]/10 focus-within:shadow-[0_8px_40px_rgba(255,85,0,0.1)] transition-all shadow-[0_8px_40px_rgba(0,0,0,0.05)] cursor-pointer pointer-events-auto"
+                className="flex items-end gap-3 bg-white/70 dark:bg-black/60 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 rounded-[2rem] p-2 focus-within:border-[#ff5500]/50 focus-within:ring-4 focus-within:ring-[#ff5500]/10 focus-within:shadow-[0_8px_40px_rgba(255,85,0,0.1)] transition-all shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] cursor-pointer"
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
                 <button
                   onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="h-12 w-12 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-600 dark:text-white/80 flex items-center justify-center transition-all pointer-events-auto shadow-sm"
-                  title={t('Adjuntar imágenes o documentos', 'Attach images or documents', 'Ts\'a ba\'alob')}
+                  className="h-12 w-12 shrink-0 rounded-full bg-slate-100/80 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-600 dark:text-white/80 flex items-center justify-center transition-all shadow-inner"
+                  title={t('Adjuntar', 'Attach', 'Ts\'a')}
                 >
                   <Paperclip size={20} />
                 </button>
+                
                 <textarea
                   id="muna-input"
                   value={input}
@@ -700,24 +705,25 @@ export default function MunaPage() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                   placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
                   rows={1}
-                  className="flex-1 bg-transparent text-[15px] font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/40 outline-none resize-none py-3.5 leading-relaxed max-h-40 overflow-y-auto cursor-text px-3"
+                  className="flex-1 bg-transparent text-[15px] font-medium text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-white/40 outline-none resize-none py-3.5 max-h-32 overflow-y-auto cursor-text px-2"
                   style={{ scrollbarWidth: 'none' }}
                 />
+                
                 <button
                   onClick={(e) => { e.stopPropagation(); handleSend(); }}
                   disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                  className="h-12 w-12 shrink-0 bg-gradient-to-br from-[#ff5500] to-[#ffaa00] hover:from-[#e04b00] hover:to-[#ff8800] text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 transition-all shadow-[0_4px_16px_rgba(255,85,0,0.4)] pointer-events-auto"
-                  title={t('Transmitir Pulso', 'Transmit Pulse', 'Túuxt Pulse')}
+                  className="h-12 w-12 shrink-0 bg-gradient-to-br from-[#ff5500] to-[#ffaa00] hover:from-[#e04b00] hover:to-[#ff8800] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 transition-all shadow-lg shadow-orange-500/30"
+                  title={t('Enviar', 'Send', 'Túuxt')}
                 >
-                  <ChevronRight size={24} strokeWidth={2.5} />
+                  <ChevronRight size={24} strokeWidth={3} />
                 </button>
               </div>
-
-              <div className="flex justify-between items-center mt-4 px-6 text-[10px] text-slate-500 dark:text-white/40 font-mono uppercase tracking-widest font-bold">
-                <div className="flex items-center gap-2 text-[#ff5500]">
-                  <Radio size={14} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
+              
+              <div className="flex justify-between items-center px-4 text-[9px] text-slate-500 dark:text-white/40 font-mono uppercase tracking-widest font-bold">
+                <div className="flex items-center gap-1.5 text-[#ff5500]">
+                  <Radio size={10} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
                 </div>
-                <span>{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
+                <span className="hidden sm:inline">{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
               </div>
             </div>
           </div>
@@ -744,31 +750,33 @@ export default function MunaPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.85, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="relative max-w-5xl max-h-[90vh] w-full"
+              className="relative max-w-5xl max-h-[90vh] w-full flex flex-col items-center justify-center"
               onClick={e => e.stopPropagation()}
             >
-              <img
-                src={lightboxSrc}
-                alt="Expanded view"
-                className="w-full h-auto max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/30"
-              />
-              <div className="absolute top-3 right-3 flex gap-2">
-                <a
-                  href={lightboxSrc}
-                  download="muna-image.jpg"
-                  className="h-10 w-10 bg-white text-black rounded-xl flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
-                  title="Download image"
-                >
-                  <Download size={18} />
-                </a>
-                <button
-                  onClick={() => setLightboxSrc(null)}
-                  className="h-10 w-10 bg-white/10 text-white rounded-xl flex items-center justify-center border border-white/20 hover:bg-white/20 transition-all"
-                >
-                  <X size={18} />
-                </button>
+              <div className="relative">
+                <img
+                  src={lightboxSrc}
+                  alt="Expanded view"
+                  className="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/30"
+                />
+                <div className="absolute -top-4 -right-4 flex gap-2">
+                  <a
+                    href={lightboxSrc}
+                    download="muna-image.jpg"
+                    className="h-10 w-10 bg-white text-black rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-transform"
+                    title="Download image"
+                  >
+                    <Download size={18} />
+                  </a>
+                  <button
+                    onClick={() => setLightboxSrc(null)}
+                    className="h-10 w-10 bg-black/50 backdrop-blur-md text-white rounded-full flex items-center justify-center border border-white/20 hover:bg-black/70 transition-all"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
-              <p className="text-center text-white/40 text-xs mt-3 font-mono tracking-wider">Click outside to close · Right-click to save · Download button top-right</p>
+              <p className="text-center text-white/40 text-[10px] mt-4 font-mono tracking-wider">Click outside to close · Download button top-right</p>
             </motion.div>
           </motion.div>
         )}
