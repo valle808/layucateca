@@ -555,7 +555,7 @@ export default function MunaPage() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className={`flex w-full gap-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex w-full gap-4 min-w-0 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'bot' && (
                       <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ff5500] to-orange-500 text-white flex items-center justify-center mt-1 shadow-lg shadow-orange-500/30">
@@ -563,7 +563,7 @@ export default function MunaPage() {
                       </div>
                     )}
 
-                    <div className={`flex flex-col gap-2 max-w-[calc(100%-3rem)] md:max-w-[75%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div className={`flex flex-col gap-2 min-w-0 max-w-[calc(100%-3rem)] md:max-w-[75%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                       {/* Identity Tag */}
                       <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-sm backdrop-blur-xl ${
                         m.role === 'user' 
@@ -583,13 +583,13 @@ export default function MunaPage() {
                         </div>
                       )}
  
-                      <div className={`px-5 py-4 text-[15px] leading-relaxed transition-all break-words overflow-hidden ${
+                      <div className={`px-5 py-4 text-[15px] leading-relaxed transition-all min-w-0 w-full overflow-hidden ${
                         m.role === 'user'
                           ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] border border-white/20 text-white font-medium rounded-3xl rounded-tr-sm shadow-xl shadow-orange-500/20'
                           : 'bg-white/80 dark:bg-[#111115]/80 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 text-slate-800 dark:text-white/95 rounded-3xl rounded-tl-sm w-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]'
-                      }`}>
+                      }`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                         {m.role === 'bot' ? (
-                          <div className="muna-markdown w-full max-w-full prose prose-sm md:prose-base prose-slate dark:prose-invert prose-headings:font-black prose-p:leading-loose prose-a:text-[#ff5500] break-words">
+                          <div className="muna-markdown w-full max-w-full min-w-0 prose prose-sm md:prose-base prose-slate dark:prose-invert prose-headings:font-black prose-p:leading-loose prose-a:text-[#ff5500]" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
@@ -615,7 +615,7 @@ export default function MunaPage() {
                               >{m.text}</ReactMarkdown>
                             </div>
                           ) : (
-                            <span>{m.text}</span>
+                            <span style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', display: 'block' }}>{m.text}</span>
                           )}
                         </div>
    

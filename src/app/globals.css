@@ -507,8 +507,18 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
   line-height: 1.78;
   font-size: 0.925rem;
   color: var(--text-primary);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
-.muna-markdown p { margin-bottom: 1.2rem; }
+.muna-markdown p {
+  margin-bottom: 1.2rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 .muna-markdown p:last-child { margin-bottom: 0; }
 .muna-markdown h1,
 .muna-markdown h2,
@@ -520,6 +530,7 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
   margin-bottom: 0.9rem;
   letter-spacing: -0.015em;
   line-height: 1.25;
+  word-break: break-word;
 }
 .muna-markdown h1 { font-size:1.55rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.5rem; }
 .muna-markdown h2 { font-size:1.35rem; }
@@ -527,7 +538,7 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
 .muna-markdown h4 { font-size:1.05rem; }
 .muna-markdown ul { list-style-type:disc; padding-left:1.6rem; margin-bottom:1.2rem; display:block; }
 .muna-markdown ol { list-style-type:decimal; padding-left:1.6rem; margin-bottom:1.2rem; display:block; }
-.muna-markdown li { margin-bottom:0.55rem; line-height:1.65; display:list-item; }
+.muna-markdown li { margin-bottom:0.55rem; line-height:1.65; display:list-item; word-break: break-word; overflow-wrap: anywhere; }
 .muna-markdown strong { font-weight:700; color:var(--accent); }
 .muna-markdown em { font-style:italic; opacity:0.9; }
 .muna-markdown blockquote {
@@ -538,6 +549,7 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
   margin: 1.4rem 0;
   background: rgba(255,85,0,0.04);
   border-radius: 0 8px 8px 0;
+  word-break: break-word;
 }
 .muna-markdown pre {
   background: rgba(8,8,14,0.92) !important;
@@ -546,6 +558,9 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
   padding: 1.2rem;
   margin: 1.4rem 0;
   overflow-x: auto;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
   font-family: 'Fira Code', Menlo, Monaco, Consolas, monospace;
   box-shadow: 0 6px 24px rgba(0,0,0,0.28);
 }
@@ -557,13 +572,14 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
   padding: 0.14rem 0.34rem;
   border-radius: 5px;
   border: 1px solid rgba(255,85,0,0.14);
+  word-break: break-all;
 }
-.muna-markdown pre code { background:transparent !important; color:#e2e8f0; padding:0; border:none; font-size:0.82rem; }
-.muna-markdown a { color:var(--accent); text-decoration:underline; font-weight:600; transition:opacity 0.18s; }
+.muna-markdown pre code { background:transparent !important; color:#e2e8f0; padding:0; border:none; font-size:0.82rem; word-break: break-word; white-space: pre-wrap; }
+.muna-markdown a { color:var(--accent); text-decoration:underline; font-weight:600; transition:opacity 0.18s; word-break: break-all; }
 .muna-markdown a:hover { opacity:0.75; }
-.muna-markdown table { width:100%; border-collapse:collapse; margin:1.4rem 0; font-size:0.875rem; }
+.muna-markdown table { width:100%; border-collapse:collapse; margin:1.4rem 0; font-size:0.875rem; display:block; overflow-x:auto; }
 .muna-markdown th { background:rgba(255,85,0,0.08); color:#ff8844; font-weight:700; text-align:left; padding:0.7rem 1rem; border-bottom:2px solid var(--border-accent); }
-.muna-markdown td { padding:0.7rem 1rem; border-bottom:1px solid var(--border-subtle); color:var(--text-primary); }
+.muna-markdown td { padding:0.7rem 1rem; border-bottom:1px solid var(--border-subtle); color:var(--text-primary); word-break: break-word; }
 .muna-markdown tr:hover { background:rgba(255,255,255,0.02); }
 
 /* ── Muna Theme Variants ────────────────────────────────────────────────────── */
