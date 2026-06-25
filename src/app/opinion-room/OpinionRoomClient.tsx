@@ -320,21 +320,23 @@ export default function OpinionRoomPage() {
 
   return (
     <>
-    <main className="pt-28 pb-12 px-4 md:px-8 max-w-[800px] mx-auto flex flex-col min-h-screen font-sans relative gap-8">
+    <main className="pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto flex flex-col min-h-screen font-sans relative gap-12">
       
       {/* Glassmorphism ambient background */}
-      <div className="fixed inset-0 pointer-events-none -z-10 bg-[#f8fafc] dark:bg-[#09090b] transition-colors"></div>
-      <div aria-hidden="true" style={{ position: "fixed", top: "5%", right: "5%", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(255,85,0,0.07) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
-      <div aria-hidden="true" style={{ position: "fixed", bottom: "10%", left: "0%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(255,170,0,0.05) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+      <div className="fixed inset-0 pointer-events-none -z-10 bg-[#f8fafc] dark:bg-[#0a0a0c] transition-colors"></div>
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden opacity-80">
+        <div className="absolute top-[10%] left-[20%] w-[60vw] h-[60vw] bg-gradient-to-br from-[#ff5500]/10 to-[#ffaa00]/10 blur-[160px] rounded-full" />
+        <div className="absolute bottom-[5%] right-[5%] w-[45vw] h-[45vw] bg-gradient-to-tl from-[#ff5500]/5 to-transparent blur-[140px] rounded-full" />
+      </div>
 
       {/* Upper header */}
-      <div className="flex flex-col items-center text-center gap-6">
+      <div className="flex flex-col items-center text-center gap-8">
         <div className="flex flex-col items-center text-center">
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight flex items-center justify-center gap-3">
-            <MessageSquare className="w-10 h-10 text-[#ff5500]" />
+          <h1 className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tighter flex items-center justify-center gap-4">
+            <MessageSquare className="w-12 h-12 text-[#ff5500]" />
             <span>{t("Sala de Opinión", "Opinion Room", "Sala de Opinión")}</span>
           </h1>
-          <p className="text-sm md:text-base text-slate-500 dark:text-white/60 mt-3 font-medium max-w-2xl">
+          <p className="text-base md:text-lg text-slate-500 dark:text-white/60 mt-6 font-medium max-w-3xl leading-relaxed">
             {t("Debates, reportes viales y conversaciones locales en tiempo real con una experiencia modernizada.", "Real-time chat, local news, and community talk with a modern experience.", "Debates de la península en tiempo real.")}
           </p>
         </div>
@@ -371,31 +373,25 @@ export default function OpinionRoomPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-10 grow pb-8">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 grow pb-12 w-full">
         
-        {/* Rooms List (Horizontal or clean stacked) */}
-        <div className="flex flex-col rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" style={{
-          background: "rgba(255,255,255,0.04)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          border: "1px solid rgba(255,255,255,0.09)",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)",
-        }}>
-          <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-black/20 shrink-0">
-            <span className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2 tracking-wide">
-              <Users className="w-5 h-5 text-[#ff5500]" />
+        {/* Rooms List (Sidebar on Desktop) */}
+        <div className="flex flex-col lg:w-96 rounded-[2.5rem] overflow-hidden shadow-2xl transition-all bg-white/40 dark:bg-black/20 backdrop-blur-[40px] border border-white/40 dark:border-white/10">
+          <div className="bg-white/60 dark:bg-white/5 border-b border-slate-200/50 dark:border-white/10 p-8 flex justify-between items-center shrink-0">
+            <span className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-3 tracking-wide">
+              <Users className="w-6 h-6 text-[#ff5500]" />
               {t("Salas de Chat", "Chat Rooms", "Salas")}
             </span>
             <button
               onClick={() => setShowModal(true)}
-              className="p-2 rounded-xl bg-gradient-to-br from-[#ff5500] to-orange-500 text-white hover:opacity-90 transition-all cursor-pointer shadow-md hover:shadow-lg hover:shadow-[#ff5500]/20"
+              className="p-3 rounded-2xl bg-gradient-to-br from-[#ff5500] to-orange-500 text-white hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-[0_8px_20px_rgba(255,85,0,0.25)]"
               title={t("Crear Nueva Sala", "Create New Room", "Crear")}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex overflow-x-auto gap-3 p-6 custom-scrollbar items-center">
+          <div className="flex flex-row overflow-x-auto lg:flex-col gap-4 p-6 custom-scrollbar items-stretch h-auto lg:h-[800px] overflow-y-auto bg-slate-50/30 dark:bg-black/5">
             {loadingRooms ? (
               <div className="flex flex-col items-center justify-center w-full py-4">
                 <span className="animate-spin w-6 h-6 border-2 border-[#ff5500] border-t-transparent rounded-full"></span>
@@ -409,10 +405,10 @@ export default function OpinionRoomPage() {
                   <button
                     key={room.id}
                     onClick={() => handleRoomClick(room)}
-                    className={`shrink-0 flex items-center justify-between gap-4 px-5 py-3.5 rounded-2xl border transition-all group ${
+                    className={`min-w-[240px] lg:min-w-0 flex items-center justify-between gap-4 px-6 py-5 rounded-3xl border transition-all group ${
                       isActive
-                        ? "bg-orange-50 dark:bg-[#ff5500]/10 border-orange-200 dark:border-[#ff5500]/30 shadow-sm"
-                        : "bg-slate-50 dark:bg-white/5 border-transparent hover:bg-slate-100 dark:hover:bg-white/10 hover:border-slate-200 dark:hover:border-white/20"
+                        ? "bg-white/80 dark:bg-[#ff5500]/10 border-[#ff5500]/20 dark:border-[#ff5500]/30 shadow-[0_8px_30px_rgba(255,85,0,0.1)]"
+                        : "bg-white/30 dark:bg-white/5 border-white/40 dark:border-white/10 hover:bg-white/60 dark:hover:bg-white/10 hover:border-white/60 dark:hover:border-white/20 shadow-sm"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -450,12 +446,7 @@ export default function OpinionRoomPage() {
         </div>
 
         {/* Message Stream */}
-        <div className="flex flex-col rounded-[2.5rem] overflow-hidden h-[700px] relative transition-all shadow-2xl" style={{
-          background: "rgba(255,255,255,0.02)",
-          backdropFilter: "blur(40px)",
-          WebkitBackdropFilter: "blur(40px)",
-          border: "1px solid rgba(255,255,255,0.06)",
-        }}>
+        <div className="flex flex-col grow rounded-[2.5rem] overflow-hidden h-[800px] relative transition-all shadow-2xl bg-white/40 dark:bg-black/20 backdrop-blur-[40px] border border-white/40 dark:border-white/10">
           
           {/* Room Title */}
           <div className="bg-white/5 dark:bg-black/20 border-b border-slate-200/50 dark:border-white/5 p-6 md:p-8 flex justify-between items-center shrink-0 z-10 backdrop-blur-xl">
@@ -544,12 +535,12 @@ export default function OpinionRoomPage() {
                         </span>
                       </div>
                       
-                      <div className={`flex flex-col gap-2.5 ${isMe ? 'items-end' : 'items-start'}`}>
+                      <div className={`flex flex-col gap-3 ${isMe ? 'items-end' : 'items-start'}`}>
                         {msg.content && (
-                          <div className={`px-6 py-4 text-base leading-relaxed shadow-lg backdrop-blur-xl ${
+                          <div className={`px-8 py-5 text-[17px] leading-relaxed shadow-lg backdrop-blur-2xl ${
                             isMe 
-                              ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] text-white rounded-3xl rounded-tr-md shadow-[0_8px_24px_rgba(255,85,0,0.2)] border border-white/20' 
-                              : 'bg-white/90 dark:bg-white/10 text-slate-800 dark:text-white border border-slate-200/50 dark:border-white/10 rounded-3xl rounded-tl-md shadow-[0_8px_24px_rgba(0,0,0,0.05)]'
+                              ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] text-white rounded-[2rem] rounded-tr-xl shadow-[0_10px_30px_rgba(255,85,0,0.25)] border border-white/20' 
+                              : 'bg-white dark:bg-white/10 text-slate-800 dark:text-white border border-white/50 dark:border-white/10 rounded-[2rem] rounded-tl-xl shadow-[0_10px_30px_rgba(0,0,0,0.04)]'
                           }`}>
                             {msg.content}
                           </div>
@@ -620,7 +611,7 @@ export default function OpinionRoomPage() {
           {/* Send Input */}
           <form 
             onSubmit={handleSendMessage} 
-            className="p-4 md:p-6 bg-white dark:bg-[#111116] border-t border-slate-100 dark:border-white/5 flex gap-3 md:gap-4 shrink-0 z-10 items-center"
+            className="p-6 md:p-8 bg-white/60 dark:bg-black/40 border-t border-white/40 dark:border-white/10 flex gap-4 shrink-0 z-10 items-center backdrop-blur-xl"
           >
             {/* Hidden File Input */}
             <input 
@@ -634,19 +625,19 @@ export default function OpinionRoomPage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-[#ff5500] dark:hover:text-[#ff5500] transition-colors border border-slate-200 dark:border-white/10 shadow-sm"
+              className="w-16 h-16 rounded-full bg-white dark:bg-white/5 text-slate-500 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-[#ff5500] dark:hover:text-[#ff5500] transition-colors border border-white dark:border-white/10 shadow-sm flex items-center justify-center shrink-0"
               title={t("Adjuntar Imagen", "Attach Image", "Adjuntar")}
             >
-              <ImageIcon className="w-5 h-5" />
+              <ImageIcon className="w-6 h-6" />
             </button>
             
             <button
               type="button"
               onClick={handleShareLocation}
-              className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors border border-slate-200 dark:border-white/10 shadow-sm"
+              className="w-16 h-16 rounded-full bg-white dark:bg-white/5 text-slate-500 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors border border-white dark:border-white/10 shadow-sm flex items-center justify-center shrink-0"
               title={t("Compartir Ubicación", "Share Location", "Ubicación")}
             >
-              <Navigation className="w-5 h-5" />
+              <Navigation className="w-6 h-6" />
             </button>
 
             <input
@@ -655,15 +646,15 @@ export default function OpinionRoomPage() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               disabled={!!fetchError}
-              className="input text-[16px] font-medium grow py-4 px-6 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 focus:border-[#ff5500] focus:ring-2 focus:ring-[#ff5500]/20 rounded-2xl placeholder-slate-400 dark:placeholder-white/30 shadow-inner"
+              className="input text-[17px] font-medium grow py-5 px-8 bg-white dark:bg-black/40 border border-white dark:border-white/10 focus:border-[#ff5500] focus:ring-4 focus:ring-[#ff5500]/10 rounded-full placeholder-slate-400 dark:placeholder-white/30 shadow-[inset_0_2px_10px_rgba(0,0,0,0.02)] transition-all"
             />
             
             <button
               type="submit"
               disabled={!!fetchError || (!inputText.trim() && !attachedImage && !attachedLocation)}
-              className="btn-primary px-8 rounded-2xl flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-orange-500/20 hover:shadow-2xl hover:shadow-orange-500/30 hover:scale-[1.03] active:scale-95 transition-all"
+              className="btn-primary px-10 h-[64px] rounded-full flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-orange-500/20 hover:shadow-2xl hover:shadow-orange-500/30 hover:scale-[1.03] active:scale-95 transition-all"
             >
-              <Send className="w-5 h-5 ml-1" />
+              <Send className="w-6 h-6 ml-1" />
             </button>
           </form>
         </div>
