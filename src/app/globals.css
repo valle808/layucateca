@@ -506,7 +506,7 @@ html[data-theme="light"] .dashboard-card:hover { box-shadow: var(--shadow-hover)
 .muna-markdown {
   line-height: 1.78;
   font-size: 0.925rem;
-  color: var(--text-primary);
+  color: rgba(240, 237, 232, 0.92);
   word-break: break-word;
   overflow-wrap: anywhere;
   min-width: 0;

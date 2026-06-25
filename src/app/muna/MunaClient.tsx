@@ -433,17 +433,18 @@ export default function MunaPage() {
     );
   }
 
-  const isDark = theme === 'dark';
 
   return (
-    <div className={`muna-monroe-theme flex flex-col w-full font-sans overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] relative${isDark ? ' muna-dark' : ''}`} style={{ height: "100dvh" }}>
-
+    <div className="flex flex-col w-full font-sans overflow-hidden relative" style={{ height: "100dvh", background: 'linear-gradient(135deg, #07070f 0%, #0d0d1a 40%, #110b08 100%)', color: '#f0ede8' }}>
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
         {/* AMBIENT BG GRADIENT */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-80">
-          <div className="absolute top-[10%] left-[20%] w-[60vw] h-[60vw] bg-gradient-to-br from-[#ff5500]/10 to-[#ffaa00]/10 blur-[160px] rounded-full" />
-          <div className="absolute bottom-[5%] right-[5%] w-[45vw] h-[45vw] bg-gradient-to-tl from-[#ff5500]/5 to-transparent blur-[140px] rounded-full" />
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute top-[-10%] left-[15%] w-[70vw] h-[70vw] bg-gradient-to-br from-[#ff5500]/20 to-[#ffaa00]/8 blur-[180px] rounded-full" />
+          <div className="absolute bottom-[0%] right-[-5%] w-[50vw] h-[50vw] bg-gradient-to-tl from-[#ff5500]/10 to-transparent blur-[160px] rounded-full" />
+          <div className="absolute top-[50%] left-[-10%] w-[40vw] h-[40vw] bg-gradient-to-br from-purple-900/10 to-transparent blur-[140px] rounded-full" />
+          {/* grid overlay */}
+          <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255,85,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,85,0,0.025) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
         </div>
 
         {/* ── LEFT SIDEBAR (SECONDARY MATRIX) ── */}
@@ -454,7 +455,8 @@ export default function MunaPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -380, opacity: 0 }}
               transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-              className="absolute top-0 left-0 bottom-0 w-[380px] z-[90] border-r border-slate-200/50 dark:border-white/10 bg-white/70 dark:bg-black/50 backdrop-blur-3xl flex flex-col shadow-[0_0_60px_rgba(0,0,0,0.1)] lg:hidden"
+              className="absolute top-0 left-0 bottom-0 w-[360px] z-[90] border-r border-white/[0.08] flex flex-col lg:hidden"
+              style={{ background: 'rgba(8,8,16,0.88)', backdropFilter: 'blur(40px) saturate(1.5)', WebkitBackdropFilter: 'blur(40px) saturate(1.5)', boxShadow: '8px 0 60px rgba(0,0,0,0.6)' }}
             >
               <SidebarContent 
                 knowledgeGraph={knowledgeGraph} 
@@ -488,7 +490,7 @@ export default function MunaPage() {
         </AnimatePresence>
 
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex w-[380px] flex-shrink-0 flex-col border-r border-slate-200/50 dark:border-white/10 bg-white/60 dark:bg-black/40 backdrop-blur-2xl relative z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.2)]">
+        <aside className="hidden lg:flex w-[360px] flex-shrink-0 flex-col border-r border-white/[0.06] relative z-10" style={{ background: 'rgba(8,8,16,0.7)', backdropFilter: 'blur(40px) saturate(1.5)', WebkitBackdropFilter: 'blur(40px) saturate(1.5)', boxShadow: '4px 0 40px rgba(0,0,0,0.4)' }}>
           <SidebarContent 
               knowledgeGraph={knowledgeGraph} 
               history={historySessions} 
@@ -518,7 +520,7 @@ export default function MunaPage() {
         {/* ── MAIN CHAT AREA ── */}
         <main className="flex-1 relative z-10 flex flex-col min-w-0 bg-transparent">
           {/* HEADER */}
-          <header className="flex-none flex items-center justify-between px-6 md:px-10 py-5 border-b border-slate-200/50 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-xl z-20">
+          <header className="flex-none flex items-center justify-between px-6 md:px-10 py-4 border-b border-white/[0.07] z-20" style={{ background: 'rgba(8,8,16,0.65)', backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)' }}>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(s => !s)}
@@ -526,28 +528,28 @@ export default function MunaPage() {
               >
                 <Layers size={18} />
               </button>
-              <div className="h-10 w-10 bg-gradient-to-br from-[#ff5500]/20 to-[#ffaa00]/20 border border-[#ff5500]/30 rounded-xl flex items-center justify-center shadow-lg shrink-0">
-                <BrainCircuit size={18} className="text-[#ff5500]" />
+              <div className="h-10 w-10 rounded-2xl flex items-center justify-center shadow-lg shrink-0" style={{ background: 'linear-gradient(135deg, rgba(255,85,0,0.3), rgba(255,170,0,0.15))', border: '1px solid rgba(255,85,0,0.4)', boxShadow: '0 0 20px rgba(255,85,0,0.2)' }}>
+                <BrainCircuit size={18} className="text-[#ff6622]" />
               </div>
               <div className="flex flex-col">
-                <div className="flex items-center gap-2 font-black tracking-tight text-slate-900 dark:text-white text-base uppercase font-sans">
-                  MUNA <span className="text-[#ff5500]">V1.0</span>
+                <div className="flex items-center gap-2 font-black tracking-tight text-white text-base uppercase font-sans">
+                  MUNA <span style={{ color: '#ff6622' }}>V1.0</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#ff5500] animate-pulse shadow-[0_0_10px_rgba(255,85,0,0.8)]" />
-                  <span className="text-[9px] text-[#ff5500] font-bold tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
+                  <div className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: '#ff6622', boxShadow: '0 0 8px rgba(255,85,0,0.9)' }} />
+                  <span className="text-[9px] font-bold tracking-widest uppercase" style={{ color: 'rgba(255,102,34,0.8)' }}>{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20 shadow-inner backdrop-blur-md">
-              <Wifi size={14} strokeWidth={2.5} className="text-emerald-500" /> <span className="hidden sm:inline">{t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}</span>
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full" style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', color: '#4ade80' }}>
+              <Wifi size={14} strokeWidth={2.5} /> <span className="hidden sm:inline">{t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}</span>
             </div>
           </header>
 
           {/* MESSAGES */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 pt-8 pb-40 space-y-10 scroll-smooth custom-scrollbar relative"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent' }}>
-            <div className="max-w-3xl mx-auto space-y-10 w-full">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 pt-10 pb-44 scroll-smooth relative"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.2) transparent' }}>
+            <div className="max-w-3xl mx-auto space-y-8 w-full">
               <AnimatePresence mode="popLayout">
                 {messages.map((m) => (
                   <motion.div
@@ -558,18 +560,18 @@ export default function MunaPage() {
                     className={`flex w-full gap-4 min-w-0 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'bot' && (
-                      <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ff5500] to-orange-500 text-white flex items-center justify-center mt-1 shadow-lg shadow-orange-500/30">
-                        <BrainCircuit size={18} />
+                      <div className="h-10 w-10 shrink-0 rounded-2xl text-white flex items-center justify-center mt-1 shrink-0" style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 20px rgba(255,85,0,0.35)' }}>
+                        <BrainCircuit size={17} />
                       </div>
                     )}
 
-                    <div className={`flex flex-col gap-2 min-w-0 max-w-[calc(100%-3rem)] md:max-w-[75%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div className={`flex flex-col gap-2 min-w-0 max-w-[calc(100%-3rem)] md:max-w-[78%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                       {/* Identity Tag */}
-                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-sm backdrop-blur-xl ${
+                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase ${
                         m.role === 'user' 
-                           ? 'bg-slate-900/5 dark:bg-white/5 text-slate-800 dark:text-white/80 border border-slate-200/50 dark:border-white/10' 
-                           : 'bg-[#ff5500]/10 border border-[#ff5500]/20 text-[#ff5500]'
-                      }`}>
+                           ? '' 
+                           : ''
+                       }`} style={m.role === 'user' ? { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' } : { background: 'rgba(255,85,0,0.12)', border: '1px solid rgba(255,85,0,0.25)', color: '#ff7733' }}>
                         {m.role === 'user' ? <span>{t('Tú', 'You', 'Tú')}</span> : <span>MUNA AI</span>}
                       </div>
  
@@ -583,13 +585,29 @@ export default function MunaPage() {
                         </div>
                       )}
  
-                      <div className={`px-5 py-4 text-[15px] leading-relaxed transition-all min-w-0 w-full overflow-hidden ${
-                        m.role === 'user'
-                          ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] border border-white/20 text-white font-medium rounded-3xl rounded-tr-sm shadow-xl shadow-orange-500/20'
-                          : 'bg-white/80 dark:bg-[#111115]/80 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 text-slate-800 dark:text-white/95 rounded-3xl rounded-tl-sm w-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]'
-                      }`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+                      <div className={`px-5 py-4 text-[15px] leading-relaxed min-w-0 w-full overflow-hidden transition-all`}
+                        style={m.role === 'user' ? {
+                          background: 'linear-gradient(135deg, #ff5500 0%, #ff8800 100%)',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          color: '#fff',
+                          fontWeight: 500,
+                          borderRadius: '20px 20px 4px 20px',
+                          boxShadow: '0 8px 32px rgba(255,85,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
+                          wordBreak: 'break-word',
+                          overflowWrap: 'anywhere'
+                        } : {
+                          background: 'rgba(255,255,255,0.04)',
+                          backdropFilter: 'blur(20px)',
+                          WebkitBackdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255,255,255,0.08)',
+                          color: 'rgba(240,237,232,0.95)',
+                          borderRadius: '4px 20px 20px 20px',
+                          boxShadow: '0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)',
+                          wordBreak: 'break-word',
+                          overflowWrap: 'anywhere'
+                        }}>
                         {m.role === 'bot' ? (
-                          <div className="muna-markdown w-full max-w-full min-w-0 prose prose-sm md:prose-base prose-slate dark:prose-invert prose-headings:font-black prose-p:leading-loose prose-a:text-[#ff5500]" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+                          <div className="muna-markdown w-full max-w-full min-w-0" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', color: 'rgba(240,237,232,0.95)' }}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
@@ -619,8 +637,8 @@ export default function MunaPage() {
                           )}
                         </div>
    
-                        <div className="flex items-center gap-2 mt-1 opacity-70 text-[9px] font-mono uppercase tracking-widest px-2">
-                          <span className={m.role === 'user' ? 'text-slate-500 dark:text-white/50' : 'text-slate-500 dark:text-white/50'}>
+                        <div className="flex items-center gap-2 mt-1 text-[9px] font-mono uppercase tracking-widest px-2" style={{ opacity: 0.45 }}>
+                          <span style={{ color: m.role === 'user' ? 'rgba(255,255,255,0.6)' : 'rgba(255,102,34,0.8)' }}>
                             {m.role === 'bot' ? t('Muna · Yucateca v1.0', 'Muna · Yucateca v1.0', 'Muna · Yucateca v1.0') : t('Operator · Sovereign Access', 'Operator · Sovereign Access', 'Operator · Sovereign Access')}
                           </span>
                           {m.role === 'bot' && (
@@ -646,17 +664,18 @@ export default function MunaPage() {
 
               {isTyping && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4 justify-start">
-                  <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ff5500]/20 to-orange-500/20 border border-[#ff5500]/30 flex items-center justify-center mt-1 shadow-[0_8px_24px_rgba(255,85,0,0.15)]">
-                    <BrainCircuit size={16} className="text-[#ff5500]" />
+                  <div className="h-10 w-10 shrink-0 rounded-2xl text-white flex items-center justify-center mt-1" style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 20px rgba(255,85,0,0.35)' }}>
+                    <BrainCircuit size={17} />
                   </div>
-                  <div className="px-6 py-4 rounded-3xl rounded-tl-sm bg-white/80 dark:bg-[#111115]/80 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 flex items-center gap-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                    <Sparkles size={14} className="text-[#ff5500] animate-spin mr-1" />
+                  <div className="px-6 py-4 flex items-center gap-3" style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '4px 20px 20px 20px', boxShadow: '0 8px 40px rgba(0,0,0,0.3)' }}>
+                    <Sparkles size={13} style={{ color: '#ff6622' }} className="animate-spin" />
                     {[0, 1, 2].map(n => (
                       <motion.div
                         key={n}
-                        animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
+                        animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.3, 0.8] }}
                         transition={{ duration: 1.2, repeat: Infinity, delay: n * 0.2 }}
-                        className="h-2 w-2 rounded-full bg-gradient-to-r from-[#ff5500] to-[#ffaa00]"
+                        className="h-2 w-2 rounded-full"
+                        style={{ background: 'linear-gradient(135deg, #ff5500, #ffaa00)' }}
                       />
                     ))}
                   </div>
@@ -686,16 +705,18 @@ export default function MunaPage() {
               )}
 
               <div 
-                className="flex items-end gap-3 bg-white/70 dark:bg-black/60 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 rounded-[2rem] p-2 focus-within:border-[#ff5500]/50 focus-within:ring-4 focus-within:ring-[#ff5500]/10 focus-within:shadow-[0_8px_40px_rgba(255,85,0,0.1)] transition-all shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] cursor-pointer"
+                className="flex items-end gap-3 p-2 transition-all cursor-pointer"
+                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(30px) saturate(1.5)', WebkitBackdropFilter: 'blur(30px) saturate(1.5)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: '2rem', boxShadow: '0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)' }}
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
                 <button
                   onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="h-12 w-12 shrink-0 rounded-full bg-slate-100/80 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-600 dark:text-white/80 flex items-center justify-center transition-all shadow-inner"
+                  className="h-12 w-12 shrink-0 rounded-full flex items-center justify-center transition-all"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
                   title={t('Adjuntar', 'Attach', 'Ts\'a')}
                 >
-                  <Paperclip size={20} />
+                  <Paperclip size={19} />
                 </button>
                 
                 <textarea
@@ -705,22 +726,23 @@ export default function MunaPage() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                   placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
                   rows={1}
-                  className="flex-1 bg-transparent text-[15px] font-medium text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-white/40 outline-none resize-none py-3.5 max-h-32 overflow-y-auto cursor-text px-2"
-                  style={{ scrollbarWidth: 'none' }}
+                  className="flex-1 text-[15px] font-medium outline-none resize-none py-3.5 max-h-32 overflow-y-auto cursor-text px-2"
+                  style={{ background: 'transparent', color: 'rgba(240,237,232,0.9)', scrollbarWidth: 'none' }}
                 />
                 
                 <button
                   onClick={(e) => { e.stopPropagation(); handleSend(); }}
                   disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                  className="h-12 w-12 shrink-0 bg-gradient-to-br from-[#ff5500] to-[#ffaa00] hover:from-[#e04b00] hover:to-[#ff8800] text-white rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 transition-all shadow-lg shadow-orange-500/30"
+                  className="h-12 w-12 shrink-0 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 transition-all"
+                  style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 20px rgba(255,85,0,0.4)', color: '#fff' }}
                   title={t('Enviar', 'Send', 'Túuxt')}
                 >
-                  <ChevronRight size={24} strokeWidth={3} />
+                  <ChevronRight size={22} strokeWidth={3} />
                 </button>
               </div>
               
-              <div className="flex justify-between items-center px-4 text-[9px] text-slate-500 dark:text-white/40 font-mono uppercase tracking-widest font-bold">
-                <div className="flex items-center gap-1.5 text-[#ff5500]">
+              <div className="flex justify-between items-center px-4 text-[9px] font-mono uppercase tracking-widest font-bold" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                <div className="flex items-center gap-1.5" style={{ color: 'rgba(255,102,34,0.7)' }}>
                   <Radio size={10} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
                 </div>
                 <span className="hidden sm:inline">{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
@@ -731,7 +753,7 @@ export default function MunaPage() {
 
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
-          <div className="lg:hidden absolute inset-0 z-[80] bg-black/80 backdrop-blur-md" onClick={() => setSidebarOpen(false)} />
+          <div className="lg:hidden absolute inset-0 z-[80] bg-black/85 backdrop-blur-md" onClick={() => setSidebarOpen(false)} />
         )}
       </div>
 
@@ -868,59 +890,53 @@ function SidebarContent({
   ];
 
   return (
-    <div className="flex flex-col h-full p-10 pt-16 xl:pt-24 space-y-10 overflow-hidden text-slate-900 dark:text-white font-sans bg-transparent">
+    <div className="flex flex-col h-full p-8 pt-14 xl:pt-20 space-y-8 overflow-hidden font-sans" style={{ color: 'rgba(240,237,232,0.9)', background: 'transparent' }}>
       <div className="flex items-center justify-between shrink-0 mb-6">
-        <Link href="/" className="flex items-center gap-3 text-slate-500 dark:text-white/60 hover:text-[#ff5500] dark:hover:text-[#ff5500] transition-all text-xs font-black uppercase tracking-widest group bg-slate-100/50 dark:bg-white/5 px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
-          <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform text-[#ff5500]" /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
+        <Link href="/" className="flex items-center gap-3 hover:text-[#ff6622] transition-all text-xs font-black uppercase tracking-widest group px-4 py-2 rounded-full" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(10px)' }}>
+          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" style={{ color: '#ff6622' }} /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
         </Link>
         {onClose && (
-          <button onClick={onClose} className="h-9 w-9 rounded-xl bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 flex items-center justify-center text-slate-500 dark:text-white/70 hover:text-slate-900 dark:hover:text-white transition-all shadow-md">
+          <button onClick={onClose} className="h-9 w-9 rounded-xl flex items-center justify-center transition-all" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>
             <X size={18} />
           </button>
         )}
       </div>
 
       <div className="shrink-0 space-y-3 pt-2">
-        <h1 className="text-5xl font-black uppercase tracking-tighter italic leading-none text-slate-900 dark:text-white flex flex-col font-sans">
+        <h1 className="text-5xl font-black uppercase tracking-tighter italic leading-none flex flex-col font-sans" style={{ color: '#fff' }}>
           <span>MUNA.</span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff5500] to-[#ffaa00]">YUCATECA.</span>
+          <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #ff5500, #ffaa00)' }}>YUCATECA.</span>
         </h1>
-        <div className="text-[10px] font-black uppercase tracking-widest text-[#ff5500] italic font-sans bg-[#ff5500]/10 inline-block px-3 py-1 rounded-full border border-[#ff5500]/20">
+        <div className="text-[10px] font-black uppercase tracking-widest italic font-sans inline-block px-3 py-1 rounded-full" style={{ color: '#ff6622', background: 'rgba(255,85,0,0.12)', border: '1px solid rgba(255,85,0,0.25)' }}>
           SOVEREIGN_ARRAY_V7.0
         </div>
         {onNewChat && (
-          <button onClick={onNewChat} className="w-full py-3.5 bg-gradient-to-br from-[#ff5500] to-orange-500 hover:from-[#e04b00] hover:to-[#ff8800] text-white font-black rounded-2xl text-[11px] uppercase tracking-widest shadow-[0_8px_24px_rgba(255,85,0,0.3)] hover:shadow-[0_12px_32px_rgba(255,85,0,0.4)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-8 mb-2 cursor-pointer border border-white/20">
+          <button onClick={onNewChat} className="w-full py-3.5 text-white font-black rounded-2xl text-[11px] uppercase tracking-widest hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-6 mb-2 cursor-pointer" style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 8px 28px rgba(255,85,0,0.35)', border: '1px solid rgba(255,255,255,0.15)' }}>
             <Sparkles size={16} className="text-white" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
           </button>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 p-1.5 bg-slate-100/50 dark:bg-white/5 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-white/10 shrink-0 my-4 shadow-inner">
+      <div className="flex gap-2 p-1 rounded-2xl shrink-0 my-2" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
         <button 
           onClick={() => setMarketTab('HISTORY')}
-          className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-            marketTab === 'HISTORY' 
-              ? 'bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-white/20' 
-              : 'text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          className="flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+          style={marketTab === 'HISTORY' ? { background: 'rgba(255,85,0,0.15)', color: '#ff6622', border: '1px solid rgba(255,85,0,0.25)' } : { color: 'rgba(255,255,255,0.35)' }}
         >
           {t('Sesiones', 'Sessions', 'Meyajo\'ob')}
         </button>
         <button 
           onClick={() => setMarketTab('SKILLS')}
-          className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-            marketTab === 'SKILLS' 
-              ? 'bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-white/20' 
-              : 'text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white'
-          }`}
+          className="flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+          style={marketTab === 'SKILLS' ? { background: 'rgba(255,85,0,0.15)', color: '#ff6622', border: '1px solid rgba(255,85,0,0.25)' } : { color: 'rgba(255,255,255,0.35)' }}
         >
           {t('Habilidades', 'Skills', 'U Na\'at')}
         </button>
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto space-y-6 min-h-0 pr-2 text-sm font-medium animate-fadeIn custom-scrollbar" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(0,0,0,0.1) transparent' }}>
+      <div className="flex-1 overflow-y-auto space-y-3 min-h-0 pr-1 text-sm font-medium animate-fadeIn" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.2) transparent' }}>
         {marketTab === 'HISTORY' ? (
           <>
             {history.length > 0 ? (
@@ -928,19 +944,22 @@ function SidebarContent({
                 <div
                   key={session.sessionId}
                   onClick={() => { onSelectSession && onSelectSession(session.sessionId); }}
-                  className="mx-0.5 p-6 bg-white/70 dark:bg-white/5 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 rounded-[2rem] hover:border-[#ff5500]/50 hover:shadow-[0_8px_30px_rgba(255,85,0,0.1)] transition-all cursor-pointer group shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-4 mb-5"
+                  className="p-4 rounded-2xl transition-all cursor-pointer group space-y-3"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.border = '1px solid rgba(255,85,0,0.3)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,85,0,0.06)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.border = '1px solid rgba(255,255,255,0.07)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)'; }}
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] text-[#ff5500] font-black tracking-widest uppercase bg-[#ff5500]/10 px-3 py-1 rounded-full">{session.mode}</span>
-                    <ChevronRight size={16} className="text-slate-400 group-hover:text-[#ff5500] group-hover:translate-x-1 transition-all" />
+                    <span className="text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-full" style={{ color: '#ff6622', background: 'rgba(255,85,0,0.12)', border: '1px solid rgba(255,85,0,0.2)' }}>{session.mode}</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-all" style={{ color: 'rgba(255,255,255,0.3)' }} />
                   </div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-white/90 leading-relaxed line-clamp-2 group-hover:text-[#ff5500] transition-colors">
+                  <p className="text-sm font-bold leading-relaxed line-clamp-2" style={{ color: 'rgba(240,237,232,0.8)' }}>
                     {translateSessionTitle(session.prompt, language)}
                   </p>
                 </div>
               ))
             ) : (
-              <div className="text-center py-16 opacity-40 text-sm uppercase font-black tracking-widest flex flex-col items-center gap-4">
+              <div className="text-center py-16 text-sm uppercase font-black tracking-widest flex flex-col items-center gap-4" style={{ color: 'rgba(255,255,255,0.25)' }}>
                 <Database size={32} className="opacity-50" />
                 {t('No se detectó historial', 'No history detected', 'Mina\'an tsoolt\'aan')}
               </div>
@@ -971,16 +990,17 @@ function SidebarContent({
       </div>
 
       {/* Tools Section */}
-      <div className="space-y-4 shrink-0 pt-6 border-t border-slate-200/80 dark:border-white/10">
+      <div className="space-y-4 shrink-0 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
         <div className="flex gap-3">
           <button 
             onClick={onDownload}
-            className="flex-1 py-3.5 bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/10 hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-slate-600 dark:text-white/70 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-0.5"
+            className="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.55)' }}
           >
-            <Download size={16} /> {t('Descargar', 'Download', 'Emtik')}
+            <Download size={14} /> {t('Descargar', 'Download', 'Emtik')}
           </button>
-          <label className="flex-1 py-3.5 bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/10 hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-slate-600 dark:text-white/70 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-0.5">
-            <Database size={16} /> {t('Cargar', 'Upload', 'Na\'aksik')}
+          <label className="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.55)' }}>
+            <Database size={14} /> {t('Cargar', 'Upload', 'Na\'aksik')}
             <input type="file" className="hidden" accept=".json" onChange={onUpload} />
           </label>
         </div>
