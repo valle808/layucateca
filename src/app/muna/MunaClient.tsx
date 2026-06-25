@@ -434,8 +434,30 @@ export default function MunaPage() {
   }
 
 
+  const isDark = theme === 'dark';
+
+  const darkBg   = 'linear-gradient(135deg, #07070f 0%, #0d0d1a 40%, #110b08 100%)';
+  const lightBg  = 'linear-gradient(135deg, #f0f4ff 0%, #f8f6ff 50%, #fff7f0 100%)';
+  const darkText = '#f0ede8';
+  const lightText = '#1a1523';
+
+  const sidebarDark  = 'rgba(8,8,16,0.80)';
+  const sidebarLight = 'rgba(255,255,255,0.75)';
+  const headerDark   = 'rgba(8,8,16,0.70)';
+  const headerLight  = 'rgba(255,255,255,0.80)';
+  const borderDark   = 'rgba(255,255,255,0.07)';
+  const borderLight  = 'rgba(0,0,0,0.08)';
+
   return (
-    <div className="flex flex-col w-full font-sans overflow-hidden relative" style={{ height: "100dvh", background: 'linear-gradient(135deg, #07070f 0%, #0d0d1a 40%, #110b08 100%)', color: '#f0ede8' }}>
+    <div
+      className="flex flex-col w-full font-sans relative"
+      style={{
+        height: '100dvh',
+        overflow: 'hidden',
+        background: isDark ? darkBg : lightBg,
+        color: isDark ? darkText : lightText,
+      }}
+    >
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
         {/* AMBIENT BG GRADIENT */}
@@ -490,7 +512,16 @@ export default function MunaPage() {
         </AnimatePresence>
 
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex w-[360px] flex-shrink-0 flex-col border-r border-white/[0.06] relative z-10" style={{ background: 'rgba(8,8,16,0.7)', backdropFilter: 'blur(40px) saturate(1.5)', WebkitBackdropFilter: 'blur(40px) saturate(1.5)', boxShadow: '4px 0 40px rgba(0,0,0,0.4)' }}>
+        <aside
+          className="hidden lg:flex w-[320px] xl:w-[360px] flex-shrink-0 flex-col relative z-10"
+          style={{
+            borderRight: `1px solid ${isDark ? borderDark : borderLight}`,
+            background: isDark ? sidebarDark : sidebarLight,
+            backdropFilter: 'blur(40px) saturate(1.8)',
+            WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+            boxShadow: isDark ? '4px 0 40px rgba(0,0,0,0.4)' : '4px 0 20px rgba(0,0,0,0.06)',
+          }}
+        >
           <SidebarContent 
               knowledgeGraph={knowledgeGraph} 
               history={historySessions} 
@@ -520,19 +551,37 @@ export default function MunaPage() {
         {/* ── MAIN CHAT AREA ── */}
         <main className="flex-1 relative z-10 flex flex-col min-w-0 bg-transparent">
           {/* HEADER */}
-          <header className="flex-none flex items-center justify-between px-6 md:px-10 py-4 border-b border-white/[0.07] z-20" style={{ background: 'rgba(8,8,16,0.65)', backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)' }}>
+          <header
+            className="flex-none flex items-center justify-between px-4 md:px-8 py-4 z-20"
+            style={{
+              borderBottom: `1px solid ${isDark ? borderDark : borderLight}`,
+              background: isDark ? headerDark : headerLight,
+              backdropFilter: 'blur(30px)',
+              WebkitBackdropFilter: 'blur(30px)',
+            }}
+          >
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(s => !s)}
-                className="lg:hidden h-10 w-10 rounded-xl border border-slate-200/80 dark:border-white/20 flex items-center justify-center text-slate-600 dark:text-white/70 hover:bg-white dark:hover:bg-white/10 transition-all shadow-sm"
+                className="lg:hidden h-10 w-10 rounded-xl flex items-center justify-center transition-all"
+                style={{
+                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}`,
+                  background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+                  color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
+                }}
               >
                 <Layers size={18} />
               </button>
-              <div className="h-10 w-10 rounded-2xl flex items-center justify-center shadow-lg shrink-0" style={{ background: 'linear-gradient(135deg, rgba(255,85,0,0.3), rgba(255,170,0,0.15))', border: '1px solid rgba(255,85,0,0.4)', boxShadow: '0 0 20px rgba(255,85,0,0.2)' }}>
-                <BrainCircuit size={18} className="text-[#ff6622]" />
+              <div
+                className="h-10 w-10 rounded-2xl flex items-center justify-center shrink-0"
+                style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 16px rgba(255,85,0,0.4)' }}
+              >
+                <BrainCircuit size={18} className="text-white" />
               </div>
               <div className="flex flex-col">
-                <div className="flex items-center gap-2 font-black tracking-tight text-white text-base uppercase font-sans">
+                <div className="flex items-center gap-2 font-black tracking-tight text-base uppercase font-sans"
+                  style={{ color: isDark ? '#fff' : '#1a1523' }}
+                >
                   MUNA <span style={{ color: '#ff6622' }}>V1.0</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -547,9 +596,16 @@ export default function MunaPage() {
           </header>
 
           {/* MESSAGES */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 pt-10 pb-44 scroll-smooth relative"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.2) transparent' }}>
-            <div className="max-w-3xl mx-auto space-y-8 w-full">
+          <div
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-8 pt-10 scroll-smooth"
+            style={{
+              paddingBottom: '9rem',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(255,85,0,0.2) transparent',
+            }}
+          >
+            <div className="max-w-3xl mx-auto space-y-8 w-full min-w-0">
               <AnimatePresence mode="popLayout">
                 {messages.map((m) => (
                   <motion.div
@@ -557,21 +613,31 @@ export default function MunaPage() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className={`flex w-full gap-4 min-w-0 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
+                    className={`flex w-full gap-3 min-w-0 ${
+                    m.role === 'user' ? 'justify-end' : 'justify-start'
+                  }`}
+                >
                     {m.role === 'bot' && (
-                      <div className="h-10 w-10 shrink-0 rounded-2xl text-white flex items-center justify-center mt-1 shrink-0" style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 20px rgba(255,85,0,0.35)' }}>
-                        <BrainCircuit size={17} />
+                      <div
+                        className="h-9 w-9 shrink-0 rounded-xl text-white flex items-center justify-center mt-1"
+                        style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 16px rgba(255,85,0,0.3)', minWidth: '2.25rem' }}
+                      >
+                        <BrainCircuit size={15} />
                       </div>
                     )}
 
-                    <div className={`flex flex-col gap-2 min-w-0 max-w-[calc(100%-3rem)] md:max-w-[78%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-                      {/* Identity Tag */}
-                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase ${
-                        m.role === 'user' 
-                           ? '' 
-                           : ''
-                       }`} style={m.role === 'user' ? { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' } : { background: 'rgba(255,85,0,0.12)', border: '1px solid rgba(255,85,0,0.25)', color: '#ff7733' }}>
+                    <div className={`flex flex-col gap-1.5 min-w-0 ${
+                      m.role === 'user'
+                        ? 'items-end max-w-[85%] md:max-w-[72%]'
+                        : 'items-start max-w-[calc(100%-3rem)] md:max-w-[82%]'
+                    }`}>
+                      <div
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wider uppercase"
+                        style={m.role === 'user'
+                          ? { background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)', border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`, color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)' }
+                          : { background: 'rgba(255,85,0,0.1)', border: '1px solid rgba(255,85,0,0.2)', color: '#ff7733' }
+                        }
+                      >
                         {m.role === 'user' ? <span>{t('Tú', 'You', 'Tú')}</span> : <span>MUNA AI</span>}
                       </div>
  
@@ -585,29 +651,31 @@ export default function MunaPage() {
                         </div>
                       )}
  
-                      <div className={`px-5 py-4 text-[15px] leading-relaxed min-w-0 w-full overflow-hidden transition-all`}
+                      <div
+                        className="px-5 py-4 text-[14.5px] leading-[1.75] min-w-0 w-full"
                         style={m.role === 'user' ? {
-                          background: 'linear-gradient(135deg, #ff5500 0%, #ff8800 100%)',
+                          background: 'linear-gradient(135deg, #ff5500, #ff8800)',
                           border: '1px solid rgba(255,255,255,0.15)',
                           color: '#fff',
                           fontWeight: 500,
-                          borderRadius: '20px 20px 4px 20px',
-                          boxShadow: '0 8px 32px rgba(255,85,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
+                          borderRadius: '18px 18px 4px 18px',
+                          boxShadow: '0 6px 24px rgba(255,85,0,0.28)',
                           wordBreak: 'break-word',
-                          overflowWrap: 'anywhere'
+                          overflowWrap: 'anywhere',
                         } : {
-                          background: 'rgba(255,255,255,0.04)',
+                          background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.72)',
                           backdropFilter: 'blur(20px)',
                           WebkitBackdropFilter: 'blur(20px)',
-                          border: '1px solid rgba(255,255,255,0.08)',
-                          color: 'rgba(240,237,232,0.95)',
-                          borderRadius: '4px 20px 20px 20px',
-                          boxShadow: '0 8px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)',
+                          border: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'}`,
+                          color: isDark ? 'rgba(240,237,232,0.93)' : '#1a1523',
+                          borderRadius: '4px 18px 18px 18px',
+                          boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.28)' : '0 4px 20px rgba(0,0,0,0.06)',
                           wordBreak: 'break-word',
-                          overflowWrap: 'anywhere'
-                        }}>
+                          overflowWrap: 'anywhere',
+                        }}
+                      >
                         {m.role === 'bot' ? (
-                          <div className="muna-markdown w-full max-w-full min-w-0" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', color: 'rgba(240,237,232,0.95)' }}>
+                          <div className="muna-markdown w-full max-w-full min-w-0" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', color: isDark ? 'rgba(240,237,232,0.93)' : '#1a1523' }}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
@@ -687,8 +755,8 @@ export default function MunaPage() {
             </div>
           </div>
 
-          {/* FLOATING PILL INPUT BAR */}
-          <div className="absolute bottom-6 left-0 right-0 px-4 md:px-8 z-30 pointer-events-none flex justify-center">
+          {/* FLOATING INPUT BAR — fixed height bottom clearance */}
+          <div className="absolute bottom-0 left-0 right-0 px-3 md:px-8 z-30 pointer-events-none flex justify-center pb-4">
             <div className="w-full max-w-3xl flex flex-col gap-2 pointer-events-auto">
               
               {attachments.length > 0 && (
@@ -704,16 +772,29 @@ export default function MunaPage() {
                 </div>
               )}
 
-              <div 
+              <div
                 className="flex items-end gap-3 p-2 transition-all cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(30px) saturate(1.5)', WebkitBackdropFilter: 'blur(30px) saturate(1.5)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: '2rem', boxShadow: '0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)' }}
+                style={{
+                  background: isDark ? 'rgba(12,12,22,0.85)' : 'rgba(255,255,255,0.88)',
+                  backdropFilter: 'blur(30px) saturate(1.8)',
+                  WebkitBackdropFilter: 'blur(30px) saturate(1.8)',
+                  border: `1px solid ${isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)'}`,
+                  borderRadius: '1.5rem',
+                  boxShadow: isDark
+                    ? '0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03)'
+                    : '0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.8)',
+                }}
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
                 <button
                   onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="h-12 w-12 shrink-0 rounded-full flex items-center justify-center transition-all"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
+                  className="h-11 w-11 shrink-0 rounded-full flex items-center justify-center transition-all"
+                  style={{
+                    background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+                    color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
+                  }}
                   title={t('Adjuntar', 'Attach', 'Ts\'a')}
                 >
                   <Paperclip size={19} />
@@ -726,8 +807,12 @@ export default function MunaPage() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                   placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
                   rows={1}
-                  className="flex-1 text-[15px] font-medium outline-none resize-none py-3.5 max-h-32 overflow-y-auto cursor-text px-2"
-                  style={{ background: 'transparent', color: 'rgba(240,237,232,0.9)', scrollbarWidth: 'none' }}
+                  className="flex-1 text-[15px] font-medium outline-none resize-none py-3 max-h-32 overflow-y-auto cursor-text px-2"
+                  style={{
+                    background: 'transparent',
+                    color: isDark ? 'rgba(240,237,232,0.9)' : '#1a1523',
+                    scrollbarWidth: 'none',
+                  }}
                 />
                 
                 <button
@@ -741,9 +826,10 @@ export default function MunaPage() {
                 </button>
               </div>
               
-              <div className="flex justify-between items-center px-4 text-[9px] font-mono uppercase tracking-widest font-bold" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                <div className="flex items-center gap-1.5" style={{ color: 'rgba(255,102,34,0.7)' }}>
-                  <Radio size={10} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
+              <div className="flex justify-between items-center px-3 pt-1 pb-1 text-[9px] font-mono uppercase tracking-widest font-bold"
+                style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.3)' }}>
+                <div className="flex items-center gap-1.5" style={{ color: 'rgba(255,102,34,0.75)' }}>
+                  <Radio size={9} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
                 </div>
                 <span className="hidden sm:inline">{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
               </div>
