@@ -157,6 +157,10 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
 
   return (
     <>
+      {/* Ambient background orbs */}
+      <div aria-hidden="true" style={{ position: "fixed", top: "5%", right: "10%", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(255,85,0,0.05) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden="true" style={{ position: "fixed", bottom: "20%", left: "5%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(255,170,0,0.04) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+
       {/* ── Sticky desktop share bar ── */}
       <div className="fixed left-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-3 z-40">
         {[
@@ -172,10 +176,10 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
             target="_blank"
             rel="noopener noreferrer"
             title={label}
-            style={{ "--hover-color": color } as React.CSSProperties}
-            className="w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-[rgba(20,20,30,0.9)] border border-gray-200 dark:border-[rgba(255,255,255,0.08)] text-gray-500 dark:text-[rgba(255,255,255,0.55)] shadow-md hover:text-white hover:border-transparent transition-all duration-200"
-            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = color; (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = ""; (e.currentTarget as HTMLAnchorElement).style.color = ""; }}
+            className="w-9 h-9 flex items-center justify-center rounded-full text-gray-500 dark:text-[rgba(255,255,255,0.6)] shadow-md hover:text-white hover:border-transparent transition-all duration-200"
+            style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = color; (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "transparent"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.06)"; (e.currentTarget as HTMLAnchorElement).style.color = ""; (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.1)"; }}
           >
             {icon}
           </a>
@@ -303,7 +307,16 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
           <div className="divider my-8" />
 
           {/* Bottom share bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-5 px-5 rounded-2xl bg-gray-50 dark:bg-[rgba(255,255,255,0.03)] border border-gray-200 dark:border-[rgba(255,255,255,0.07)] mb-8">
+          <div
+            className="flex flex-col sm:flex-row items-center justify-between gap-4 py-5 px-5 rounded-2xl mb-8"
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.15)",
+            }}
+          >
             <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-[rgba(255,255,255,0.75)]">
               <Share2 className="w-4 h-4 text-[#ff5500]" />
               {t("Comparte esta noticia", "Share this article", "K'eex le péektsil")}
@@ -377,7 +390,16 @@ export default function NewsArticleClient({ post, similarPosts = [] }: NewsArtic
                 <Link
                   key={p.id}
                   href={`/news/${p.slug}`}
-                  className="group flex gap-3 p-3 rounded-xl border border-gray-200 dark:border-[rgba(255,255,255,0.06)] bg-white dark:bg-[rgba(15,15,25,0.4)] hover:border-[#ff5500]/40 hover:shadow-md transition-all"
+                  className="group flex gap-3 p-3 rounded-xl transition-all"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    backdropFilter: "blur(16px)",
+                    WebkitBackdropFilter: "blur(16px)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,85,0,0.35)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 28px rgba(255,85,0,0.1)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.07)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 2px 12px rgba(0,0,0,0.15)"; }}
                 >
                   <div
                     className="flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden bg-gray-100 dark:bg-[rgba(255,255,255,0.04)]"

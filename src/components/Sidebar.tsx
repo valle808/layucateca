@@ -348,6 +348,7 @@ export default function Sidebar() {
             {[
               { href: "/", label: t("Inicio", "Home", "Yáax"), icon: <Icons.Home /> },
               { href: "/news", label: t("Noticias", "News", "Péektsil"), icon: <Icons.News /> },
+              { href: "/muna", label: "Muna AI", icon: <Icons.Ai /> },
               { href: "/citizen-report", label: t("Denunciar", "Citizen Report", "Denunciar"), icon: <Icons.Report /> },
               { href: "/opinion-room", label: t("Chat Local", "Local Chat", "Chat Local"), icon: <Icons.Chat /> },
               { href: "/mercadito", label: t("Mercado", "Marketplace", "Mercado"), icon: <Icons.Market /> },

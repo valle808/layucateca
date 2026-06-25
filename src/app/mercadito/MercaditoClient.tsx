@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
 import { ShoppingBag, Tag, MapPin, Calendar, Plus, X, Sparkles, Filter, CheckCircle, Image as ImageIcon, Upload, Bot, Loader2, Store } from "lucide-react";
+import Footer from "@/components/Footer";
 
 interface MarketplaceItem {
   id: string;
@@ -152,6 +153,7 @@ export default function MercaditoPage() {
   });
 
   return (
+    <>
     <main className="min-h-screen bg-[var(--bg-main)] pb-24">
       {/* ── STUNNING HERO SECTION ── */}
       <section className="relative pt-32 pb-20 px-4 md:px-8 overflow-hidden">
@@ -230,7 +232,16 @@ export default function MercaditoPage() {
             {filteredItems.map((item) => (
               <div 
                 key={item.id} 
-                className="group bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden hover:border-[#ff5500]/30 transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,85,0,0.1)] hover:-translate-y-1 flex flex-col"
+                className="group border rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,85,0,0.3)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 48px rgba(255,85,0,0.12)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,0.08)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 24px rgba(0,0,0,0.2)"; }}
               >
                 {/* Image Area */}
                 <div className="relative aspect-[4/3] bg-black/40 overflow-hidden">
@@ -260,16 +271,16 @@ export default function MercaditoPage() {
                 </div>
 
                 {/* Content Area */}
-                <div className="p-5 flex flex-col flex-grow">
-                  <h3 className="font-bold text-lg text-white mb-2 leading-tight line-clamp-2 group-hover:text-[#ff5500] transition-colors">
+                <div className="p-6 md:p-8 flex flex-col flex-grow bg-gradient-to-b from-transparent to-black/20">
+                  <h3 className="font-black text-xl text-white mb-3 leading-tight line-clamp-2 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-[var(--text-secondary)] line-clamp-3 leading-relaxed flex-grow mb-4">
+                  <p className="text-base text-white/70 line-clamp-3 leading-relaxed flex-grow mb-6 font-medium">
                     {item.description}
                   </p>
                   
                   {/* Footer */}
-                  <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs font-semibold text-[var(--text-secondary)]">
+                  <div className="pt-5 border-t border-white/10 flex items-center justify-between text-xs font-bold text-white/60">
                     <div className="flex items-center gap-1.5 truncate max-w-[60%]">
                       <MapPin className="w-3.5 h-3.5 text-[#ff5500] shrink-0" />
                       <span className="truncate">{item.location}</span>
@@ -514,6 +525,8 @@ export default function MercaditoPage() {
         }
       `}} />
     </main>
+    <Footer />
+    </>
   );
 }
 

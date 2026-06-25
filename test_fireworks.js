@@ -1,26 +1,13 @@
-const https = require('https');
-const data = JSON.stringify({
-  model: "accounts/fireworks/models/kimi-k2p6",
-  messages: [{"role": "user", "content": "hi"}],
-  stream: true,
-  max_tokens: 10
-});
-const options = {
-  hostname: 'api.fireworks.ai',
-  path: '/inference/v1/chat/completions',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer fw_CETRcaBeje2h4VdUYTj9Z'
+require('dotenv').config({ path: '.env.vercel.test' });
+async function getFireworksModels() {
+  try {
+    const res = await fetch('https://api.fireworks.ai/inference/v1/models', {
+      headers: { 'Authorization': `Bearer ${process.env.FIREWORKS_API_KEY}` }
+    });
+    const data = await res.json();
+    console.log(data);
+  } catch (e) {
+    console.error(e);
   }
-};
-const req = https.request(options, res => {
-  let body = '';
-  res.on('data', d => {
-    body += d;
-    console.log("CHUNK:", d.toString());
-  });
-  res.on('end', () => console.log("END STATUS:", res.statusCode));
-});
-req.write(data);
-req.end();
+}
+getFireworksModels();

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
 import { AlertTriangle, MapPin, EyeOff, ShieldAlert, FileText, CheckCircle, Upload } from "lucide-react";
+import Footer from "@/components/Footer";
 
 interface Report {
   id: string;
@@ -118,7 +119,11 @@ export default function CitizenReportPage() {
   };
 
   return (
-    <main className="min-h-screen pt-24 pb-16 px-4 md:px-8" style={{ maxWidth: 1200, margin: "0 auto" }}>
+    <>
+      {/* Ambient background orbs */}
+      <div aria-hidden="true" style={{ position: "fixed", top: "5%", right: "15%", width: "600px", height: "600px", background: "radial-gradient(circle, rgba(255,85,0,0.07) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden="true" style={{ position: "fixed", bottom: "10%", left: "5%", width: "450px", height: "450px", background: "radial-gradient(circle, rgba(255,170,0,0.05) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+      <main className="min-h-screen pt-24 pb-16 px-4 md:px-8" style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 1 }}>
       {/* Header */}
       <div className="text-center mb-10 animate-fadeInUp">
         <span style={{
@@ -145,9 +150,12 @@ export default function CitizenReportPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Form panel */}
         <div className="lg:col-span-7" style={{
-          background: "var(--bg-card)", border: "1px solid var(--border-subtle)",
-          borderRadius: 18, padding: "32px",
-          boxShadow: "var(--shadow-card)",
+          background: "rgba(255,255,255,0.03)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: "1px solid rgba(255,255,255,0.09)",
+          borderRadius: 22, padding: "36px",
+          boxShadow: "0 12px 48px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}>
           {success ? (
             <div className="text-center py-10 animate-fadeInUp">
@@ -389,10 +397,13 @@ export default function CitizenReportPage() {
                 const tags = JSON.parse(rep.aiTags || "[]");
                 return (
                   <div key={rep.id} style={{
-                    padding: "16px", borderRadius: 14,
-                    background: "var(--bg-card)", border: "1px solid var(--border-subtle)",
-                    boxShadow: "var(--shadow-card)",
-                    transition: "border-color 0.18s ease, box-shadow 0.18s ease",
+                    padding: "18px", borderRadius: 16,
+                    background: "rgba(255,255,255,0.03)",
+                    backdropFilter: "blur(16px)",
+                    WebkitBackdropFilter: "blur(16px)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+                    transition: "border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease",
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,85,0,0.28)";
@@ -440,5 +451,7 @@ export default function CitizenReportPage() {
         </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import OpenAI from "openai";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -488,7 +488,10 @@ async function publisherAgent(article: any, generatedImageUrl: string) {
         facebookPostId = photoData.id || photoData.post_id;
         facebookPublished = true;
         console.log(`[PUBLISHER] 📸 FB photo: ${facebookPostId} [${article.category}]`);
+      } else if (photoData.error) {
+        console.warn(`[PUBLISHER] FB photo error:`, JSON.stringify(photoData.error));
       }
+      
       // Fallback: link post
       if (!facebookPublished) {
         const feedRes = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
@@ -500,9 +503,11 @@ async function publisherAgent(article: any, generatedImageUrl: string) {
           facebookPostId = feedData.id;
           facebookPublished = true;
           console.log(`[PUBLISHER] 📘 FB link: ${facebookPostId} [${article.category}]`);
+        } else if (feedData.error) {
+          console.warn(`[PUBLISHER] FB link error:`, JSON.stringify(feedData.error));
         }
       }
-    } catch (fbErr) { console.error("[PUBLISHER] FB error:", fbErr); }
+    } catch (fbErr: any) { console.error("[PUBLISHER] FB error:", fbErr?.message || fbErr); }
 
     if (facebookPostId && savedPost?.id && !String(savedPost.id).startsWith("temp-")) {
       try { await prisma.post.update({ where: { id: savedPost.id }, data: { facebookPostId } }); } catch {}

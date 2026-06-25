@@ -8,6 +8,7 @@ import {
   Trophy, Lock, Unlock, KeyRound, Image as ImageIcon, Navigation, 
   UserCircle, X
 } from "lucide-react";
+import Footer from "@/components/Footer";
 
 interface ChatRoom {
   id: string;
@@ -142,6 +143,9 @@ export default function OpinionRoomPage() {
     }
   };
 
+  const userScrolledUp = useRef(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     fetchRooms();
   }, []);
@@ -158,8 +162,18 @@ export default function OpinionRoomPage() {
   }, [activeRoom, roomPasswords]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!userScrolledUp.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+      userScrolledUp.current = !isNearBottom;
+    }
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -305,10 +319,13 @@ export default function OpinionRoomPage() {
   const currentRoomDetails = rooms.find((r) => r.slug === activeRoom);
 
   return (
+    <>
     <main className="pt-28 pb-12 px-4 md:px-8 max-w-[800px] mx-auto flex flex-col min-h-screen font-sans relative gap-8">
       
-      {/* Clean Solid Background */}
+      {/* Glassmorphism ambient background */}
       <div className="fixed inset-0 pointer-events-none -z-10 bg-[#f8fafc] dark:bg-[#09090b] transition-colors"></div>
+      <div aria-hidden="true" style={{ position: "fixed", top: "5%", right: "5%", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(255,85,0,0.07) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden="true" style={{ position: "fixed", bottom: "10%", left: "0%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(255,170,0,0.05) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none", zIndex: 0 }} />
 
       {/* Upper header */}
       <div className="flex flex-col items-center text-center gap-6">
@@ -357,7 +374,13 @@ export default function OpinionRoomPage() {
       <div className="flex flex-col gap-10 grow pb-8">
         
         {/* Rooms List (Horizontal or clean stacked) */}
-        <div className="flex flex-col bg-white dark:bg-[#111116] border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex flex-col rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow" style={{
+          background: "rgba(255,255,255,0.04)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: "1px solid rgba(255,255,255,0.09)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)",
+        }}>
           <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-black/20 shrink-0">
             <span className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2 tracking-wide">
               <Users className="w-5 h-5 text-[#ff5500]" />
@@ -427,40 +450,52 @@ export default function OpinionRoomPage() {
         </div>
 
         {/* Message Stream */}
-        <div className="flex flex-col bg-white dark:bg-[#111116] border border-slate-200 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-lg shadow-slate-200/50 dark:shadow-none transition-shadow h-[600px] relative">
+        <div className="flex flex-col rounded-[2.5rem] overflow-hidden h-[700px] relative transition-all shadow-2xl" style={{
+          background: "rgba(255,255,255,0.02)",
+          backdropFilter: "blur(40px)",
+          WebkitBackdropFilter: "blur(40px)",
+          border: "1px solid rgba(255,255,255,0.06)",
+        }}>
           
           {/* Room Title */}
-          <div className="bg-slate-50/50 dark:bg-black/20 border-b border-slate-100 dark:border-white/5 p-6 flex justify-between items-center shrink-0 z-10">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-[#ff5500] to-pink-500 rounded-2xl shadow-lg shadow-orange-500/20 text-white">
+          <div className="bg-white/5 dark:bg-black/20 border-b border-slate-200/50 dark:border-white/5 p-6 md:p-8 flex justify-between items-center shrink-0 z-10 backdrop-blur-xl">
+            <div className="flex items-center gap-5">
+              <div className="p-3.5 bg-gradient-to-br from-[#ff5500] to-orange-500 rounded-2xl shadow-[0_8px_32px_rgba(255,85,0,0.3)] text-white">
                 {currentRoomDetails?.isPrivate ? (
-                  <Lock className="w-5 h-5" />
+                  <Lock className="w-6 h-6" />
                 ) : (
-                  <MessageSquare className="w-5 h-5" />
+                  <MessageSquare className="w-6 h-6" />
                 )}
               </div>
               <div>
-                <span className="font-black text-xl text-slate-900 dark:text-white block leading-tight">
+                <span className="font-black text-2xl tracking-tight text-slate-900 dark:text-white block leading-tight">
                   {currentRoomDetails ? currentRoomDetails.name : "general"}
                 </span>
-                <span className="text-xs font-semibold text-slate-500 dark:text-white/50 mt-1 block">
+                <span className="text-sm font-semibold text-slate-500 dark:text-white/50 mt-1 block uppercase tracking-wider">
                   {currentRoomDetails?.type === "REGIONAL" ? t("Sala Regional", "Regional Room", "Sala Regional") : currentRoomDetails?.isPrivate ? t("Sala Privada", "Private Room", "Sala Privada") : t("Debate Libre", "Free Debate", "Debate Libre")}
                 </span>
               </div>
             </div>
             
-            <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 px-3 py-1.5 rounded-full shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">{t("En Vivo", "Live", "En Vivo")}</span>
+            <div className="flex items-center gap-2.5 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-full shadow-inner backdrop-blur-md">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]"></span>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">{t("En Vivo", "Live", "En Vivo")}</span>
             </div>
           </div>
 
           {/* Messages list */}
-          <div className="grow p-6 overflow-y-auto space-y-8 custom-scrollbar relative bg-slate-50/30 dark:bg-black/10">
+          <div 
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="grow p-6 md:p-8 overflow-y-auto space-y-10 custom-scrollbar relative bg-slate-50/10 dark:bg-black/5"
+          >
             
             {loadingMessages && messages.length === 0 ? (
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="animate-spin w-8 h-8 border-2 border-[#ff5500] border-t-transparent rounded-full"></span>
+                <div className="relative w-16 h-16">
+                  <div className="absolute inset-0 border-4 border-[#ff5500]/20 rounded-full"></div>
+                  <div className="absolute inset-0 border-4 border-[#ff5500] rounded-full border-t-transparent animate-spin"></div>
+                </div>
               </div>
             ) : fetchError ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
@@ -501,28 +536,28 @@ export default function OpinionRoomPage() {
                       </div>
                     </div>
                     
-                    <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] md:max-w-[75%]`}>
-                      <div className="flex items-baseline gap-2 px-1 mb-1.5">
-                        <span className="text-xs font-bold text-slate-700 dark:text-white/90">{isMe ? 'Tú' : msg.authorName}</span>
-                        <span className="text-[10px] font-semibold text-slate-400 dark:text-white/40">
+                    <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[85%] md:max-w-[70%]`}>
+                      <div className="flex items-baseline gap-2.5 px-2 mb-2">
+                        <span className="text-[13px] font-black text-slate-700 dark:text-white/90 tracking-wide">{isMe ? 'Tú' : msg.authorName}</span>
+                        <span className="text-[11px] font-bold text-slate-400 dark:text-white/40 tracking-wider">
                           {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </span>
                       </div>
                       
-                      <div className={`flex flex-col gap-2 ${isMe ? 'items-end' : 'items-start'}`}>
+                      <div className={`flex flex-col gap-2.5 ${isMe ? 'items-end' : 'items-start'}`}>
                         {msg.content && (
-                          <div className={`px-5 py-3.5 text-[15px] leading-relaxed shadow-sm backdrop-blur-md ${
+                          <div className={`px-6 py-4 text-base leading-relaxed shadow-lg backdrop-blur-xl ${
                             isMe 
-                              ? 'bg-gradient-to-br from-[#ff5500] to-orange-500 text-white rounded-3xl rounded-tr-md' 
-                              : 'bg-white/80 dark:bg-white/10 text-slate-800 dark:text-white/90 border border-white dark:border-white/5 rounded-3xl rounded-tl-md'
+                              ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] text-white rounded-3xl rounded-tr-md shadow-[0_8px_24px_rgba(255,85,0,0.2)] border border-white/20' 
+                              : 'bg-white/90 dark:bg-white/10 text-slate-800 dark:text-white border border-slate-200/50 dark:border-white/10 rounded-3xl rounded-tl-md shadow-[0_8px_24px_rgba(0,0,0,0.05)]'
                           }`}>
                             {msg.content}
                           </div>
                         )}
 
                         {msg.imageUrl && (
-                          <div className={`overflow-hidden shadow-sm border ${isMe ? 'border-orange-500/30 rounded-3xl rounded-tr-md' : 'border-slate-200 dark:border-white/10 rounded-3xl rounded-tl-md'} bg-black/5`}>
-                            <img src={msg.imageUrl} alt="Adjunto" className="max-w-full md:max-w-sm max-h-64 object-contain" loading="lazy" />
+                          <div className={`overflow-hidden shadow-lg border p-1 ${isMe ? 'border-orange-500/30 rounded-[2rem] rounded-tr-xl' : 'border-slate-200 dark:border-white/10 rounded-[2rem] rounded-tl-xl'} bg-white/20 dark:bg-white/5 backdrop-blur-md`}>
+                            <img src={msg.imageUrl} alt="Adjunto" className="max-w-full md:max-w-sm max-h-72 object-cover rounded-3xl" loading="lazy" />
                           </div>
                         )}
 
@@ -531,18 +566,18 @@ export default function OpinionRoomPage() {
                             href={`https://www.google.com/maps?q=${msg.location}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={`flex items-center gap-3 px-4 py-3 shadow-sm backdrop-blur-md transition-transform hover:scale-[1.02] active:scale-95 ${
+                            className={`flex items-center gap-4 px-5 py-4 shadow-lg backdrop-blur-xl transition-all hover:scale-105 active:scale-95 ${
                               isMe 
-                                ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-3xl rounded-tr-md border border-emerald-400/30' 
-                                : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-100 border border-emerald-200 dark:border-emerald-500/20 rounded-3xl rounded-tl-md'
+                                ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-3xl rounded-tr-md border border-white/20 shadow-[0_8px_24px_rgba(16,185,129,0.2)]' 
+                                : 'bg-emerald-50/90 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-100 border border-emerald-200 dark:border-emerald-500/20 rounded-3xl rounded-tl-md'
                             }`}
                           >
-                            <div className="p-2 bg-white/20 rounded-full shrink-0">
+                            <div className="p-2.5 bg-white/25 rounded-full shrink-0">
                               <MapPin className="w-5 h-5" />
                             </div>
-                            <div className="text-left pr-2">
-                              <span className="block text-sm font-bold">Ubicación Compartida</span>
-                              <span className="block text-xs opacity-80">Ver en Google Maps</span>
+                            <div className="text-left pr-3">
+                              <span className="block text-[15px] font-black tracking-tight">Ubicación Compartida</span>
+                              <span className="block text-xs font-semibold opacity-80 uppercase tracking-widest mt-0.5">Abrir Maps</span>
                             </div>
                           </a>
                         )}
@@ -814,5 +849,7 @@ export default function OpinionRoomPage() {
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 85, 0, 0.5); }
       `}} />
     </main>
+    <Footer />
+    </>
   );
 }

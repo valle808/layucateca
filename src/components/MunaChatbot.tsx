@@ -24,9 +24,9 @@ export default function MunaChatbot() {
   // Initialize welcome message when language changes
   useEffect(() => {
     const welcomeText = t(
-      "¡Hola! Soy Muna, la Inteligencia Autónoma de La Yucateca. Estoy aquí para guiarte por nuestro portal de noticias y catálogo de diseños web premium. ¿En qué puedo ayudarte hoy?",
-      "Hello! I am Muna, the Autonomous AI of La Yucateca. I am here to guide you through our news portal and premium web design catalog. How can I help you today?",
-      "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob yéetel diseño web premium. ¿Bix je'el in wáantikech bejla'e'?"
+      "¡Hola! Soy Muna, la Inteligencia Autónoma de La Yucateca. Estoy aquí para mantenerte al día con las noticias locales más relevantes y responder cualquier pregunta que tengas. ¿Desde dónde nos visitas hoy o sobre qué te gustaría leer?",
+      "Hello! I am Muna, the Autonomous AI of La Yucateca. I'm here to keep you updated with the most relevant local news and answer any questions you have. Where are you visiting us from today, or what would you like to read about?",
+      "¡Sajil! Munaen, u ya'ax na'at ti' La Yucateca. Teen k-nu'uktik ti'al le péektsilo'ob. ¿Tu'ux a taal bejla'e' wa ba'ax k'áat a xok?"
     );
     setMessages([{ sender: "muna", text: welcomeText }]);
   }, [language]);

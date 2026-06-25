@@ -419,16 +419,16 @@ export default function MunaPage() {
 
   if (viewMode === 'MACHINE') {
     return (
-      <div className="flex-1 flex flex-col p-6 space-y-6 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-mono">
-        <header className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-6">
-          <div className="flex items-center gap-3 text-lg font-black uppercase tracking-widest italic text-[#ff5500]">
-            <Terminal size={22} /> RAW_M2M_TELEMETRY :: SECTOR_MUNA
+      <div className="flex-1 flex flex-col p-8 md:p-12 space-y-8 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-mono">
+        <header className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-8">
+          <div className="flex items-center gap-4 text-xl font-black uppercase tracking-widest italic text-[#ff5500]">
+            <Terminal size={24} /> RAW_M2M_TELEMETRY :: SECTOR_MUNA
           </div>
-          <button onClick={() => setViewMode('HUMAN')} className="px-5 py-2 border border-[var(--border-subtle)] bg-[var(--bg-card)] text-xs font-black uppercase tracking-widest hover:bg-[#ff5500] hover:text-white transition-all rounded-xl shadow-sm">
+          <button onClick={() => setViewMode('HUMAN')} className="px-6 py-3 border border-[var(--border-subtle)] bg-[var(--bg-card)] text-sm font-black uppercase tracking-widest hover:bg-[#ff5500] hover:text-white transition-all rounded-xl shadow-md">
             EXIT_MATRIX
           </button>
         </header>
-        <pre className="flex-1 overflow-auto text-xs leading-loose opacity-80 bg-[var(--bg-card)] p-6 rounded-2xl border border-[var(--border-subtle)] shadow-inner">{JSON.stringify(messages, null, 2)}</pre>
+        <pre className="flex-1 overflow-auto text-sm leading-loose opacity-90 bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-subtle)] shadow-inner">{JSON.stringify(messages, null, 2)}</pre>
       </div>
     );
   }
@@ -441,20 +441,20 @@ export default function MunaPage() {
 
       <div className="flex flex-1 min-h-0 overflow-hidden relative">
         {/* AMBIENT BG GRADIENT */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-65">
-          <div className="absolute top-[15%] left-[25%] w-[60vw] h-[60vw] bg-[#ff5500]/4 blur-[140px] rounded-full" />
-          <div className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] bg-[#ff5500]/3 blur-[110px] rounded-full" />
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-80">
+          <div className="absolute top-[10%] left-[20%] w-[60vw] h-[60vw] bg-gradient-to-br from-[#ff5500]/10 to-[#ffaa00]/10 blur-[160px] rounded-full" />
+          <div className="absolute bottom-[5%] right-[5%] w-[45vw] h-[45vw] bg-gradient-to-tl from-[#ff5500]/5 to-transparent blur-[140px] rounded-full" />
         </div>
 
         {/* ── LEFT SIDEBAR (SECONDARY MATRIX) ── */}
         <AnimatePresence>
           {sidebarOpen && (
             <motion.aside
-              initial={{ x: -320, opacity: 0 }}
+              initial={{ x: -380, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -320, opacity: 0 }}
+              exit={{ x: -380, opacity: 0 }}
               transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-              className="absolute top-0 left-0 bottom-0 w-72 z-[90] border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] backdrop-blur-3xl flex flex-col shadow-2xl lg:hidden"
+              className="absolute top-0 left-0 bottom-0 w-[380px] z-[90] border-r border-slate-200/50 dark:border-white/10 bg-white/70 dark:bg-black/50 backdrop-blur-3xl flex flex-col shadow-[0_0_60px_rgba(0,0,0,0.1)] lg:hidden"
             >
               <SidebarContent 
                 knowledgeGraph={knowledgeGraph} 
@@ -488,7 +488,7 @@ export default function MunaPage() {
         </AnimatePresence>
 
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex w-72 flex-shrink-0 flex-col border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative z-10">
+        <aside className="hidden lg:flex w-[380px] flex-shrink-0 flex-col border-r border-slate-200/50 dark:border-white/10 bg-white/60 dark:bg-black/40 backdrop-blur-2xl relative z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.2)]">
           <SidebarContent 
               knowledgeGraph={knowledgeGraph} 
               history={historySessions} 
@@ -516,98 +516,98 @@ export default function MunaPage() {
         </aside>
 
         {/* ── MAIN CHAT AREA ── */}
-        <main className="flex-1 relative z-10 flex flex-col min-w-0 overflow-hidden bg-[var(--bg-primary)]">
+        <main className="flex-1 relative z-10 flex flex-col min-w-0 overflow-hidden bg-transparent">
           {/* HEADER */}
-          <header className="flex-none flex items-center gap-3 px-6 py-3.5 border-b border-[var(--border-subtle)] bg-transparent backdrop-blur-md z-20">
+          <header className="flex-none flex items-center gap-6 px-10 md:px-16 py-8 border-b border-slate-200/50 dark:border-white/10 bg-white/30 dark:bg-black/20 backdrop-blur-3xl z-20 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
             <button
               onClick={() => setSidebarOpen(s => !s)}
-              className="lg:hidden h-8 w-8 rounded-xl border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all bg-white shadow-2xs"
+              className="lg:hidden h-10 w-10 rounded-2xl border border-slate-200/80 dark:border-white/20 flex items-center justify-center text-slate-600 dark:text-white/70 hover:bg-white dark:hover:bg-white/10 transition-all shadow-sm"
             >
-              <Layers size={15} />
+              <Layers size={18} />
             </button>
-            <div className="h-8 w-8 bg-[#ff5500]/8 border border-[#ff5500]/20 rounded-full flex items-center justify-center shadow-2xs shrink-0">
+            <div className="h-10 w-10 bg-gradient-to-br from-[#ff5500]/20 to-[#ffaa00]/20 border border-[#ff5500]/30 rounded-2xl flex items-center justify-center shadow-lg shrink-0">
               <BrainCircuit size={16} className="text-[#ff5500]" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2 font-black tracking-tight text-[var(--text-primary)] text-xs uppercase font-sans">
+              <div className="flex items-center gap-2 font-black tracking-tight text-slate-900 dark:text-white text-sm uppercase font-sans">
                 MUNA <span className="text-[#ff5500]">V1.0</span>
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="h-1.5 w-1.5 rounded-full bg-[#ff5500] animate-pulse" />
-                <span className="text-[8px] text-[#ff5500] font-black tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="h-2 w-2 rounded-full bg-[#ff5500] animate-pulse shadow-[0_0_10px_rgba(255,85,0,0.8)]" />
+                <span className="text-[10px] text-[#ff5500] font-black tracking-widest uppercase font-sans">{t('MUNA STREAMING', 'MUNA STREAMING', 'MUNA STREAMING')}</span>
               </div>
             </div>
-            <div className="ml-auto flex items-center gap-3">
-              <div className="flex items-center gap-1.5 text-[9px] text-[#ff5500] font-black uppercase tracking-widest bg-[#ff5500]/5 px-3 py-1.5 rounded-full border border-[#ff5500]/15 shadow-2xs">
-                <Wifi size={11} strokeWidth={2.5} className="text-[#ff5500]" /> {t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}
+            <div className="ml-auto flex items-center gap-4">
+              <div className="flex items-center gap-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20 shadow-inner backdrop-blur-md">
+                <Wifi size={14} strokeWidth={2.5} className="text-emerald-500" /> {t('CONECTADO', 'CONNECTED', 'NUPULA\'AN')}
               </div>
             </div>
           </header>
 
           {/* MESSAGES */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 space-y-6 scroll-smooth pb-44"
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 md:px-16 py-16 space-y-12 scroll-smooth pb-64 custom-scrollbar"
             style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,85,0,0.3) transparent' }}>
-            <div className="max-w-3xl mx-auto space-y-6" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <div className="max-w-5xl mx-auto space-y-16" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               <AnimatePresence mode="popLayout">
                 {messages.map((m) => (
                   <motion.div
                     key={m.id}
-                    initial={{ opacity: 0, y: 12 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className={`flex w-full gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    transition={{ duration: 0.4 }}
+                    className={`flex w-full gap-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'bot' && (
-                      <div className="h-8 w-8 shrink-0 rounded-full bg-[#ff5500]/5 border border-[#ff5500]/10 flex items-center justify-center mt-1 shadow-2xs">
-                        <BrainCircuit size={14} className="text-[#ff5500]" />
+                      <div className="h-10 w-10 shrink-0 rounded-2xl bg-gradient-to-br from-[#ff5500] to-orange-500 text-white flex items-center justify-center mt-2 shadow-[0_8px_24px_rgba(255,85,0,0.25)]">
+                        <BrainCircuit size={18} />
                       </div>
                     )}
 
-                    <div className={`max-w-[82%] flex flex-col gap-1.5 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div className={`max-w-[85%] md:max-w-[75%] flex flex-col gap-2 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                       {/* Identity Tag */}
-                      <div className={`flex items-center gap-1 mb-0.5 px-3 py-0.5 rounded-full text-[8px] font-black tracking-widest uppercase border shadow-2xs ${
+                      <div className={`flex items-center gap-2 mb-2 px-5 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm backdrop-blur-xl ${
                         m.role === 'user' 
-                           ? 'bg-white text-black border-black/[0.06]' 
-                           : 'bg-[#ff5500]/6 border-[#ff5500]/15 text-[#ff5500]'
+                           ? 'bg-slate-900/5 dark:bg-white/5 text-slate-800 dark:text-white/80 border border-slate-200/50 dark:border-white/10' 
+                           : 'bg-[#ff5500]/5 border border-[#ff5500]/10 text-[#ff5500]'
                       }`}>
                         {m.role === 'user' ? <span>[{t('👤 OPERADOR', '👤 OPERATOR', '👤 OPERADOR')}]</span> : <span>[{t('🧠 MUNA AI', '🧠 MUNA AI', '🧠 MUNA AI')}]</span>}
                       </div>
  
                       {m.images && m.images.length > 0 && (
-                        <div className="flex gap-2 flex-wrap">
+                        <div className="flex gap-3 flex-wrap">
                           {m.images.map((img, idx) => (
-                            <img key={idx} src={img} alt="attachment" className="h-36 rounded-xl border border-[var(--border-subtle)] object-contain bg-white shadow-md" />
+                            <div key={idx} className="p-1 bg-white/20 dark:bg-white/5 border border-white/30 dark:border-white/10 backdrop-blur-xl rounded-3xl shadow-lg">
+                              <img src={img} alt="attachment" className="h-48 rounded-[1.25rem] object-cover" loading="lazy" />
+                            </div>
                           ))}
                         </div>
                       )}
  
-                      <div className={`px-5 py-3.5 rounded-2xl text-[13px] leading-relaxed transition-all border shadow-2xs ${
+                      <div className={`px-8 py-6 rounded-[2.5rem] text-[16px] leading-[1.8] transition-all backdrop-blur-3xl shadow-[0_8px_40px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.2)] ${
                         m.role === 'user'
-                          ? 'bg-white border-black/[0.05] text-[#1e1b18] font-medium rounded-tr-md'
-                          : 'bg-white border-black/[0.04] text-[#1e1b18] rounded-tl-md w-full'
+                          ? 'bg-gradient-to-br from-[#ff5500] to-[#ffaa00] border border-white/20 text-white font-medium rounded-tr-xl'
+                          : 'bg-white/90 dark:bg-[#09090b]/80 border border-slate-200/50 dark:border-white/10 text-slate-800 dark:text-white rounded-tl-xl w-full'
                       }`}>
                         {m.role === 'bot' ? (
-                          <div className="muna-markdown max-w-none text-[#1e1b18] w-full">
+                          <div className="muna-markdown max-w-none w-full">
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
                                 components={{
                                   img: ({ src, alt, ...props }) => (
-                                    <span style={{ display: 'block', position: 'relative' }} className="group my-2">
+                                    <span style={{ display: 'block', position: 'relative' }} className="group my-4 p-1 bg-white/20 dark:bg-white/5 backdrop-blur-md rounded-3xl border border-white/30 dark:border-white/10 shadow-lg">
                                       <img
                                         src={typeof src === 'string' ? src : undefined}
                                         alt={alt}
                                         {...props}
-                                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', cursor: 'zoom-in' }}
-                                        className="border border-[var(--border-subtle)] shadow-md"
+                                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '1.25rem', cursor: 'zoom-in' }}
                                         onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
                                       />
                                       <span
                                         onClick={() => setLightboxSrc(typeof src === 'string' ? src : null)}
-                                        style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="absolute top-4 right-4 bg-black/70 backdrop-blur-md rounded-xl px-3 py-2 cursor-pointer flex items-center gap-2 text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity border border-white/20"
                                       >
-                                        <ZoomIn size={14} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
+                                        <ZoomIn size={16} /> {t('Ampliar', 'Expand', 'Ch\'íik')}
                                       </span>
                                     </span>
                                   )
@@ -619,20 +619,20 @@ export default function MunaPage() {
                           )}
                         </div>
    
-                        <div className="flex items-center gap-2 mt-1.5 opacity-65 text-[9px] font-mono uppercase tracking-widest px-1">
-                          <span className="text-[var(--text-secondary)]">
+                        <div className="flex items-center gap-2 mt-2 opacity-70 text-[10px] font-mono uppercase tracking-widest px-2">
+                          <span className={m.role === 'user' ? 'text-slate-500 dark:text-white/50' : 'text-slate-500 dark:text-white/50'}>
                             {m.role === 'bot' ? t('Muna · Yucateca v1.0', 'Muna · Yucateca v1.0', 'Muna · Yucateca v1.0') : t('Operator · Sovereign Access', 'Operator · Sovereign Access', 'Operator · Sovereign Access')}
                           </span>
                           {m.role === 'bot' && (
                             <>
-                              <span>·</span>
+                              <span className="opacity-50">·</span>
                               <button
                                 onClick={() => speak(m.text, m.id)}
-                                className={`flex items-center gap-1 font-bold uppercase cursor-pointer transition-all ${
-                                  isPlaying === m.id ? 'text-[#ff5500] animate-pulse font-black' : 'text-[var(--text-secondary)] hover:text-[#ff5500]'
+                                className={`flex items-center gap-1.5 font-bold uppercase cursor-pointer transition-all px-3 py-1 rounded-full ${
+                                  isPlaying === m.id ? 'bg-[#ff5500]/10 text-[#ff5500] animate-pulse font-black' : 'hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 dark:text-white/70 hover:text-[#ff5500]'
                                 }`}
                               >
-                                {isPlaying === m.id ? <Radio size={10} className="animate-spin text-[#ff5500]" /> : <Volume2 size={10} />}
+                                {isPlaying === m.id ? <Radio size={12} className="animate-spin text-[#ff5500]" /> : <Volume2 size={12} />}
                                 {isPlaying === m.id ? t('DETENER', 'STOP AUDIO', 'DETENER') : t('PLAY AUDIO', 'PLAY AUDIO', 'PLAY AUDIO')}
                               </button>
                             </>
@@ -645,18 +645,18 @@ export default function MunaPage() {
               </AnimatePresence>
 
               {isTyping && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex gap-3 justify-start">
-                  <div className="h-8 w-8 shrink-0 rounded-xl bg-[#ff5500]/10 border border-[#ff5500]/30 flex items-center justify-center mt-1 shadow-2xs">
-                    <BrainCircuit size={14} className="text-[#ff5500]" />
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4 justify-start">
+                  <div className="h-10 w-10 shrink-0 rounded-2xl bg-gradient-to-br from-[#ff5500]/20 to-orange-500/20 border border-[#ff5500]/30 flex items-center justify-center mt-2 shadow-[0_8px_24px_rgba(255,85,0,0.15)]">
+                    <BrainCircuit size={18} className="text-[#ff5500]" />
                   </div>
-                  <div className="px-5 py-3.5 rounded-2xl rounded-tl-sm bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center gap-2 shadow-sm">
-                    <Sparkles size={14} className="text-[#ff5500] animate-spin mr-1" />
+                  <div className="px-8 py-5 rounded-[2.5rem] rounded-tl-xl bg-white/70 dark:bg-[#09090b]/60 backdrop-blur-3xl border border-slate-200/50 dark:border-white/10 flex items-center gap-4 shadow-[0_8px_40px_rgba(0,0,0,0.04)]">
+                    <Sparkles size={16} className="text-[#ff5500] animate-spin mr-1" />
                     {[0, 1, 2].map(n => (
                       <motion.div
                         key={n}
-                        animate={{ opacity: [0.2, 1, 0.2] }}
+                        animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.2, 0.8] }}
                         transition={{ duration: 1.2, repeat: Infinity, delay: n * 0.2 }}
-                        className="h-2 w-2 rounded-full bg-[#ff5500]"
+                        className="h-2.5 w-2.5 rounded-full bg-gradient-to-r from-[#ff5500] to-[#ffaa00]"
                       />
                     ))}
                   </div>
@@ -666,53 +666,32 @@ export default function MunaPage() {
           </div>
 
           {/* INPUT BAR */}
-          <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)] to-transparent z-20 backdrop-blur-xs">
-            <div className="max-w-3xl mx-auto space-y-2.5" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+          <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-12 pt-20 bg-gradient-to-t from-white via-white/95 dark:from-[#050505] dark:via-[#050505]/95 to-transparent z-20 pointer-events-none">
+            <div className="max-w-5xl mx-auto space-y-6" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
               {attachments.length > 0 && (
-                <div className="flex gap-2.5 mb-1 overflow-x-auto pb-1">
+                <div className="flex gap-4 mb-2 overflow-x-auto pb-2 pointer-events-auto">
                   {attachments.map((file, idx) => (
-                    <div key={idx} className="relative shrink-0 group">
-                      <img src={file.preview} className="h-16 w-16 object-cover rounded-xl border border-[var(--border-accent)] shadow-md" alt="attachment" />
-                      <button onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 h-6 w-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-lg scale-90 hover:scale-105">
-                        <X size={12} strokeWidth={3} />
+                    <div key={idx} className="relative shrink-0 group p-1 bg-white/50 dark:bg-white/10 backdrop-blur-md rounded-2xl border border-white/40 dark:border-white/20 shadow-lg">
+                      <img src={file.preview} className="h-20 w-20 object-cover rounded-xl" alt="attachment" />
+                      <button onClick={() => removeAttachment(idx)} className="absolute -top-3 -right-3 h-8 w-8 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-xl hover:scale-110">
+                        <X size={14} strokeWidth={3} />
                       </button>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* Mode Selector */}
-              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar select-none">
-                {MODES.map(m => {
-                  const Icon = m.icon;
-                  const isSelected = selectedMode === m.id;
-                  return (
-                    <button
-                      key={m.id}
-                      onClick={() => setSelectedMode(m.id)}
-                      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-2xs ${
-                        isSelected 
-                          ? 'bg-[#ff5500] border-[#ff5500] text-[#1e1b18] shadow-2xs font-bold scale-[1.02]' 
-                          : 'bg-white border-black/[0.05] text-[var(--text-secondary)] hover:text-black hover:border-[#ff5500]/30'
-                      }`}
-                    >
-                      <Icon size={12} /> {m.label}
-                    </button>
-                  );
-                })}
-              </div>
-
               <div 
-                className="flex items-end gap-2.5 bg-white border border-black/[0.06] rounded-full p-2 focus-within:border-[#ff5500] focus-within:shadow-[0_4px_25px_rgba(255,85,0,0.05)] transition-all shadow-md cursor-pointer pointer-events-auto"
+                className="flex items-end gap-4 bg-white/90 dark:bg-[#09090b]/80 backdrop-blur-3xl border border-slate-200/80 dark:border-white/10 rounded-[3rem] p-4 focus-within:border-[#ff5500]/50 focus-within:ring-4 focus-within:ring-[#ff5500]/10 focus-within:shadow-[0_8px_40px_rgba(255,85,0,0.1)] transition-all shadow-[0_8px_40px_rgba(0,0,0,0.05)] cursor-pointer pointer-events-auto"
                 onClick={() => document.getElementById('muna-input')?.focus()}
               >
                 <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept="*/*" />
                 <button
                   onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  className="h-9 w-9 shrink-0 rounded-full bg-[#fdfbf7] hover:bg-black/5 text-[var(--text-secondary)] flex items-center justify-center transition-all pointer-events-auto border border-black/[0.04] shadow-2xs"
+                  className="h-12 w-12 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-600 dark:text-white/80 flex items-center justify-center transition-all pointer-events-auto shadow-sm"
                   title={t('Adjuntar imágenes o documentos', 'Attach images or documents', 'Ts\'a ba\'alob')}
                 >
-                  <Paperclip size={15} />
+                  <Paperclip size={20} />
                 </button>
                 <textarea
                   id="muna-input"
@@ -721,22 +700,22 @@ export default function MunaPage() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                   placeholder={t('Escribe a Muna AI...', 'Message Muna AI...', 'Ts\'íib ti\' Muna AI...')}
                   rows={1}
-                  className="flex-1 bg-transparent text-[13px] font-medium text-black placeholder:text-[var(--text-secondary)] outline-none resize-none py-2.5 leading-relaxed max-h-32 overflow-y-auto cursor-text px-2"
+                  className="flex-1 bg-transparent text-[15px] font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/40 outline-none resize-none py-3.5 leading-relaxed max-h-40 overflow-y-auto cursor-text px-3"
                   style={{ scrollbarWidth: 'none' }}
                 />
                 <button
                   onClick={(e) => { e.stopPropagation(); handleSend(); }}
                   disabled={(!input.trim() && attachments.length === 0) || isTyping}
-                  className="h-9 w-9 shrink-0 bg-[#ff5500] hover:bg-[#e04b00] text-[#1e1b18] rounded-full flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-25 transition-all shadow-xs pointer-events-auto"
+                  className="h-12 w-12 shrink-0 bg-gradient-to-br from-[#ff5500] to-[#ffaa00] hover:from-[#e04b00] hover:to-[#ff8800] text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 disabled:opacity-30 disabled:hover:scale-100 transition-all shadow-[0_4px_16px_rgba(255,85,0,0.4)] pointer-events-auto"
                   title={t('Transmitir Pulso', 'Transmit Pulse', 'Túuxt Pulse')}
                 >
-                  <ChevronRight size={18} strokeWidth={3} className="text-[#1e1b18]" />
+                  <ChevronRight size={24} strokeWidth={2.5} />
                 </button>
               </div>
 
-              <div className="flex justify-between items-center mt-2 px-2 text-[9px] text-[var(--text-secondary)] font-mono uppercase tracking-widest font-bold">
-                <div className="flex items-center gap-1.5 text-[#ff5500]">
-                  <Radio size={11} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
+              <div className="flex justify-between items-center mt-4 px-6 text-[10px] text-slate-500 dark:text-white/40 font-mono uppercase tracking-widest font-bold">
+                <div className="flex items-center gap-2 text-[#ff5500]">
+                  <Radio size={14} className="animate-pulse" /> {selectedMode} {t('MODO VERIFICADO', 'MODE VERIFIED', 'MODO VERIFICADO')}
                 </div>
                 <span>{t('ENTER PARA ENVIAR · SHIFT+ENTER PARA NUEVA LÍNEA', 'ENTER TO SEND · SHIFT+ENTER FOR NEWLINE', 'ENTER TI\'AL A TÚUXTIK · SHIFT+ENTER TI\'AL YA\'AX LÍNEA')}</span>
               </div>
@@ -881,51 +860,51 @@ function SidebarContent({
   ];
 
   return (
-    <div className="flex flex-col h-full p-6 pt-16 xl:pt-20 space-y-6 overflow-hidden text-[var(--text-primary)] font-sans">
+    <div className="flex flex-col h-full p-10 pt-16 xl:pt-24 space-y-10 overflow-hidden text-slate-900 dark:text-white font-sans bg-transparent">
       <div className="flex items-center justify-between shrink-0 mb-6">
-        <Link href="/" className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[#ff5500] transition-all text-[11px] font-black uppercase tracking-widest group">
-          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform text-[#ff5500]" /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
+        <Link href="/" className="flex items-center gap-3 text-slate-500 dark:text-white/60 hover:text-[#ff5500] dark:hover:text-[#ff5500] transition-all text-xs font-black uppercase tracking-widest group bg-slate-100/50 dark:bg-white/5 px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform text-[#ff5500]" /> {t('Matriz Principal', 'Core Matrix', 'U K\'ubil')}
         </Link>
         {onClose && (
-          <button onClick={onClose} className="h-7 w-7 rounded-lg bg-white border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all shadow-2xs">
-            <X size={14} />
+          <button onClick={onClose} className="h-9 w-9 rounded-xl bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 flex items-center justify-center text-slate-500 dark:text-white/70 hover:text-slate-900 dark:hover:text-white transition-all shadow-md">
+            <X size={18} />
           </button>
         )}
       </div>
 
-      <div className="shrink-0 space-y-2 pt-2">
-        <h1 className="text-4xl font-black uppercase tracking-tighter italic leading-none text-[var(--text-primary)] flex flex-col font-sans">
+      <div className="shrink-0 space-y-3 pt-2">
+        <h1 className="text-5xl font-black uppercase tracking-tighter italic leading-none text-slate-900 dark:text-white flex flex-col font-sans">
           <span>MUNA.</span>
-          <span className="text-[#ff5500]">YUCATECA.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff5500] to-[#ffaa00]">YUCATECA.</span>
         </h1>
-        <div className="text-[9px] font-black uppercase tracking-widest text-[#ff5500] italic font-sans">
+        <div className="text-[10px] font-black uppercase tracking-widest text-[#ff5500] italic font-sans bg-[#ff5500]/10 inline-block px-3 py-1 rounded-full border border-[#ff5500]/20">
           SOVEREIGN_ARRAY_V7.0
         </div>
         {onNewChat && (
-          <button onClick={onNewChat} className="w-full py-2.5 bg-[#ff5500] hover:bg-[#e04b00] text-[#1e1b18] font-black rounded-full text-[10px] uppercase tracking-widest shadow-xs hover:scale-[1.01] transition-all flex items-center justify-center gap-1.5 mt-6 mb-2 cursor-pointer">
-            <Sparkles size={13} className="text-[#1e1b18]" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
+          <button onClick={onNewChat} className="w-full py-3.5 bg-gradient-to-br from-[#ff5500] to-orange-500 hover:from-[#e04b00] hover:to-[#ff8800] text-white font-black rounded-2xl text-[11px] uppercase tracking-widest shadow-[0_8px_24px_rgba(255,85,0,0.3)] hover:shadow-[0_12px_32px_rgba(255,85,0,0.4)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 mt-8 mb-2 cursor-pointer border border-white/20">
+            <Sparkles size={16} className="text-white" /> {t('Nueva Conversación', 'New Conversation', 'Ya\'ax Tsoolt\'aan')}
           </button>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-black/[0.03] rounded-full border border-black/[0.04] shrink-0 my-2">
+      <div className="flex gap-2 p-1.5 bg-slate-100/50 dark:bg-white/5 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-white/10 shrink-0 my-4 shadow-inner">
         <button 
           onClick={() => setMarketTab('HISTORY')}
-          className={`flex-1 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
             marketTab === 'HISTORY' 
-              ? 'bg-white text-black font-black shadow-xs border border-black/[0.03]' 
-              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              ? 'bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-white/20' 
+              : 'text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           {t('Sesiones', 'Sessions', 'Meyajo\'ob')}
         </button>
         <button 
           onClick={() => setMarketTab('SKILLS')}
-          className={`flex-1 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
             marketTab === 'SKILLS' 
-              ? 'bg-white text-black font-black shadow-xs border border-black/[0.03]' 
-              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              ? 'bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-md border border-slate-200 dark:border-white/20' 
+              : 'text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           {t('Habilidades', 'Skills', 'U Na\'at')}
@@ -933,7 +912,7 @@ function SidebarContent({
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto space-y-3.5 min-h-0 pr-1 text-sm font-medium animate-fadeIn" style={{ scrollbarWidth: 'none' }}>
+      <div className="flex-1 overflow-y-auto space-y-6 min-h-0 pr-2 text-sm font-medium animate-fadeIn custom-scrollbar" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(0,0,0,0.1) transparent' }}>
         {marketTab === 'HISTORY' ? (
           <>
             {history.length > 0 ? (
@@ -941,36 +920,41 @@ function SidebarContent({
                 <div
                   key={session.sessionId}
                   onClick={() => { onSelectSession && onSelectSession(session.sessionId); }}
-                  className="mx-0.5 p-4.5 bg-white/40 border border-black/[0.03] rounded-[20px] hover:border-[#ff5500]/40 transition-all cursor-pointer group shadow-2xs space-y-2 mb-3"
+                  className="mx-0.5 p-6 bg-white/70 dark:bg-white/5 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 rounded-[2rem] hover:border-[#ff5500]/50 hover:shadow-[0_8px_30px_rgba(255,85,0,0.1)] transition-all cursor-pointer group shadow-[0_4px_20px_rgba(0,0,0,0.02)] space-y-4 mb-5"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[9px] text-[#ff5500] font-black tracking-widest uppercase">{session.mode}</span>
-                    <ChevronRight size={12} className="text-[var(--text-secondary)] group-hover:text-[#ff5500] group-hover:translate-x-0.5 transition-all" />
+                    <span className="text-[10px] text-[#ff5500] font-black tracking-widest uppercase bg-[#ff5500]/10 px-3 py-1 rounded-full">{session.mode}</span>
+                    <ChevronRight size={16} className="text-slate-400 group-hover:text-[#ff5500] group-hover:translate-x-1 transition-all" />
                   </div>
-                  <p className="text-xs font-bold text-[var(--text-primary)] leading-relaxed line-clamp-2 group-hover:text-[#ff5500] transition-colors">
+                  <p className="text-sm font-bold text-slate-800 dark:text-white/90 leading-relaxed line-clamp-2 group-hover:text-[#ff5500] transition-colors">
                     {translateSessionTitle(session.prompt, language)}
                   </p>
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 opacity-40 text-xs uppercase font-black tracking-widest">{t('No se detectó historial', 'No history detected', 'Mina\'an tsoolt\'aan')}</div>
+              <div className="text-center py-16 opacity-40 text-sm uppercase font-black tracking-widest flex flex-col items-center gap-4">
+                <Database size={32} className="opacity-50" />
+                {t('No se detectó historial', 'No history detected', 'Mina\'an tsoolt\'aan')}
+              </div>
             )}
           </>
         ) : (
-          <div className="space-y-3.5 animate-fadeIn">
-            <div className="text-[10px] font-black uppercase tracking-widest text-[#ff5500] mb-2 px-1">{t('PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE')}</div>
+          <div className="space-y-4 animate-fadeIn">
+            <div className="text-xs font-black uppercase tracking-widest text-[#ff5500] mb-4 px-2 flex items-center gap-2">
+              <Sparkles size={14} /> {t('PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE', 'PLUGIN MARKETPLACE')}
+            </div>
             {MOCK_SKILLS.map((skill, i) => (
-              <div key={i} className="mx-0.5 p-4.5 bg-white/40 border border-black/[0.03] rounded-[20px] transition-all shadow-2xs space-y-2 mb-3 hover:border-[#ff5500]/30">
-                <div className="flex justify-between items-center">
-                  <span className="text-[11px] font-bold text-black uppercase tracking-tight">{skill.title}</span>
-                  <span className="text-[9px] text-[#ff5500] font-black tracking-wider">{skill.price}</span>
+              <div key={i} className="mx-0.5 p-5 bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-[1.5rem] transition-all shadow-sm space-y-3 mb-4 hover:border-[#ff5500]/40 hover:shadow-lg">
+                <div className="flex justify-between items-start gap-2">
+                  <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight leading-tight">{skill.title}</span>
+                  <span className="text-[10px] text-[#ff5500] font-black tracking-wider bg-[#ff5500]/10 px-2 py-1 rounded-md shrink-0">{skill.price}</span>
                 </div>
-                <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">{skill.desc}</p>
+                <p className="text-xs text-slate-500 dark:text-white/60 leading-relaxed font-medium">{skill.desc}</p>
               </div>
             ))}
             <button 
               onClick={() => alert('Redirecting to Muna Skill Forge...')}
-              className="w-full py-3.5 mt-3 border border-dashed border-black/[0.08] hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-[20px] text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] bg-black/[0.01] shadow-2xs cursor-pointer"
+              className="w-full py-4 mt-6 border-2 border-dashed border-slate-300 dark:border-white/20 hover:border-[#ff5500] hover:text-[#ff5500] transition-all rounded-[1.5rem] text-sm font-black uppercase tracking-widest text-slate-500 dark:text-white/50 bg-slate-50/50 dark:bg-white/5 backdrop-blur-md shadow-sm cursor-pointer hover:bg-[#ff5500]/5"
             >
               {t('+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL', '+ REGISTER NEW SKILL')}
             </button>
@@ -979,33 +963,33 @@ function SidebarContent({
       </div>
 
       {/* Tools Section */}
-      <div className="space-y-3 shrink-0 pt-4 border-t border-[var(--border-subtle)]">
-        <div className="flex gap-2.5">
+      <div className="space-y-4 shrink-0 pt-6 border-t border-slate-200/80 dark:border-white/10">
+        <div className="flex gap-3">
           <button 
             onClick={onDownload}
-            className="flex-1 py-3 bg-white/40 border border-black/[0.03] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-[20px] transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer"
+            className="flex-1 py-3.5 bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/10 hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-slate-600 dark:text-white/70 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-0.5"
           >
-            <Download size={14} /> {t('Descargar', 'Download', 'Emtik')}
+            <Download size={16} /> {t('Descargar', 'Download', 'Emtik')}
           </button>
-          <label className="flex-1 py-3 bg-white/40 border border-black/[0.03] hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-[20px] transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
-            <Database size={14} /> {t('Cargar', 'Upload', 'Na\'aksik')}
+          <label className="flex-1 py-3.5 bg-white/60 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/10 hover:bg-[#ff5500] hover:text-white hover:border-[#ff5500] text-slate-600 dark:text-white/70 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-0.5">
+            <Database size={16} /> {t('Cargar', 'Upload', 'Na\'aksik')}
             <input type="file" className="hidden" accept=".json" onChange={onUpload} />
           </label>
         </div>
 
         {/* Swarm Telemetry */}
-        <div className="p-4 border border-[#ff5500]/15 bg-[#ff5500]/5 rounded-[20px] space-y-2.5 shadow-2xs">
-          <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-[#ff5500]">
-            <div className="flex items-center gap-1.5 text-[#ff5500]"><Orbit size={13} className="animate-spin" style={{ animationDuration: '20s' }} /> {t('SWARM', 'SWARM', 'SWARM')}</div>
-            <span className="text-[#ff5500] font-black">98%</span>
+        <div className="p-5 border border-[#ff5500]/20 bg-gradient-to-br from-[#ff5500]/10 to-[#ffaa00]/5 rounded-[1.5rem] space-y-4 shadow-inner backdrop-blur-md">
+          <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-[#ff5500]">
+            <div className="flex items-center gap-2 text-[#ff5500]"><Orbit size={16} className="animate-spin" style={{ animationDuration: '20s' }} /> {t('SWARM', 'SWARM', 'SWARM')}</div>
+            <span className="text-[#ff5500] font-black bg-white/50 dark:bg-black/50 px-3 py-1 rounded-lg border border-[#ff5500]/20 shadow-sm">98%</span>
           </div>
-          <div className="h-1.5 w-full bg-[#1e1b18]/10 rounded-full overflow-hidden">
-            <motion.div animate={{ width: ['90%', '98%', '94%'] }} transition={{ duration: 12, repeat: Infinity }} className="h-full bg-[#ff5500]" />
+          <div className="h-2 w-full bg-slate-900/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
+            <motion.div animate={{ width: ['90%', '98%', '94%'] }} transition={{ duration: 12, repeat: Infinity }} className="h-full bg-gradient-to-r from-[#ff5500] to-[#ffaa00]" />
           </div>
         </div>
 
-        <button onClick={onMachineView} className="w-full py-3.5 bg-white/40 border border-black/[0.03] hover:bg-[#ff5500] hover:border-[#ff5500] hover:text-white text-[var(--text-secondary)] text-[10px] font-black uppercase tracking-widest rounded-[20px] transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
-          <Terminal size={12} /> {t('>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION')}
+        <button onClick={onMachineView} className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white/90 text-xs font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer hover:shadow-xl hover:-translate-y-0.5">
+          <Terminal size={14} /> {t('>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION', '>_ RAW_EXTRACTION')}
         </button>
       </div>
     </div>
