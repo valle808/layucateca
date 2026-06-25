@@ -685,7 +685,6 @@ export default function OpinionRoomPage() {
                 onChange={(e) => setTempName(e.target.value)}
                 maxLength={25}
                 className="input text-center text-lg font-bold w-full py-4 bg-slate-50 dark:bg-black/30 border-slate-200 dark:border-white/10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-2xl"
-                autoFocus
               />
 
               <div className="flex gap-3 pt-4">
@@ -817,7 +816,6 @@ export default function OpinionRoomPage() {
                   value={unlockPasswordInput}
                   onChange={(e) => setUnlockPasswordInput(e.target.value)}
                   className="input text-center text-lg font-medium tracking-widest w-full py-4 bg-slate-50 dark:bg-black/30 border-slate-200 dark:border-white/10 focus:border-rose-500 focus:bg-rose-50 dark:focus:bg-rose-500/5 rounded-2xl"
-                  autoFocus
                 />
                 {unlockError && <p className="text-sm text-rose-500 font-bold animate-pulse pt-1">{unlockError}</p>}
               </div>
