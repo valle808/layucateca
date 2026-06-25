@@ -730,6 +730,42 @@ export default function MunaPage() {
                 ))}
               </AnimatePresence>
 
+              {/* STARTER PROMPTS GRID */}
+              {messages.length <= 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 pb-8"
+                >
+                  {starterPrompts.map((p, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setInput(p.prompt);
+                        setTimeout(() => handleSend(), 50);
+                      }}
+                      className="group flex flex-col text-left p-5 rounded-2xl transition-all cursor-pointer border hover:scale-[1.02]"
+                      style={{
+                        background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.6)',
+                        borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                        boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.2)' : '0 4px 16px rgba(0,0,0,0.04)'
+                      }}
+                    >
+                      <div className="flex items-center justify-between w-full mb-3">
+                        <span className="text-[11px] font-black tracking-widest uppercase" style={{ color: '#ff6622' }}>
+                          {p.title}
+                        </span>
+                        <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-[#ff6622]" />
+                      </div>
+                      <p className="text-[13px] leading-relaxed" style={{ color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}>
+                        {p.desc}
+                      </p>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+
               {isTyping && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4 justify-start">
                   <div className="h-10 w-10 shrink-0 rounded-2xl text-white flex items-center justify-center mt-1" style={{ background: 'linear-gradient(135deg, #ff5500, #ff8800)', boxShadow: '0 4px 20px rgba(255,85,0,0.35)' }}>
